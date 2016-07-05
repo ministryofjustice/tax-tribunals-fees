@@ -1,24 +1,3 @@
-# README
+# Tax Tribunals Fees
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+[![CircleCI](https://circleci.com/gh/ministryofjustice/tax-tribunals-fees.svg?style=svg&circle-token=53059f2bf1c3a736853b21bdb4ab3df9baf2dd2b)](https://circleci.com/gh/ministryofjustice/tax-tribunals-fees)
