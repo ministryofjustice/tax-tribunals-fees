@@ -1,14 +1,36 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>TaxTribunalsFees</title>
-    <%= csrf_meta_tags %>
+<% content_for(:homepage_url) { "/" } %>
+<% content_for(:page_title) { "GOV.UK - Pay your tax tribunal fees" } %>
 
-    <%= stylesheet_link_tag    'application', media: 'all' %>
-    <%= javascript_include_tag 'application' %>
-  </head>
+<% content_for(:head) do %>
+  <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+<% end %>
 
-  <body>
+<% content_for(:inside_header) do %>
+  <div class="header-proposition">
+    <div class="content">
+      <a href="/" id="proposition-name">Pay your tax tribunal fees</a>
+    </div>
+  </div>
+<% end %>
+
+<% content_for(:content) do %>
+  <main id="content" role="main">
+    <div class="phase-banner-alpha">
+      <p>
+        <strong class="phase-tag">ALPHA</strong>
+        <span>This is a prototype. Do not enter personally identifiable information or credit card details.</span>
+      </p>
+    </div>
+
+    <% if flash[:alert] %>
+      <div class="error-summary">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
     <%= yield %>
-  </body>
-</html>
+  </main>
+<% end %>
+
+<%= render template: "layouts/govuk_template" %>

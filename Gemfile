@@ -1,6 +1,11 @@
 source 'https://rubygems.org'
 
 gem 'bcrypt', '~> 3.1.7'
+gem 'govuk_elements_rails'
+gem 'govuk_elements_form_builder', git: 'https://github.com/ministryofjustice/govuk_elements_form_builder.git'
+gem 'govuk_frontend_toolkit'
+gem 'govuk_template'
+gem 'high_voltage'
 gem 'pg'
 gem 'pry-rails'
 gem 'puma', '~> 3.0'
