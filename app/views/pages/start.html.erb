@@ -1,0 +1,39 @@
+<div class="grid-row">
+  <div class="column-two-thirds">
+    <h1 class="heading-large"><%= t('.pay_your_fees') %></h1>
+    <p class="lede">
+      <%= t('.leader') %>
+    </p>
+
+    <p>
+      <%= t('.use_this_service_to') %>
+    </p>
+    <ul class="list list-bullet">
+      <%= t('.list_of_uses_html') %>
+    </ul>
+    <p>
+      <%= t('.how_long_does_it_take') %>
+    </p>
+    <p>
+      <%= link_to t('.start_now') , new_case_request_path, class: 'button button-start' %>
+    </p>
+    <h2 class="heading-medium"><%= t('.before_you_start') %></h2>
+    <p>
+      <%= t('.what_you_need') %>
+    </p>
+  </div>
+
+  <div class="column-one-third">
+    <aside class="govuk-related-items" role="complementary">
+    <h2 class="heading-medium" id="subsection-title"><%= t('.useful_links') %></h2>
+      <nav role="navigation" aria-labelledby="subsection-title">
+        <ul class="font-xsmall">
+          <li>
+            <a href="https://www.gov.uk/courts-tribunals/first-tier-tribunal-tax" rel="external" target="_blank">About the tax tribunal </a><br />
+            <span class="related-link-hint"><%= t('.how_and_when_you_can_appeal') %></span>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  </div>
+</div>

@@ -1,0 +1,21 @@
+en:
+  pages:
+    start:
+      pay_your_fees: Pay your tax tribunal fees
+      leader: |
+        Pay for your tax tribunal fees online if you have an existing case with
+        the tribunal.
+      use_this_service_to: 'Use this service to:'
+      list_of_uses_html:
+        <li>view outstanding fees on your case</li>
+        <li>make a payment for fees</li>
+      how_long_does_it_take: Making a payment takes about 5 minutes.
+      start_now: Start now
+      before_you_start: Before you start
+      what_you_need: |
+        You will need your case reference and
+        confirmation code, which you can find on the letter
+        from the tribunal.
+      useful_links: Useful Links
+      how_and_when_you_can_appeal: Information on when and how you can appeal.
+
