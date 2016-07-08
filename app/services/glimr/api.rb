@@ -2,7 +2,7 @@ module Glimr
   class Api
     include HTTParty
 
-    base_uri ENV['GLIMR_API_URL']
+    base_uri Rails.configuration.glimr_api_url
     default_timeout 8 # seconds
     format :json
     headers Accept: 'application/json'

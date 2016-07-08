@@ -8,7 +8,7 @@ RSpec.describe Glimr::Requests::CaseFees do
   describe '#call' do
     context 'successful' do
       before do
-        stub_request(:post, %r[/api/tdsapi/requestpayablecasefees$]).
+        stub_request(:post, 'https://glimr-test.dsd.io/requestpayablecasefees').
           with(body: "jurisdictionId=8&caseNumber=TT123&caseConfirmationCode=1234",
                headers: { 'Accept' => 'application/json' }).
           to_return(status: 200)
@@ -21,7 +21,7 @@ RSpec.describe Glimr::Requests::CaseFees do
 
     context 'unsuccessful' do
       before do
-        stub_request(:post, %r[/api/tdsapi/requestpayablecasefees$]).
+        stub_request(:post, 'https://glimr-test.dsd.io/requestpayablecasefees').
           with(body: "jurisdictionId=8&caseNumber=TT123&caseConfirmationCode=1234",
                headers: { 'Accept' => 'application/json' }).
           to_return(status: 404)
