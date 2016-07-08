@@ -2,7 +2,9 @@ require 'simplecov'
 require 'simplecov-rcov'
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 SimpleCov.minimum_coverage 100
-SimpleCov.start
+SimpleCov.start do
+  add_filter "/spec/"
+end
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

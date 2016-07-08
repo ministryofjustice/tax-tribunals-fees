@@ -6,6 +6,7 @@ gem 'govuk_elements_form_builder', git: 'https://github.com/ministryofjustice/go
 gem 'govuk_frontend_toolkit'
 gem 'govuk_template'
 gem 'high_voltage'
+gem 'httparty'
 gem 'pg'
 gem 'pry-rails'
 gem 'puma', '~> 3.0'
@@ -30,6 +31,7 @@ group :test do
   gem 'rubocop-rspec', require: false
   gem 'simplecov', require: false
   gem 'simplecov-rcov'
+  gem 'webmock'
 end
 
 group :development do
