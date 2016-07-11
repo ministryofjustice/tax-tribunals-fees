@@ -27,6 +27,11 @@ In order to use GOV.UK Pay, you will need to configure your environment with a s
 
 You are of course free to run the app directly too, in which case you will need to bring your own Ruby-ready environment and PostgreSQL server. You will also need to tweak the `DATABASE_URL` environment variable in `.env`.
 
+### .env.test
+
+If you need a sensible `.env.test`, you can copy over the example from
+`.env.test.example`.
+
 ### Nokogiri installation issues on OSX
 
 If you are trying to run the app directly on OSX 10.11 and nokogiri
