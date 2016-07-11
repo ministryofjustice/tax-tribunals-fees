@@ -29,8 +29,8 @@ You are of course free to run the app directly too, in which case you will need 
 
 ### .env.test
 
-There is a sensible `.env.test` checked into the app already.  Please do
-not commit changes to it without consulting with the team.
+If you need a sensible `.env.test`, you can copy over the example from
+`.env.test.example`.
 
 ### Nokogiri installation issues on OSX
 
