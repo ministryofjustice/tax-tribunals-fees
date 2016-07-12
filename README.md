@@ -12,11 +12,23 @@ This app uses [Docker Compose](https://docs.docker.com/compose/) to run locally,
 # Set up environment variables
 cp .env.example .env
 
-# Create the database
-docker-compose run web rails db:create db:migrate
-
 # Run the containers
 docker-compose up
+
+### In a separate shell...
+
+# Create the databases
+# Note that these tasks will fail until the database instance is up and
+# running.
+#   TODO: db:create won't create test database because the DB
+#   is on a different server. Investigate creating a one-step setup
+#   Rake task.
+docker-compose run web rails db:create db:migrate
+docker-compose run -e "RAILS_ENV=test" web rails db:create db:migrate
+
+# Run the tests
+#   TODO: Improve so RAILS_ENV doesn't need to be set
+docker-compose run -e "RAILS_ENV=test" web rake
 ```
 
 ### GOV.UK Pay API Key
