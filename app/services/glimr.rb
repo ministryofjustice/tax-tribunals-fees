@@ -8,4 +8,12 @@ require 'glimr/responses/case_not_found'
 require 'glimr/responses/fee_payment'
 
 module Glimr
+  module_function
+
+  def find_case(case_reference, confirmation_code)
+    Requests::CaseFees.call(
+      case_reference: case_reference,
+      confirmation_code: confirmation_code
+    )
+  end
 end

@@ -1,0 +1,14 @@
+en:
+  helpers:
+    label:
+      forms_new_case_request:
+        case_reference: Case Reference
+        confirmation_code: Confirmation Code
+    hint:
+      forms_new_case_request:
+        case_reference: e.g. TC/2012/00001
+        confirmation_code: e.g. ABC123
+    submit:
+      forms_new_case_request:
+        create:
+          Find Case

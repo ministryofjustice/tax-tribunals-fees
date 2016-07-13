@@ -12,6 +12,8 @@ require 'sprockets/railtie'
 
 Bundler.require(*Rails.groups)
 
+ActionView::Base.default_form_builder = GovukElementsFormBuilder::FormBuilder
+
 module TaxTribunalsFees
   class Application < Rails::Application
     config.i18n.load_path =

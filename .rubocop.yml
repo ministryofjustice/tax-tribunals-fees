@@ -36,6 +36,8 @@ Style/AsciiComments:
 # Use Weirich style
 Style/BlockDelimiters:
   EnforcedStyle: semantic
+  Exclude:
+    - 'spec/factories/**/*'
 
 # Allow ===. It's useful.
 Style/CaseEquality:
