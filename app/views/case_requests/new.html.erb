@@ -4,6 +4,12 @@
   <%= t('.enter_details') %>
 </p>
 
+<% if flash[:notice] %>
+  <h1 class='heading-large'>
+  <%= h flash[:notice] %>
+  </h1>
+<% end %>
+
 <%= GovukElementsErrorsHelper.error_summary @case_request_form,
   t('.could_not_find_case'), t('.check_details') %>
 

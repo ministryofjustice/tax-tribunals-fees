@@ -1,30 +1,19 @@
 require 'rails_helper'
+require 'shared_examples_for_glimr'
 
 RSpec.feature 'Request a case' do
+  include_examples 'glimr availability request', glimrAvailable: 'yes'
+
   describe 'happy paths' do
     context 'correct information' do
-      let(:glimr_response) {
-        {
-          'jurisdictionId' => 8,
-          'tribunalCaseId' => 60_029,
-          'caseTitle' => 'You vs HM Revenue & Customs',
-          'feeLiabilities' =>
-          [
-            {
-              'feeLiabilityId' => 7,
+      include_examples 'request payable case fees', 200,
+        'jurisdictionId' => 8,
+        'tribunalCaseId' => 60_029,
+        'caseTitle' => 'You vs HM Revenue & Customs',
+        'feeLiabilities' =>
+           [{ 'feeLiabilityId' => 7,
               'onlineFeeTypeDescription' => 'Lodgement Fee',
-              'payableWithUnclearedInPence' => 2000
-            }
-          ]
-        }
-      }
-
-      before do
-        stub_request(:post, "https://glimr-test.dsd.io/requestpayablecasefees").
-          with(body: "jurisdictionId=8&caseNumber=TC%2F2012%2F00001&caseConfirmationCode=ABC123",
-               headers: { 'Accept' => 'application/json' }).
-          to_return(status: 200, body: glimr_response.to_json)
-      end
+              'payableWithUnclearedInPence' => 2000 }]
 
       scenario do
         visit '/'
@@ -64,19 +53,9 @@ RSpec.feature 'Request a case' do
     end # 'without a confirmation code'
 
     context 'when glimr returns an error' do
-      let(:glimr_response) {
-        {
-          'glimrerrorcode' => 418,
-          'message' => 'I’m a teapot'
-        }
-      }
-
-      before do
-        stub_request(:post, "https://glimr-test.dsd.io/requestpayablecasefees").
-          with(body: "jurisdictionId=8&caseNumber=TC%2F2012%2F00001&caseConfirmationCode=ABC123",
-               headers: { 'Accept' => 'application/json' }).
-          to_return(status: 418, body: glimr_response.to_json)
-      end
+      include_examples 'request payable case fees', 418,
+        'glimrerrorcode' => 418,
+        'message' => 'I’m a teapot'
 
       scenario do
         visit '/'

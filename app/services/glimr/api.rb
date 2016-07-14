@@ -1,5 +1,7 @@
 module Glimr
   class Api
+    class Unavailable < StandardError; end
+
     include HTTParty
 
     base_uri Rails.configuration.glimr_api_url
@@ -17,8 +19,6 @@ module Glimr
 
     def post_handler(endpoint, body)
       self.class.post(endpoint, body: body)
-    rescue SocketError, Timeout::Error => e
-      Responses::ApiError.new(e)
     end
   end
 end

@@ -16,4 +16,8 @@ module Glimr
       confirmation_code: confirmation_code
     )
   end
+
+  def available?
+    Requests::Available.call.available?
+  end
 end
