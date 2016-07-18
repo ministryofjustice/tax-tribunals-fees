@@ -8,4 +8,13 @@ require 'govpay/responses/payment_created'
 require 'govpay/responses/payment_status'
 
 module Govpay
+  module_function
+
+  def create_payment(fee_liability)
+    Requests::CreatePayment.(fee_liability)
+  end
+
+  def get_payment(fee_liability)
+    Requests::GetPaymentStatus.(fee_liability)
+  end
 end

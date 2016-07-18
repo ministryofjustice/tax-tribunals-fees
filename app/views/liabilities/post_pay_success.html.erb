@@ -1,0 +1,24 @@
+<h1 class="heading-large">
+  <span class="heading-secondary"><%= @case_request.case_reference %></span>
+  <%= @case_request.case_title %>
+</h1>
+
+<div class="govuk-box-highlight">
+<h1 class="bold-large">Payment successful</h1>
+<p>
+Your payment reference is <br>
+<strong class="heading-medium"><%= @liability.govpay_payment_id.upcase %></strong>
+</p>
+</div>
+<p>We have sent you a confirmation email.</p>
+
+<h2 class="heading-medium">What happens next</h2>
+<p>
+  The tribunal will continue to work on your case.
+  They will send you an invoice and may contact you to ask for more information.
+</p>
+<p><a href="#">What did you think of this service?</a> (takes 30 seconds)</p>
+
+<p>
+  <%= link_to 'Find another case', new_case_request_path, class: 'link-back' %>
+</p>
