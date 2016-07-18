@@ -1,0 +1,64 @@
+<h1 class="heading-large">
+  <span class="heading-secondary"><%= @case_request.case_reference %></span>
+  <%= @case_request.case_title %>
+</h1>
+
+<% if @case_request.fee_liabilities? %>
+  <p class="lede">
+    <%= t('.you_need_to_pay') %>
+  </p>
+
+  <div class="notice notice-payment">
+    <i class="icon icon-important">
+      <span class="visuallyhidden"><%= t('.warning') %></span>
+    </i>
+    <strong class="bold-small">
+      <%= t('.lose_the_right') %>
+    </strong>
+    </div>
+
+  <div class="liabilities-list">
+    <% @case_request.fee_liabilities.each do |fee| %>
+      <div class="grid-row payments-row">
+        <div class="column-one-third">
+          <div class="data">
+            <h2 class="bold-xlarge"><%= number_to_currency(fee.amount_in_pounds) %></h2>
+            <p class="bold-small"><%= fee.description %></p>
+          </div>
+        </div>
+        <div class="column-two-thirds">
+          <p>
+            <%= link_to t('.pay_now'), pay_liability_path(fee), class: 'button' %>
+          </p>
+          <p class="font-xsmall">
+            <%= t('.gov_pay_redirect') %>
+          </p>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="lede">
+    <%= t('.no_outstanding_fees') %>
+  </p>
+
+  <p>
+    <%= t('.a_number_of_reasons') %>
+  </p>
+
+  <ul class="list list-bullet">
+    <%= t('.reasons_html') %>
+  </ul>
+
+  <p>
+  <a
+    href="https://www.gov.uk/courts-tribunals/first-tier-tribunal-tax"
+    target="_blank"
+    rel="external"><%= t('.contact_the_tribunal') %></a>
+    <%= t('.if_you_believe') %>
+  </p>
+<% end %>
+
+<p>
+  <%= link_to t('.find_another_case'), new_case_request_path, class: 'link-back' %>
+</p>

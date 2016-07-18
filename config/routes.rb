@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
-  # Root route is handled by the high_voltage gem.  See
-  # config/initializers/high_voltage.rb
+  get '/pages/*id' => 'pages#show', as: :page, format: false
+
+  root to: 'pages#show', id: 'start'
+
+  resources :case_requests,
+    only: [:new, :create],
+    path_names: { new: '' }
 
   resources :liabilities, only: [] do
     member do

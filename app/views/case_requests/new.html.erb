@@ -1,0 +1,29 @@
+<h1 class="heading-large"><%= t('.find_your_case') %></h1>
+
+<p class="lede">
+  <%= t('.enter_details') %>
+</p>
+
+<% if flash[:notice] %>
+  <h1 class='heading-large'>
+  <%= h flash[:notice] %>
+  </h1>
+<% end %>
+
+<%= GovukElementsErrorsHelper.error_summary @case_request_form,
+  t('.could_not_find_case'), t('.check_details') %>
+
+<%= form_for @case_request_form, url: case_requests_path do |f| %>
+  <%= f.text_field :case_reference %>
+  <%= f.text_field :confirmation_code %>
+  <%= f.submit class: 'button' %>
+<% end %>
+
+<details class="find-case-help">
+<summary><span class="summary"><%= t('.dont_know_details') %></span></summary>
+  <div class="panel panel-border-narrow">
+    <p>
+      <%= t('.where_to_find_details') %>
+    </p>
+  </div>
+</details>

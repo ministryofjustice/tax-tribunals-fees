@@ -1,0 +1,38 @@
+en:
+  case_requests:
+    could_not_find_case: Could not find a case on our systems with these details.
+    new:
+      where_to_find_details: |
+        You will find your case reference and confirmation code on the letter
+        the tribunal sent you.
+      dont_know_details: 'Don’t know your details?'
+      enter_details: |
+        Enter your case details from the letter the tribunal sent you.
+      find_your_case: Find your case
+      could_not_find_case: Sorry - we could not find your case.
+      check_details: |
+        Please ensure you have entered all details correctly. If you are sure
+        all details are correct, and you still cannot retrieve your case
+        details, please contact us.
+    show:
+      no_outstanding_fees: |
+        There are currently no outstanding fees on your case.
+      a_number_of_reasons: 'This could be for a number of different reasons:'
+      reasons_html: |
+        <li>There are no fees due.</li>
+        <li>You’ve already paid.</li>
+        <li>You have missed the deadline to pay.</li>
+      find_another_case: Find another case
+      contact_the_tribunal: Contact the tribunal
+      if_you_believe: |
+        if you believe there should be an outstanding fee.
+      you_need_to_pay: |
+        You need to pay fees before the tribunal continues to work on your case.
+      lose_the_right: |
+        You may lose the right to appeal if you do not pay your fee within the
+        time limit we give you.
+      warning: Warning
+      pay_now: Pay now
+      gov_pay_redirect: |
+        You will be redirected to GOV.UK Pay, an official secure payments
+        service.
