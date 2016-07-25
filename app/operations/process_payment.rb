@@ -1,8 +1,9 @@
 class ProcessPayment
-  attr_reader :liability_id
+  attr_reader :liability, :payment
 
   def initialize(liability_id)
-    @liability_id = liability_id
+    @liability = FeeLiability.find(liability_id)
+    @payment = Govpay.get_payment(@liability)
   end
 
   def call(&block)
@@ -40,13 +41,5 @@ class ProcessPayment
     end
 
     true
-  end
-
-  def liability
-    @liability ||= FeeLiability.find(liability_id)
-  end
-
-  def payment
-    @payment ||= Govpay.get_payment(liability)
   end
 end

@@ -1,18 +1,19 @@
 class LiabilitiesController < ApplicationController
   def pay
-    payment = Operations::CreatePayment.new(params[:id]).call
+    operation = CreatePayment.new(params[:id])
 
-    target = if payment
-      payment.payment_url
+    target = unless operation.error?
+      operation.payment_url
     else
+      flash[:alert] = t('.govpay_api_error')
       root_path
     end
+
     redirect_to target
-    #redirect_to root_path, alert: "Could not connect to our payment gateway - please try again later."
   end
 
   def post_pay
-    Operations::ProcessPayment.new(params[:id]).call do |liability|
+    ProcessPayment.new(params[:id]).call do |liability|
       @liability = liability
       @case_request = liability.case_request
 

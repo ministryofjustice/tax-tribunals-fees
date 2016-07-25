@@ -20,4 +20,8 @@ module Glimr
   def available?
     Requests::Available.call.available?
   end
+
+  def fee_paid(fee_liability)
+    Requests::FeePaid.new(fee_liability).call
+  end
 end
