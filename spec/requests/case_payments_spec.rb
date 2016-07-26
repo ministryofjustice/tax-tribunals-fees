@@ -48,7 +48,6 @@ RSpec.describe LiabilitiesController do
     end
 
     context 'failed payment' do
-
       let(:post_pay_response) {
         { 'state' =>
           {
@@ -72,6 +71,28 @@ RSpec.describe LiabilitiesController do
         liability.reload
         expect(response.body).to include('try making the payment again')
         expect(response.body).to include('3D secure failed')
+        expect(response.body).to include('we couldn’t take your payment')
+      end
+    end
+
+    context 'govpay fails' do
+      include_examples 'govpay payment response'
+      include_examples 'govpay post_pay returns a 500'
+
+      before do
+        get "/liabilities/#{liability.id}/pay"
+      end
+
+      it 'does not try to update glimr' do
+        expect(Glimr).not_to receive(:fee_paid)
+        get "/liabilities/#{liability.id}/post_pay"
+      end
+
+      it 'alerts the user to the failure and reason' do
+        get "/liabilities/#{liability.id}/post_pay"
+        liability.reload
+        expect(response.body).to include('try making the payment again')
+        expect(response.body).to include('Govpay is not working')
         expect(response.body).to include('we couldn’t take your payment')
       end
     end

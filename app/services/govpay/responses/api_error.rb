@@ -5,6 +5,10 @@ module Govpay
         @error = error
       end
 
+      def status
+        @error.try(:status) || 'failed'
+      end
+
       def error?
         true
       end
@@ -14,8 +18,10 @@ module Govpay
       end
 
       def error_message
-        @error.message
+        @error.try(:message) || 'Govpay error'
       end
+      alias :message :error_message
+
     end
   end
 end

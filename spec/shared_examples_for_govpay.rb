@@ -127,3 +127,17 @@ RSpec.shared_examples 'govpay returns a 404' do
     ).to_return(status: 404)
   end
 end
+
+RSpec.shared_examples 'govpay post_pay returns a 500' do
+  let(:govpay_payment_id) { 'rmpaurrjuehgpvtqg997bt50f' }
+  before do
+    stub_request(:get, "https://govpay-test.dsd.io/payments/#{govpay_payment_id}").
+      with(
+        headers: {
+          'Accept' => 'application/json',
+          'Authorization' => 'Bearer deadbeef',
+          'Content-Type' => 'application/json'
+        }
+    ).to_return(status: 500, body: '{"message":"Govpay is not working"}')
+  end
+end
