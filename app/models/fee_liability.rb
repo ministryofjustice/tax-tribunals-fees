@@ -22,7 +22,7 @@ class FeeLiability < ApplicationRecord
   end
 
   def failed?
-    !paid?
+    status_known? && !paid?
   end
 
   private
