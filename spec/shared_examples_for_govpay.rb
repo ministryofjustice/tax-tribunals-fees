@@ -102,3 +102,28 @@ RSpec.shared_examples 'govpay payment response' do
       ).to_return(status: 200, body: post_pay_response)
   end
 end
+
+RSpec.shared_examples 'govpay returns a 404' do
+  let!(:liability) { create(:fee_liability) }
+
+  let(:request_body) {
+    {
+      return_url: CGI.unescape(post_pay_liability_url(liability)),
+      description: liability.govpay_description,
+      reference: liability.govpay_reference,
+      amount: liability.amount
+    }.to_json
+  }
+
+  before do
+    stub_request(:post, "https://govpay-test.dsd.io/payments").
+      with(
+        body: request_body,
+        headers: {
+          'Accept' => 'application/json',
+          'Authorization' => 'Bearer deadbeef',
+          'Content-Type' => 'application/json'
+        }
+    ).to_return(status: 404)
+  end
+end

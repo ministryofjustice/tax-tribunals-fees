@@ -15,6 +15,15 @@ RSpec.describe LiabilitiesController do
         )
       end
     end
+
+    context 'the GovPay API returns a 404' do
+      include_examples 'govpay returns a 404'
+
+      it 'redirects to the govpay payment URL' do
+        get "/liabilities/#{liability.id}/pay"
+        expect(response).to redirect_to(root_url)
+      end
+    end
   end
 
   # TODO: spec the unhappy path for the race condition whereby the fee
