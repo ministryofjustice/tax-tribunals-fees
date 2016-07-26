@@ -22,13 +22,13 @@ group :development, :test do
   gem 'launchy'
   gem 'pry-byebug'
   gem 'rspec-rails'
+  gem 'database_cleaner'
+  gem 'factory_girl_rails'
 end
 
 group :test do
   gem 'brakeman'
   gem 'capybara'
-  gem 'database_cleaner'
-  gem 'factory_girl_rails'
   gem 'fuubar'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
