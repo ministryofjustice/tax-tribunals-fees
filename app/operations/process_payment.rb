@@ -1,32 +1,45 @@
 class ProcessPayment
-  attr_reader :liability, :payment
+  attr_reader :liability
 
   def initialize(liability_id)
     @liability = FeeLiability.find(liability_id)
-    @payment = Govpay.get_payment(@liability)
   end
 
-  def call(&block)
-    yield liability if verify_payment_status && post_glimr_fee_payment
+  def payment
+    @payment ||= Govpay.get_payment(liability).tap { |p|
+      liability.update(
+        govpay_payment_status: p.status,
+        govpay_payment_message: p.message
+      )
+
+      if p.error?
+        Rails.logger.error(
+          {
+            source: 'payment_processor_get_payment_error',
+            error_code: p.error_code,
+            error_message: p.error_message
+          }.to_a.map{ |x| x.join('=') }.join(' ')
+        )
+      elsif liability.failed?
+        Rails.logger.error(
+          {
+            source: 'payment_processor_fee_liability_not_paid',
+            payment_status: liability.govpay_payment_status,
+            payment_message: liability.govpay_payment_message
+          }.to_a.map{ |x| x.join('=') }.join(' ')
+        )
+      else
+        notifiy_glimr_fee_has_been_paid!
+      end
+    }
   end
+
+  delegate :error?, to: :payment
+  delegate :failed?, to: :liability
 
   private
 
-  def verify_payment_status
-    if payment.error?
-      Rails.logger.error "Error getting payment status: #{payment.error_code} - #{payment.error_message}"
-      return false
-    end
-
-    liability.update(
-      govpay_payment_status: payment.status,
-      govpay_payment_message: payment.message
-    )
-
-    true
-  end
-
-  def post_glimr_fee_payment
+  def notifiy_glimr_fee_has_been_paid!
     # Set this environment variable to something falsy (or omit it)
     # in the application's environment to bypass submitting payment
     # success into GLiMR. This allows testing the payment flow over
@@ -36,7 +49,13 @@ class ProcessPayment
 
     glimr_status = Glimr.fee_paid(liability)
     if glimr_status.error?
-      Rails.logger.error "Error pushing payment status to GLiMR: #{glimr_status.error_code} - #{glimr_status.error_message}"
+      Rails.logger.error(
+        {
+          source: 'payment_processor_glimr_notificaiton',
+          error_code: glimr_status.error_code,
+          error_message: glimr_statue.error_message
+        }.to_a.map{ |x| x.join('=') }.join(' ')
+      )
       return false
     end
 

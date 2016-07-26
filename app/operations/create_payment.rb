@@ -10,9 +10,9 @@ class CreatePayment
       if p.error?
         Rails.logger.error(
           {
-            source: 'create_payment',
-            error_code: payment.error_code,
-            error_message: payment.error_message
+            source: 'create_payment_govpay_error',
+            error_code: p.error_code,
+            error_message: p.error_message
           }.to_a.map{ |x| x.join('=') }.join(' ')
         )
       else

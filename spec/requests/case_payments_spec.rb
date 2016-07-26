@@ -20,14 +20,14 @@ RSpec.describe LiabilitiesController do
   # TODO: spec the unhappy path for the race condition whereby the fee
   # liability gets called early and does not yet have a govpay_payment_id
   describe '#post_pay' do
-    include_examples 'payment taken'
+    context 'successful payment' do
+      include_examples 'report payment taken to glimr'
 
-    before do
+      before do
         get "/liabilities/#{liability.id}/pay"
-    end
+      end
 
-    context 'payment has been successful' do
-      it 'redirects to the govpay payment URL' do
+      it 'tells the user their payment was taken' do
         get "/liabilities/#{liability.id}/post_pay"
         liability.reload
         expect(response.body).to include(liability.case_request.case_reference)
@@ -35,6 +35,35 @@ RSpec.describe LiabilitiesController do
         expect(response.body).to include('Payment successful')
         expect(response.body).to include('Your payment reference is')
         expect(response.body).to include(liability.govpay_payment_id.upcase)
+      end
+    end
+
+    context 'failed payment' do
+
+      let(:post_pay_response) {
+        { 'state' =>
+          {
+          'status' => 'failed',
+          'message' => '3D secure failed'
+          }
+        }.to_json
+      }
+
+      before do
+        get "/liabilities/#{liability.id}/pay"
+      end
+
+      it 'does not try to update glimr' do
+        expect(Glimr).not_to receive(:fee_paid)
+        get "/liabilities/#{liability.id}/post_pay"
+      end
+
+      it 'alerts the user to the failure and reason' do
+        get "/liabilities/#{liability.id}/post_pay"
+        liability.reload
+        expect(response.body).to include('try making the payment again')
+        expect(response.body).to include('3D secure failed')
+        expect(response.body).to include('we couldn’t take your payment')
       end
     end
   end
