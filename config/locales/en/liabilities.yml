@@ -1,0 +1,6 @@
+en:
+  liabilities:
+    post_pay:
+      payment_error: |
+        There was an error updating your case after payment. Please contact the
+        tribunal to let them know.

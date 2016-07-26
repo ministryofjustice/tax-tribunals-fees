@@ -17,10 +17,11 @@ class LiabilitiesController < ApplicationController
     @liability = operation.liability
     @case_request = @liability.case_request
 
-    unless operation.error? || operation.failed?
-      render 'post_pay_success'
-    else
+    if operation.error? || operation.failed? || operation.glimr_error?
+      flash[:error] = @liability.govpay_payment_message || t('.payment_error')
       render 'post_pay_error'
+    else
+      render 'post_pay_success'
     end
   end
 end

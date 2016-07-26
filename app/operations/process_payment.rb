@@ -34,6 +34,14 @@ class ProcessPayment
     }
   end
 
+  def glimr
+    @glimr ||= Glimr.fee_paid(liability)
+  end
+
+  def glimr_error?
+    glimr.error?
+  end
+
   delegate :error?, to: :payment
   delegate :failed?, to: :liability
 
@@ -47,18 +55,14 @@ class ProcessPayment
     # consider it paid.
     return true unless ENV['GLIMR_SUBMIT_PAYMENT_SUCCESS']
 
-    glimr_status = Glimr.fee_paid(liability)
-    if glimr_status.error?
+    if glimr_error?
       Rails.logger.error(
         {
           source: 'payment_processor_glimr_notificaiton',
-          error_code: glimr_status.error_code,
-          error_message: glimr_statue.error_message
+          error_code: glimr.error_code,
+          error_message: glimr.error_message
         }.to_a.map{ |x| x.join('=') }.join(' ')
       )
-      return false
     end
-
-    true
   end
 end

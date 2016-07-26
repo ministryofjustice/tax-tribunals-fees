@@ -6,7 +6,7 @@
 <div class="error-summary">
   <h2 class="heading-medium heading-error">Sorry, we couldn’t take your payment.</h2>
   <p>
-    <%= @liability.govpay_payment_message %>.
+    <%= flash[:error] %>.
   </p>
   <p class="font-xsmall">
     You can try making the payment again. Check that you have sufficient money in

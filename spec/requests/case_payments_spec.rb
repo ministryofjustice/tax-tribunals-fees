@@ -96,5 +96,22 @@ RSpec.describe LiabilitiesController do
         expect(response.body).to include('we couldn’t take your payment')
       end
     end
+
+    context 'glimr update fails' do
+      include_examples 'govpay payment response'
+      include_examples 'glimr fee_paid returns a 500'
+
+      before do
+        get "/liabilities/#{liability.id}/pay"
+      end
+
+      it 'alerts the user to the failure and reason' do
+        get "/liabilities/#{liability.id}/post_pay"
+        liability.reload
+        expect(response.body).to include('try making the payment again')
+        expect(response.body).to include('error updating your case after payment')
+        expect(response.body).to include('we couldn’t take your payment')
+      end
+    end
   end
 end
