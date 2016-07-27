@@ -1,68 +1,59 @@
 class ProcessPayment
-  attr_reader :liability
+  include SimplifiedLogging
+
+  # Set the environment variable to something falsy (or omit it)
+  # in the application's environment to bypass submitting payment
+  # success into GLiMR. This allows testing the payment flow over
+  # and over again with the same reference, because GLiMR won't
+  # consider it paid.
+  UPDATE_GLIMR = ENV['UPDATE_GLIMR'] || !Rails.env.development?
+
+  attr_reader :liability, :payment, :glimr
 
   def initialize(liability_id)
     @liability = FeeLiability.find(liability_id)
-  end
-
-  def payment
-    @payment ||= Govpay.get_payment(liability).tap { |p|
-      liability.update(
-        govpay_payment_status: p.status,
-        govpay_payment_message: p.message
-      )
-
-      if p.error?
-        Rails.logger.error(
-          {
-            source: 'payment_processor_get_payment_error',
-            error_code: p.error_code,
-            error_message: p.error_message
-          }.to_a.map{ |x| x.join('=') }.join(' ')
-        )
-      elsif liability.failed?
-        Rails.logger.error(
-          {
-            source: 'payment_processor_fee_liability_not_paid',
-            payment_status: liability.govpay_payment_status,
-            payment_message: liability.govpay_payment_message
-          }.to_a.map{ |x| x.join('=') }.join(' ')
-        )
-      else
-        notifiy_glimr_fee_has_been_paid!
-      end
+    @payment = Govpay.get_payment(@liability).tap { |gp|
+      @liability.update(govpay_payment_status: gp.status,
+                        govpay_payment_message: gp.message)
     }
+    if @liability.paid? && !@payment.error? && UPDATE_GLIMR
+      @glimr = Glimr.fee_paid(liability)
+    end
+    log_errors if error?
   end
 
-  def glimr
-    @glimr ||= Glimr.fee_paid(liability)
+  def error?
+    payment.error? || liability.failed? || glimr.try(:error?)
   end
 
-  def glimr_error?
-    glimr.error?
+  def error_message
+    # The liability error message is a copy of the govpay message.
+    payment.message || glimr.try(:error_message)
   end
-
-  delegate :error?, to: :payment
-  delegate :failed?, to: :liability
 
   private
 
-  def notifiy_glimr_fee_has_been_paid!
-    # Set this environment variable to something falsy (or omit it)
-    # in the application's environment to bypass submitting payment
-    # success into GLiMR. This allows testing the payment flow over
-    # and over again with the same reference, because GLiMR won't
-    # consider it paid.
-    return true unless ENV['GLIMR_SUBMIT_PAYMENT_SUCCESS']
+  def log_errors
+    log_liability_error if liability.failed?
+    log_govpay_error if payment.error?
+    log_glimr_error if glimr.try(:error?)
+  end
 
-    if glimr_error?
-      Rails.logger.error(
-        {
-          source: 'payment_processor_glimr_notificaiton',
-          error_code: glimr.error_code,
-          error_message: glimr.error_message
-        }.to_a.map{ |x| x.join('=') }.join(' ')
-      )
-    end
+  def log_liability_error
+    log_error('payment_processor_liability_failure',
+      liability.govpay_payment_status,
+      liability.govpay_payment_message)
+  end
+
+  def log_govpay_error
+    log_error('payment_processor_govpay_error',
+      payment.error_code,
+      payment.error_message)
+  end
+
+  def log_glimr_error
+    log_error('payment_processor_glimr_error',
+      glimr.error_code,
+      glimr.error_message)
   end
 end

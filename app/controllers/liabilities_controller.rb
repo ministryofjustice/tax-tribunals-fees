@@ -2,11 +2,11 @@ class LiabilitiesController < ApplicationController
   def pay
     operation = CreatePayment.new(params[:id])
 
-    target = unless operation.error?
-               operation.payment_url
-             else
+    target = if operation.error?
                flash[:alert] = t('.govpay_api_error')
                root_path
+             else
+               operation.payment_url
              end
 
     redirect_to target
@@ -16,9 +16,8 @@ class LiabilitiesController < ApplicationController
     operation = ProcessPayment.new(params[:id])
     @liability = operation.liability
     @case_request = @liability.case_request
-
-    if operation.error? || operation.failed? || operation.glimr_error?
-      flash[:error] = @liability.govpay_payment_message || t('.payment_error')
+    if operation.error?
+      flash[:error] = operation.error_message || t('.payment_error')
       render 'post_pay_error'
     else
       render 'post_pay_success'

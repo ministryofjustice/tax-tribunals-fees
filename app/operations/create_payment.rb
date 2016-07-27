@@ -1,4 +1,5 @@
 class CreatePayment
+  include SimplifiedLogging
   attr_reader :liability, :payment
 
   def initialize(liability_id)
@@ -8,13 +9,9 @@ class CreatePayment
   def payment
     @payment ||= Govpay.create_payment(liability).tap { |p|
       if p.error?
-        Rails.logger.error(
-          {
-            source: 'create_payment_govpay_error',
-            error_code: p.error_code,
-            error_message: p.error_message
-          }.to_a.map{ |x| x.join('=') }.join(' ')
-        )
+        log_error('create_payment_govpay_error',
+          p.error_code,
+          p.error_message)
       else
         liability.update(govpay_payment_id: p.govpay_id)
       end
