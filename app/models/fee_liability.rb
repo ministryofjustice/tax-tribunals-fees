@@ -21,6 +21,10 @@ class FeeLiability < ApplicationRecord
     govpay_payment_status == 'success'
   end
 
+  def failed?
+    status_known? && !paid?
+  end
+
   private
 
   def set_govpay_reference!

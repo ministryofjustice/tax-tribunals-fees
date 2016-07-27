@@ -28,3 +28,21 @@ RSpec.shared_examples 'request payable case fees' do |code, g_response|
       to_return(status: code, body: g_response.to_json)
   end
 end
+
+RSpec.shared_examples 'report payment taken to glimr' do
+  before do
+    stub_request(:post, "https://glimr-test.dsd.io/paymenttaken").
+      with(body: /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/,
+           headers: { 'Accept' => 'application/json' }).
+      to_return(status: 200)
+  end
+end
+
+RSpec.shared_examples 'glimr fee_paid returns a 500' do
+  before do
+    stub_request(:post, "https://glimr-test.dsd.io/paymenttaken").
+      with(body: /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/,
+           headers: { 'Accept' => 'application/json' }).
+      to_return(status: 500)
+  end
+end

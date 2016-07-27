@@ -1,0 +1,25 @@
+<h1 class="heading-large">
+  <span class="heading-secondary"><%= @case_request.case_reference %></span>
+  <%= @case_request.case_title %>
+</h1>
+
+<div class="govuk-box-highlight">
+  <h1 class="bold-large"><%= t('.payment_successful') %></h1>
+<p>
+<%= t('.your_payment_reference') %></ br>
+<strong class="heading-medium"><%= @liability.govpay_payment_id.upcase %></strong>
+</p>
+</div>
+<p><%= t('.confirmation_email') %></p>
+
+<h2 class="heading-medium"><%= t('.what_happens_next') %></h2>
+<p>
+  <%= t('.what_the_tribunal_will_do') %>
+</p>
+<p>
+  <%= t('.what_did_you_think_html') %>
+</p>
+
+<p>
+  <%= link_to t('liabilities.find_another_case'), new_case_request_path, class: 'link-back' %>
+</p>
