@@ -9,10 +9,6 @@ module Glimr
         true
       end
 
-      def status
-        'failed'
-      end
-
       def error_code
         @error.class
       end

@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'shared_examples_for_govpay'
 require 'shared_examples_for_glimr'
 
-RSpec.describe LiabilitiesController do
+RSpec.describe 'Pay for a case', type: :request do
   include_examples 'govpay payment response'
 
   # The liability is set up in the shared example
@@ -41,19 +41,18 @@ RSpec.describe LiabilitiesController do
         liability.reload
         expect(response.body).to include(liability.case_request.case_reference)
         expect(response.body).to match(liability.case_request.case_title)
-        expect(response.body).to include('Payment successful')
-        expect(response.body).to include('Your payment reference is')
         expect(response.body).to include(liability.govpay_payment_id.upcase)
       end
     end
 
     context 'failed payment' do
       let(:post_pay_response) {
-        { 'state' =>
-          {
-          'status' => 'failed',
-          'message' => '3D secure failed'
-          }
+        {
+          'state' =>
+            {
+              'status' => 'failed',
+              'message' => '3D secure failed'
+            }
         }.to_json
       }
 

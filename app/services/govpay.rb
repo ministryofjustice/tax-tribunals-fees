@@ -11,10 +11,10 @@ module Govpay
   module_function
 
   def create_payment(fee_liability)
-    Requests::CreatePayment.(fee_liability)
+    Requests::CreatePayment.call(fee_liability)
   end
 
   def get_payment(fee_liability)
-    Requests::GetPaymentStatus.(fee_liability)
+    Requests::GetPaymentStatus.call(fee_liability)
   end
 end

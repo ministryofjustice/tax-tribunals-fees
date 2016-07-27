@@ -20,8 +20,7 @@ module Govpay
       def error_message
         @error.try(:message) || 'Govpay error'
       end
-      alias :message :error_message
-
+      alias message error_message
     end
   end
 end
