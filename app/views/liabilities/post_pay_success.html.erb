@@ -4,21 +4,22 @@
 </h1>
 
 <div class="govuk-box-highlight">
-<h1 class="bold-large">Payment successful</h1>
+  <h1 class="bold-large"><%= t('.payment_successful') %></h1>
 <p>
-Your payment reference is <br>
+<%= t('.your_payment_reference') %></ br>
 <strong class="heading-medium"><%= @liability.govpay_payment_id.upcase %></strong>
 </p>
 </div>
-<p>We have sent you a confirmation email.</p>
+<p><%= t('.confirmation_email') %></p>
 
-<h2 class="heading-medium">What happens next</h2>
+<h2 class="heading-medium"><%= t('.what_happens_next') %></h2>
 <p>
-  The tribunal will continue to work on your case.
-  They will send you an invoice and may contact you to ask for more information.
+  <%= t('.what_the_tribunal_will_do') %>
 </p>
-<p><a href="#">What did you think of this service?</a> (takes 30 seconds)</p>
+<p>
+  <%= t('.what_did_you_think_html') %>
+</p>
 
 <p>
-  <%= link_to 'Find another case', new_case_request_path, class: 'link-back' %>
+  <%= link_to t('liabilities.find_another_case'), new_case_request_path, class: 'link-back' %>
 </p>

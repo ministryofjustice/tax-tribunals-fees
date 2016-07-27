@@ -4,37 +4,31 @@
 </h1>
 
 <div class="error-summary">
-  <h2 class="heading-medium heading-error">Sorry, we couldn’t take your payment.</h2>
+  <h2 class="heading-medium heading-error"><%= t('.payment_not_taken') %></h2>
   <p>
     <%= flash[:error] %>.
   </p>
   <p class="font-xsmall">
-    You can try making the payment again. Check that you have sufficient money in
-    your account, try using a different card, or check that your bank has not
-    blocked your card for security checks.
+    <%= t('.try_again_copy') %>
   </p>
   <p>
-    <%= link_to "Try again", pay_liability_path(@liability), class: 'button' %>
+    <%= link_to t('.try_again'), pay_liability_path(@liability), class: 'button' %>
   </p>
 </div>
 
 <p>
-  If you believe this is an error on our side, please contact the tribunal immediately and tell them the error message above.
+  <%= t('.made_in_error') %>
 </p>
 
 <div class="notice notice-payment">
  <i class="icon icon-important">
-   <span class="visuallyhidden">Warning</span>
+   <span class="visuallyhidden"><%= t('.warning') %></span>
  </i>
  <strong class="bold-small">
-   You may lose the right to appeal if you do not pay your fee within the time limit we give you.
+   <%= t('.lose_the_right_to_appeal') %>
  </strong>
 </div>
 
 <p>
-  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-</p>
-
-<p>
-  <%= link_to 'Find another case', new_case_request_path, class: 'link-back' %>
+  <%= link_to t('liabilities.find_another_case'), new_case_request_path, class: 'link-back' %>
 </p>
