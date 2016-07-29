@@ -5,7 +5,7 @@ RSpec.feature 'Request a case' do
   include_examples 'glimr availability request', glimrAvailable: 'yes'
 
   describe 'happy paths' do
-    context 'correct information' do
+    context 'with correct information' do
       include_examples 'request payable case fees', 200,
         'jurisdictionId' => 8,
         'tribunalCaseId' => 60_029,
@@ -64,6 +64,17 @@ RSpec.feature 'Request a case' do
         fill_in 'Confirmation Code', with: 'ABC123'
         click_on 'Find Case'
         expect(page).to have_text('Sorry - we could not find your case.')
+      end
+    end # 'when glimr returns an error'
+
+    context 'when glimr times out' do
+      before do
+        stub_request(:post, 'https://glimr-test.dsd.io/glimravailable').to_timeout
+      end
+
+      scenario do
+        visit '/'
+        expect(page).to have_text('The service is currently unavailable')
       end
     end # 'when glimr returns an error'
   end # 'happy paths'
