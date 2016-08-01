@@ -24,6 +24,15 @@ RSpec.describe 'Pay for a case', type: :request do
         expect(response).to redirect_to(root_url)
       end
     end
+
+    context 'govpay times out' do
+      include_examples 'govpay times out'
+
+      it 'alerts the user' do
+        get "/liabilities/#{liability.id}/pay"
+        expect(response.body).to include('The service is currently unavailable')
+      end
+    end
   end
 
   # TODO: spec the unhappy path for the race condition whereby the fee
@@ -93,6 +102,24 @@ RSpec.describe 'Pay for a case', type: :request do
         expect(response.body).to include('try making the payment again')
         expect(response.body).to include('Govpay is not working')
         expect(response.body).to include('we couldn’t take your payment')
+      end
+    end
+
+    context 'govpay times out' do
+      include_examples 'govpay times out'
+
+      before do
+        get "/liabilities/#{liability.id}/pay"
+      end
+
+      it 'does not try to update glimr' do
+        expect(Glimr).not_to receive(:fee_paid)
+        get "/liabilities/#{liability.id}/post_pay"
+      end
+
+      it 'alerts the user to the failure and reason' do
+        expect(response.body).to include('The service is currently unavailable')
+        get "/liabilities/#{liability.id}/post_pay"
       end
     end
 
