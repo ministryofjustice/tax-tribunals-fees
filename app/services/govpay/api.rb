@@ -1,5 +1,6 @@
 module Govpay
   class Api
+    class Unavailable < StandardError; end
     include HTTParty
 
     base_uri Rails.configuration.govpay_api_url
@@ -14,13 +15,13 @@ module Govpay
     def get(endpoint)
       self.class.get(endpoint)
     rescue SocketError, Timeout::Error => e
-      Responses::ApiError.new(e)
+      raise Govpay::Api::Unavailable, e
     end
 
     def post(endpoint, body)
       self.class.post(endpoint, body: body)
     rescue SocketError, Timeout::Error => e
-      Responses::ApiError.new(e)
+      raise Govpay::Api::Unavailable, e
     end
   end
 end

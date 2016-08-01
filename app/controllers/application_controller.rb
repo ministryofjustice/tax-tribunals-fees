@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::Base
   rescue_from Glimr::Api::Unavailable, with: :service_not_available
+  rescue_from Govpay::Api::Unavailable, with: :service_not_available
+
   protect_from_forgery with: :exception
 
   before_action :glimr_available
