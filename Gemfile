@@ -17,6 +17,10 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'virtus'
 
+group :production do
+  gem 'rails_12factor'
+end
+
 group :development, :test do
   gem 'dotenv-rails'
   gem 'launchy'
