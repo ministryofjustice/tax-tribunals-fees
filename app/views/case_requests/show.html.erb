@@ -3,7 +3,7 @@
   <%= @case_request.case_title %>
 </h1>
 
-<% if @case_request.fee_liabilities? %>
+<% if @case_request.liabilities? %>
   <p class="lede">
     <%= t('.you_need_to_pay') %>
   </p>
@@ -17,25 +17,8 @@
     </strong>
     </div>
 
-  <div class="liabilities-list">
-    <% @case_request.fee_liabilities.each do |fee| %>
-      <div class="grid-row payments-row">
-        <div class="column-one-third">
-          <div class="data">
-            <h2 class="bold-xlarge"><%= number_to_currency(fee.amount_in_pounds) %></h2>
-            <p class="bold-small"><%= fee.description %></p>
-          </div>
-        </div>
-        <div class="column-two-thirds">
-          <p>
-            <%= link_to t('.pay_now'), pay_liability_url(fee), class: 'button' %>
-          </p>
-          <p class="font-xsmall">
-            <%= t('.gov_pay_redirect') %>
-          </p>
-        </div>
-      </div>
-    <% end %>
+    <div class="liabilities-list">
+      <%= render @case_request.liabilities %>
   </div>
 <% else %>
   <p class="lede">

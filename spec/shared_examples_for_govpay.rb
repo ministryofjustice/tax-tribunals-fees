@@ -71,7 +71,7 @@ RSpec.shared_examples 'govpay payment response' do
     }.to_json
   }
 
-  let!(:liability) { create(:fee_liability) }
+  let!(:liability) { create(:liability) }
 
   let(:request_body) {
     {
@@ -105,7 +105,7 @@ RSpec.shared_examples 'govpay payment response' do
 end
 
 RSpec.shared_examples 'govpay returns a 404' do
-  let!(:liability) { create(:fee_liability) }
+  let!(:liability) { create(:liability) }
 
   let(:request_body) {
     {

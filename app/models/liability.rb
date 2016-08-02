@@ -1,4 +1,4 @@
-class FeeLiability < ApplicationRecord
+class Liability < ApplicationRecord
   belongs_to :case_request
 
   validates :glimr_id, :description, :amount, presence: true

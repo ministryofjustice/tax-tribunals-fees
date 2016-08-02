@@ -32,7 +32,3 @@ en:
         You may lose the right to appeal if you do not pay your fee within the
         time limit we give you.
       warning: Warning
-      pay_now: Pay now
-      gov_pay_redirect: |
-        You will be redirected to GOV.UK Pay, an official secure payments
-        service.

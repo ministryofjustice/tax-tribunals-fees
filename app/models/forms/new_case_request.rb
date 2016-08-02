@@ -22,7 +22,7 @@ module Forms
     def save
       if valid?
         create_case_request!
-        create_fee_liabilities!
+        create_liabilities!
         true
       else
         false
@@ -39,12 +39,12 @@ module Forms
       )
     end
 
-    def create_fee_liabilities!
-      glimr_case_request.fee_liabilities.each do |fee|
-        @case_request.fee_liabilities.create(
-          description: fee.description,
-          amount: fee.amount,
-          glimr_id: fee.glimr_id
+    def create_liabilities!
+      glimr_case_request.fee_liabilities.each do |liability|
+        @case_request.liabilities.create(
+          description: liability.description,
+          amount: liability.amount,
+          glimr_id: liability.glimr_id
         )
       end
     end
