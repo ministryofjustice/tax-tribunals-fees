@@ -18,8 +18,12 @@
     </div>
 
     <div class="liabilities-list">
+      <% if @case_request.all_fees_paid? %>
+        <%= t('.payments_are_up_to_date') %>
+        <%= t('.other_fees_may_be_due') %>
+      <% end %>
       <%= render @case_request.liabilities %>
-  </div>
+    </div>
 <% else %>
   <p class="lede">
     <%= t('.no_outstanding_fees') %>

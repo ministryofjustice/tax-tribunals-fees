@@ -15,6 +15,10 @@ en:
         all details are correct, and you still cannot retrieve your case
         details, please contact us.
     show:
+      payments_are_up_to_date: All outstanding fee payments are up to date.
+      other_fees_may_be_due: |
+        Depending on the nature of your case, other fees may be payable at a
+        later date. The tribunal will notify you if this is the case.
       no_outstanding_fees: |
         There are currently no outstanding fees on your case.
       a_number_of_reasons: 'This could be for a number of different reasons:'
