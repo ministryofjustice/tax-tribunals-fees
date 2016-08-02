@@ -142,3 +142,11 @@ RSpec.shared_examples 'govpay post_pay returns a 500' do
       ).to_return(status: 500, body: '{"message":"Govpay is not working"}')
   end
 end
+
+RSpec.shared_examples 'govpay times out' do
+  let(:govpay_payment_id) { 'rmpaurrjuehgpvtqg997bt50f' }
+  before do
+    stub_request(:post, 'https://govpay-test.dsd.io/payments').to_timeout
+    stub_request(:get, 'https://govpay-test.dsd.io/payments/').to_timeout
+  end
+end

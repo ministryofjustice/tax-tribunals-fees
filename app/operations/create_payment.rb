@@ -1,6 +1,6 @@
 class CreatePayment
   include SimplifiedLogging
-  attr_reader :liability, :payment
+  attr_reader :liability
 
   def initialize(liability_id)
     @liability = FeeLiability.find(liability_id)

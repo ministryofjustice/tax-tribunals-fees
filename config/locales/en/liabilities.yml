@@ -1,5 +1,8 @@
 en:
   liabilities:
+    pay:
+      govpay_api_error: |
+        The payment gateway isn’t available. Please try again later.
     find_another_case: Fine another case
     post_pay:
       payment_error: |
