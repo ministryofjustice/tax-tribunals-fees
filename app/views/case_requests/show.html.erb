@@ -21,8 +21,9 @@
       <% if @case_request.all_fees_paid? %>
         <%= t('.payments_are_up_to_date') %>
         <%= t('.other_fees_may_be_due') %>
+      <% else %>
+        <%= render @case_request.liabilities %>
       <% end %>
-      <%= render @case_request.liabilities %>
     </div>
 <% else %>
   <p class="lede">

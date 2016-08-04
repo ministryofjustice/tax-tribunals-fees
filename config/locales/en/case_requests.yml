@@ -2,6 +2,7 @@ en:
   case_requests:
     could_not_find_case: Could not find a case on our systems with these details.
     new:
+      find_case: Find case
       where_to_find_details: |
         You will find your case reference and confirmation code on the letter
         the tribunal sent you.

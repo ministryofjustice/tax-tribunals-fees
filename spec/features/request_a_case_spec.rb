@@ -8,9 +8,9 @@ RSpec.feature 'Request a brand new case' do
     let(:make_a_case_request) {
       visit '/'
       click_on 'Start now'
-      fill_in 'Case Reference', with: 'TC/2012/00001'
-      fill_in 'Confirmation Code', with: 'ABC123'
-      click_on 'Find Case'
+      fill_in 'Case reference', with: 'TC/2012/00001'
+      fill_in 'Confirmation code', with: 'ABC123'
+      click_on 'Find case'
     }
 
     describe 'and glimr responds normally' do
@@ -59,9 +59,9 @@ RSpec.feature 'Request a brand new case' do
     scenario do
       visit '/'
       click_on 'Start now'
-      fill_in 'Case Reference', with: 'some junk'
-      fill_in 'Confirmation Code', with: 'ABC123'
-      click_on 'Find Case'
+      fill_in 'Case reference', with: 'some junk'
+      fill_in 'Confirmation code', with: 'ABC123'
+      click_on 'Find case'
       expect(page).to have_text('Sorry - we could not find your case.')
       expect(page).to have_text('Case reference is invalid')
     end
@@ -71,8 +71,8 @@ RSpec.feature 'Request a brand new case' do
     scenario do
       visit '/'
       click_on 'Start now'
-      fill_in 'Case Reference', with: 'some junk'
-      click_on 'Find Case'
+      fill_in 'Case reference', with: 'some junk'
+      click_on 'Find case'
       expect(page).to have_text('Sorry - we could not find your case.')
       expect(page).to have_text("Confirmation code can't be blank")
     end

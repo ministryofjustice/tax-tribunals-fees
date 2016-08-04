@@ -71,7 +71,7 @@ RSpec.shared_examples 'govpay payment response' do
     }.to_json
   }
 
-  let!(:liability) { create(:liability) }
+  let(:liability) { create(:liability) }
 
   let(:request_body) {
     {
