@@ -1,12 +1,22 @@
-class Liability < ApplicationRecord
-  belongs_to :case_request
+require 'bcrypt'
 
-  validates :glimr_id, :description, :amount, presence: true
+class Fee < ApplicationRecord
+  include BCrypt
 
+  attr_accessor :confirmation_code
+
+  validates :case_reference,
+    :confirmation_code,
+    :glimr_id,
+    :description,
+    :amount,
+    presence: true
+
+  before_save :crypt_confirmation_code, if: :confirmation_code
   after_create :set_govpay_reference!
 
   def govpay_description
-    "#{case_request.case_reference} - #{description}"
+    "#{case_reference} - #{description}"
   end
 
   def amount_in_pounds
@@ -26,6 +36,10 @@ class Liability < ApplicationRecord
   end
 
   private
+
+  def crypt_confirmation_code
+    self.confirmation_code_digest = Password.create(confirmation_code)
+  end
 
   def set_govpay_reference!
     update(govpay_reference: "#{glimr_id}G#{timestamp}")

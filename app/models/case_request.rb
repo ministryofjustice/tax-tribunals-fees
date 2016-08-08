@@ -1,5 +1,15 @@
-class CaseRequest < ApplicationRecord
-  has_many :liabilities
+class CaseRequest
+  include ActiveModel::Model
+
+  attr_accessor :case_reference,
+    :confirmation_code,
+    :liabilities
+
+  def initialize(opts = {})
+    @case_reference = opts[:case_reference]
+    @confirmation_code = opts[:confirmation_code]
+    @liabilities = []
+  end
 
   validates :case_reference,
     presence: true,
@@ -10,16 +20,26 @@ class CaseRequest < ApplicationRecord
   # Skip if there are already errors to save ourselves a roundtrip to GLiMR
   validate :case_must_exist_on_glimr, if: -> { errors.empty? }
 
-  before_create :set_title_and_jurisdiction
-  after_create :create_liabilities!
-
-  def liabilities?
-    liabilities.exists?
+  def process!
+    fee_liabilities.each do |liability|
+      Fee.find_or_create_by(case_reference: case_reference,
+                            description: liability.description,
+                            amount: liability.amount,
+                            glimr_id: liability.glimr_id).
+        tap { |f|
+          # Becaue it is stored as a BCrypt digest.
+          f.update_attributes(confirmation_code: confirmation_code)
+          liabilities << f
+        }
+    end
   end
 
   def all_fees_paid?
-    return unless liabilities?
-    liabilities.all?(&:paid?)
+    liabilities? && liabilities.all?(&:paid?)
+  end
+
+  def liabilities?
+    liabilities.present?
   end
 
   private
@@ -28,20 +48,7 @@ class CaseRequest < ApplicationRecord
     @glimr_case_request ||= Glimr.find_case(case_reference, confirmation_code)
   end
 
-  def set_title_and_jurisdiction
-    self.case_title = glimr_case_request.title
-    self.glimr_jurisdiction = glimr_case_request.jurisdiction
-  end
-
-  def create_liabilities!
-    glimr_case_request.fee_liabilities.each do |liability|
-      liabilities.create(
-        description: liability.description,
-        amount: liability.amount,
-        glimr_id: liability.glimr_id
-      )
-    end
-  end
+  delegate :fee_liabilities, :title, to: :glimr_case_request
 
   def case_must_exist_on_glimr
     if glimr_case_request.error?

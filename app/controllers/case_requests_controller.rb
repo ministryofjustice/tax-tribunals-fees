@@ -4,9 +4,9 @@ class CaseRequestsController < ApplicationController
   end
 
   def create
-    @case_request = CaseRequest.find_or_initialize_by(case_request_params)
+    @case_request = CaseRequest.new(case_request_params)
 
-    if @case_request.save
+    if @case_request.process!
       render 'show'
     else
       render 'new'

@@ -1,6 +1,6 @@
 en:
-  liabilities:
-    liability:
+  fees:
+    fee:
       pay_now: Pay now
       gov_pay_redirect: |
         You will be redirected to GOV.UK Pay, an official secure payments
