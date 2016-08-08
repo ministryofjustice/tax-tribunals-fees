@@ -1,0 +1,16 @@
+<div class="grid-row payments-row">
+  <div class="column-one-third">
+    <div class="data">
+      <h2 class="bold-xlarge"><%= number_to_currency(liability.amount_in_pounds) %></h2>
+      <p class="bold-small"><%= liability.description %></p>
+    </div>
+  </div>
+  <div class="column-two-thirds">
+    <p>
+    <%= link_to t('.pay_now'), pay_liability_url(liability), class: 'button' %>
+    </p>
+    <p class="font-xsmall">
+    <%= t('.gov_pay_redirect') %>
+    </p>
+  </div>
+</div>

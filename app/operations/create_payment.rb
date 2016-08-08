@@ -3,7 +3,7 @@ class CreatePayment
   attr_reader :liability
 
   def initialize(liability_id)
-    @liability = FeeLiability.find(liability_id)
+    @liability = Liability.find(liability_id)
   end
 
   def payment

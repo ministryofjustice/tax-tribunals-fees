@@ -1,13 +1,12 @@
 class CaseRequestsController < ApplicationController
   def new
-    @case_request_form = Forms::NewCaseRequest.new
+    @case_request = CaseRequest.new
   end
 
   def create
-    @case_request_form = Forms::NewCaseRequest.new(case_request_params)
+    @case_request = CaseRequest.find_or_initialize_by(case_request_params)
 
-    if @case_request_form.save
-      @case_request = @case_request_form.case_request
+    if @case_request.save
       render 'show'
     else
       render 'new'
@@ -17,7 +16,7 @@ class CaseRequestsController < ApplicationController
   private
 
   def case_request_params
-    params.require(:forms_new_case_request).
+    params.require(:case_request).
       permit(:case_reference, :confirmation_code).to_h
   end
 end

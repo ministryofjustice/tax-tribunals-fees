@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160607133708) do
+ActiveRecord::Schema.define(version: 20160802155244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,9 +22,10 @@ ActiveRecord::Schema.define(version: 20160607133708) do
     t.integer  "glimr_jurisdiction", null: false
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
+    t.string   "confirmation_code"
   end
 
-  create_table "fee_liabilities", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+  create_table "liabilities", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid     "case_request_id"
     t.string   "description"
     t.integer  "amount"

@@ -3,6 +3,7 @@ require 'shared_examples_for_govpay'
 require 'shared_examples_for_glimr'
 
 RSpec.describe 'Pay for a case', type: :request do
+  include_examples 'case fee is £20'
   include_examples 'govpay payment response'
 
   # The liability is set up in the shared example
@@ -49,7 +50,7 @@ RSpec.describe 'Pay for a case', type: :request do
         get "/liabilities/#{liability.id}/post_pay"
         liability.reload
         expect(response.body).to include(liability.case_request.case_reference)
-        expect(response.body).to match(liability.case_request.case_title)
+        expect(response.body).to match(CGI.escapeHTML(liability.case_request.case_title))
         expect(response.body).to include(liability.govpay_payment_id.upcase)
       end
     end

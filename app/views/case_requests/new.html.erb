@@ -10,13 +10,13 @@
   </h1>
 <% end %>
 
-<%= GovukElementsErrorsHelper.error_summary @case_request_form,
+<%= GovukElementsErrorsHelper.error_summary @case_request,
   t('.could_not_find_case'), t('.check_details') %>
 
-<%= form_for @case_request_form, url: case_requests_path do |f| %>
+<%= form_for @case_request do |f| %>
   <%= f.text_field :case_reference %>
   <%= f.text_field :confirmation_code %>
-  <%= f.submit class: 'button' %>
+  <%= f.submit(t('.find_case'), class: 'button') %>
 <% end %>
 
 <details class="find-case-help">

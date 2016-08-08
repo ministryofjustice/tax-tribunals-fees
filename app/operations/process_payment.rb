@@ -11,7 +11,7 @@ class ProcessPayment
   attr_reader :liability, :payment, :glimr
 
   def initialize(liability_id)
-    @liability = FeeLiability.find(liability_id)
+    @liability = Liability.find(liability_id)
     @payment = Govpay.get_payment(@liability).tap { |gp|
       @liability.update(govpay_payment_status: gp.status,
                         govpay_payment_message: gp.message)

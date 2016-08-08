@@ -29,6 +29,27 @@ RSpec.shared_examples 'request payable case fees' do |code, g_response|
   end
 end
 
+RSpec.shared_examples 'case fee is £20' do
+  let(:response_body) {
+    {
+      'jurisdictionId' => 8,
+      'tribunalCaseId' => 60_029,
+      'caseTitle' => 'You vs HM Revenue & Customs',
+      'feeLiabilities' =>
+      [{ 'feeLiabilityId' => 7,
+         'onlineFeeTypeDescription' => 'Lodgement Fee',
+         'payableWithUnclearedInPence' => 2000 }]
+    }
+  }
+
+  before do
+    stub_request(:post, "https://glimr-test.dsd.io/requestpayablecasefees").
+      with(body: /jurisdictionId=8&caseNumber=.+&caseConfirmationCode=ABC123/,
+           headers: { 'Accept' => 'application/json' }).
+      to_return(status: 200, body: response_body.to_json)
+  end
+end
+
 RSpec.shared_examples 'report payment taken to glimr' do
   before do
     stub_request(:post, "https://glimr-test.dsd.io/paymenttaken").
