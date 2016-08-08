@@ -6,7 +6,8 @@ class CaseRequestsController < ApplicationController
   def create
     @case_request = CaseRequest.new(case_request_params)
 
-    if @case_request.process!
+    if @case_request.valid?
+      @case_request.process!
       render 'show'
     else
       render 'new'

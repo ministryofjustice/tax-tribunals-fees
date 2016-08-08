@@ -1,8 +1,8 @@
 module Govpay
   module Requests
     class GetPaymentStatus < Base
-      def initialize(fee_liability)
-        @fee_liability = fee_liability
+      def initialize(fee)
+        @fee = fee
       end
 
       def call
@@ -20,7 +20,7 @@ module Govpay
       end
 
       def endpoint
-        "/payments/#{@fee_liability.govpay_payment_id}"
+        "/payments/#{@fee.govpay_payment_id}"
       end
     end
   end

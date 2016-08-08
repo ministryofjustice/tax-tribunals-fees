@@ -6,7 +6,6 @@ class Fee < ApplicationRecord
   attr_accessor :confirmation_code
 
   validates :case_reference,
-    :confirmation_code,
     :glimr_id,
     :description,
     :amount,

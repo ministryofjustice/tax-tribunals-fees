@@ -3,12 +3,12 @@ class CaseRequest
 
   attr_accessor :case_reference,
     :confirmation_code,
-    :liabilities
+    :fees
 
   def initialize(opts = {})
     @case_reference = opts[:case_reference]
     @confirmation_code = opts[:confirmation_code]
-    @liabilities = []
+    @fees = []
   end
 
   validates :case_reference,
@@ -21,28 +21,34 @@ class CaseRequest
   validate :case_must_exist_on_glimr, if: -> { errors.empty? }
 
   def process!
-    fee_liabilities.each do |liability|
-      Fee.find_or_create_by(case_reference: case_reference,
-                            description: liability.description,
-                            amount: liability.amount,
-                            glimr_id: liability.glimr_id).
-        tap { |f|
-          # Becaue it is stored as a BCrypt digest.
-          f.update_attributes(confirmation_code: confirmation_code)
-          liabilities << f
-        }
+    fee_liabilities.each do |fee|
+      prepare_fee(fee)
     end
   end
 
   def all_fees_paid?
-    liabilities? && liabilities.all?(&:paid?)
+    fees? && fees.all?(&:paid?)
   end
 
-  def liabilities?
-    liabilities.present?
+  def fees?
+    fees.present?
   end
 
   private
+
+  def prepare_fee(fee)
+    Fee.create(
+      case_reference: case_reference,
+      case_title: title,
+      description: fee.description,
+      amount: fee.amount,
+      glimr_id: fee.glimr_id
+    ).tap { |f|
+      fees << f
+      # Because it is stored as a BCrypt digest.
+      f.update_attributes(confirmation_code: confirmation_code)
+    }
+  end
 
   def glimr_case_request
     @glimr_case_request ||= Glimr.find_case(case_reference, confirmation_code)

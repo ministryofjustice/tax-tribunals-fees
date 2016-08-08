@@ -1,5 +1,5 @@
 require 'rails_helper'
-require 'shared_examples_for_glimr'
+require 'support/shared_examples_for_glimr'
 
 RSpec.feature 'Before requesting a case' do
   context 'Glimr is up' do

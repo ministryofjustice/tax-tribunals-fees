@@ -1,8 +1,8 @@
 module Govpay
   module Requests
     class CreatePayment < Base
-      def initialize(fee_liability)
-        @fee_liability = fee_liability
+      def initialize(fee)
+        @fee = fee
       end
 
       def call
@@ -26,10 +26,10 @@ module Govpay
       def body
         JSON.dump(
           return_url: Rails.application.
-            routes.url_helpers.post_pay_liability_url(@fee_liability),
-          description: @fee_liability.govpay_description,
-          reference: @fee_liability.govpay_reference,
-          amount: @fee_liability.amount
+            routes.url_helpers.post_pay_fee_url(@fee),
+          description: @fee.govpay_description,
+          reference: @fee.govpay_reference,
+          amount: @fee.amount
         )
       end
     end

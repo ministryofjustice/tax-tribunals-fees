@@ -18,6 +18,7 @@ ActiveRecord::Schema.define(version: 20160808131938) do
 
   create_table "fees", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "case_reference"
+    t.string   "case_title"
     t.string   "confirmation_code_digest"
     t.string   "description"
     t.integer  "amount"

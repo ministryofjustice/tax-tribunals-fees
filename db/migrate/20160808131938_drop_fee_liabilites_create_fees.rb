@@ -2,6 +2,7 @@ class DropFeeLiabilitesCreateFees < ActiveRecord::Migration[5.0]
   def change
     create_table :fees, id: :uuid do |t|
       t.string :case_reference, index: true
+      t.string :case_title
       t.string :confirmation_code_digest
       t.string :description
       t.integer :amount
