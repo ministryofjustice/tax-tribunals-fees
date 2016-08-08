@@ -22,6 +22,7 @@ RSpec.configure do |config|
   config.before(:each) do
     I18n.locale = I18n.default_locale
     DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.start
     stub_request(:post, 'https://glimr-test.dsd.io/glimravailable').
       with(:headers => {'Accept' => 'application/json'}).
       to_return(status: 200, body: '{"glimrAvailable":"yes"}')
@@ -29,10 +30,6 @@ RSpec.configure do |config|
 
   config.before(:each, js: true) do
     DatabaseCleaner.strategy = :truncation
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.start
   end
 
   config.after(:each) do

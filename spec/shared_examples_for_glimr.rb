@@ -29,6 +29,7 @@ RSpec.shared_examples 'request payable case fees' do |code, g_response|
   end
 end
 
+
 RSpec.shared_examples 'case fee is £20' do
   let(:response_body) {
     {

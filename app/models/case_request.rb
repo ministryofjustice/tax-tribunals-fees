@@ -11,7 +11,7 @@ class CaseRequest < ApplicationRecord
   validate :case_must_exist_on_glimr, if: -> { errors.empty? }
 
   before_create :set_title_and_jurisdiction
-  after_create :create_liabilities!
+  after_save :create_liabilities!, on: [:create, :update]
 
   def liabilities?
     liabilities.exists?
