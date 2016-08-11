@@ -1,4 +1,4 @@
-class LiabilitiesController < ApplicationController
+class FeesController < ApplicationController
   def pay
     operation = CreatePayment.new(params[:id])
 
@@ -14,8 +14,7 @@ class LiabilitiesController < ApplicationController
 
   def post_pay
     operation = ProcessPayment.new(params[:id])
-    @liability = operation.liability
-    @case_request = @liability.case_request
+    @fee = operation.fee
     if operation.error?
       flash[:error] = operation.error_message || t('.payment_error')
       render 'post_pay_error'

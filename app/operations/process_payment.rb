@@ -8,41 +8,41 @@ class ProcessPayment
   # consider it paid.
   UPDATE_GLIMR = ENV['UPDATE_GLIMR'] || !Rails.env.development?
 
-  attr_reader :liability, :payment, :glimr
+  attr_reader :fee, :payment, :glimr
 
-  def initialize(liability_id)
-    @liability = Liability.find(liability_id)
-    @payment = Govpay.get_payment(@liability).tap { |gp|
-      @liability.update(govpay_payment_status: gp.status,
-                        govpay_payment_message: gp.message)
+  def initialize(fee_id)
+    @fee = Fee.find(fee_id)
+    @payment = Govpay.get_payment(@fee).tap { |gp|
+      @fee.update(govpay_payment_status: gp.status,
+                  govpay_payment_message: gp.message)
     }
-    if @liability.paid? && !@payment.error? && UPDATE_GLIMR
-      @glimr = Glimr.fee_paid(liability)
+    if @fee.paid? && !@payment.error? && UPDATE_GLIMR
+      @glimr = Glimr.fee_paid(fee)
     end
     log_errors if error?
   end
 
   def error?
-    payment.error? || liability.failed? || glimr.try(:error?)
+    payment.error? || fee.failed? || glimr.try(:error?)
   end
 
   def error_message
-    # The liability error message is a copy of the govpay message.
+    # The fee error message is a copy of the govpay message.
     payment.message || glimr.try(:error_message)
   end
 
   private
 
   def log_errors
-    log_liability_error if liability.failed?
+    log_fee_error if fee.failed?
     log_govpay_error if payment.error?
     log_glimr_error if glimr.try(:error?)
   end
 
-  def log_liability_error
-    log_error('payment_processor_liability_failure',
-      liability.govpay_payment_status,
-      liability.govpay_payment_message)
+  def log_fee_error
+    log_error('payment_processor_fee_failure',
+      fee.govpay_payment_status,
+      fee.govpay_payment_message)
   end
 
   def log_govpay_error

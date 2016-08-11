@@ -10,32 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160802155244) do
+ActiveRecord::Schema.define(version: 20160808131938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
-  create_table "case_requests", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.string   "case_reference",     null: false
-    t.string   "case_title",         null: false
-    t.integer  "glimr_jurisdiction", null: false
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.string   "confirmation_code"
-  end
-
-  create_table "liabilities", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.uuid     "case_request_id"
+  create_table "fees", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "case_reference"
+    t.string   "case_title"
+    t.string   "confirmation_code_digest"
     t.string   "description"
     t.integer  "amount"
     t.integer  "glimr_id"
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "govpay_reference"
-    t.string   "govpay_payment_id"
     t.string   "govpay_payment_status"
     t.string   "govpay_payment_message"
+    t.string   "govpay_reference"
+    t.string   "govpay_payment_id"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.index ["case_reference"], name: "index_fees_on_case_reference", using: :btree
   end
 
 end

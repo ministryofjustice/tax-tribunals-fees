@@ -1,27 +1,23 @@
 require 'rails_helper'
-require 'shared_examples_for_glimr'
+require 'support/shared_examples_for_glimr'
 
 RSpec.feature 'Request a brand new case' do
   include_examples 'glimr availability request', glimrAvailable: 'yes'
+
+  case_number = 'TC/2012/00001'
+  confirmation_code = 'ABC123'
 
   describe 'happy path' do
     let(:make_a_case_request) {
       visit '/'
       click_on 'Start now'
-      fill_in 'Case reference', with: 'TC/2012/00001'
-      fill_in 'Confirmation code', with: 'ABC123'
+      fill_in 'Case reference', with: case_number
+      fill_in 'Confirmation code', with: confirmation_code
       click_on 'Find case'
     }
 
     describe 'and glimr responds normally' do
-      include_examples 'request payable case fees', 200,
-        'jurisdictionId' => 8,
-        'tribunalCaseId' => 60_029,
-        'caseTitle' => 'You vs HM Revenue & Customs',
-        'feeLiabilities' =>
-      [{ 'feeLiabilityId' => 7,
-         'onlineFeeTypeDescription' => 'Lodgement Fee',
-         'payableWithUnclearedInPence' => 2000 }]
+      include_examples 'a case fee of £20 is due', case_number, confirmation_code
 
       scenario 'then we show the fee' do
         make_a_case_request
@@ -32,9 +28,11 @@ RSpec.feature 'Request a brand new case' do
     end
 
     describe 'and glimr returns an error' do
-      include_examples 'request payable case fees', 418,
-        'glimrerrorcode' => 418,
-        'message' => 'I’m a teapot'
+      include_examples 'generic glimr response',
+        case_number,
+        confirmation_code,
+        418,
+        glimrerrorcode: 418, message: 'I’m a teapot'
 
       scenario 'then we do not show the fee' do
         make_a_case_request

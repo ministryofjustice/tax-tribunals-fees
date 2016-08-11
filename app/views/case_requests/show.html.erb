@@ -1,9 +1,9 @@
 <h1 class="heading-large">
   <span class="heading-secondary"><%= @case_request.case_reference %></span>
-  <%= @case_request.case_title %>
+  <%= @case_request.title %>
 </h1>
 
-<% if @case_request.liabilities? %>
+<% if @case_request.fees? %>
   <p class="lede">
     <%= t('.you_need_to_pay') %>
   </p>
@@ -22,7 +22,7 @@
         <%= t('.payments_are_up_to_date') %>
         <%= t('.other_fees_may_be_due') %>
       <% else %>
-        <%= render @case_request.liabilities %>
+        <%= render @case_request.fees %>
       <% end %>
     </div>
 <% else %>

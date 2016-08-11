@@ -71,14 +71,14 @@ RSpec.shared_examples 'govpay payment response' do
     }.to_json
   }
 
-  let(:liability) { create(:liability) }
+  let(:fee) { create(:fee) }
 
   let(:request_body) {
     {
-      return_url: CGI.unescape(post_pay_liability_url(liability)),
-      description: liability.govpay_description,
-      reference: liability.govpay_reference,
-      amount: liability.amount
+      return_url: CGI.unescape(post_pay_fee_url(fee)),
+      description: fee.govpay_description,
+      reference: fee.govpay_reference,
+      amount: fee.amount
     }.to_json
   }
 
@@ -105,14 +105,14 @@ RSpec.shared_examples 'govpay payment response' do
 end
 
 RSpec.shared_examples 'govpay returns a 404' do
-  let!(:liability) { create(:liability) }
+  let!(:fee) { create(:fee) }
 
   let(:request_body) {
     {
-      return_url: CGI.unescape(post_pay_liability_url(liability)),
-      description: liability.govpay_description,
-      reference: liability.govpay_reference,
-      amount: liability.amount
+      return_url: CGI.unescape(post_pay_fee_url(fee)),
+      description: fee.govpay_description,
+      reference: fee.govpay_reference,
+      amount: fee.amount
     }.to_json
   }
 

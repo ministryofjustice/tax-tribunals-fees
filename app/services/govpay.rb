@@ -10,11 +10,11 @@ require 'govpay/responses/payment_status'
 module Govpay
   module_function
 
-  def create_payment(fee_liability)
-    Requests::CreatePayment.call(fee_liability)
+  def create_payment(fee)
+    Requests::CreatePayment.call(fee)
   end
 
-  def get_payment(fee_liability)
-    Requests::GetPaymentStatus.call(fee_liability)
+  def get_payment(fee)
+    Requests::GetPaymentStatus.call(fee)
   end
 end

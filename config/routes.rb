@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     only: [:new, :create],
     path_names: { new: '' }
 
-  resources :liabilities, only: [] do
+  resources :fees, only: [] do
     member do
       get :pay
       get :post_pay
