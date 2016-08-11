@@ -1,29 +1,27 @@
 module Glimr
   module Requests
-    class FeePaid < Base
+    class FeePaid
+      include Glimr::Api
+
       def initialize(fee_liability)
         @fee_liability = fee_liability
       end
 
       def call
-        if response.success?
-          Responses::FeePayment.new(response)
+        if ok?
+          Responses::FeePayment.new(response_body)
         else
-          Responses::CaseNotFound.new(response)
+          Responses::CaseNotFound.new(response_body)
         end
       end
 
       private
 
-      def response
-        @response ||= api.post(endpoint, body)
-      end
-
       def endpoint
         '/paymenttaken'
       end
 
-      def body
+      def request_body
         {
           feeLiabilityId: @fee_liability.glimr_id,
           paymentReference: @fee_liability.govpay_reference,

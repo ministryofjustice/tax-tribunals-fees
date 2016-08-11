@@ -138,9 +138,8 @@ RSpec.describe 'Pay for a case', type: :request do
       it 'alerts the user to the failure and reason' do
         get "/fees/#{fee.id}/post_pay"
         fee.reload
-        expect(response.body).to include('try making the payment again')
-        expect(response.body).to include('error updating your case after payment')
-        expect(response.body).to include('we couldn’t take your payment')
+        expect(response.body).
+          to include('error updating your case with your payment details')
       end
     end
   end

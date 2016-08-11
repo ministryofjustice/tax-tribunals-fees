@@ -37,7 +37,7 @@ RSpec.feature 'Request a brand new case' do
       scenario 'then we do not show the fee' do
         make_a_case_request
         # TODO: This is not ideal.  It should alert the user to the failure.
-        expect(page).to have_text('Sorry - we could not find your case.')
+        expect(page).to have_text('service is currently unavailable')
       end
     end
 

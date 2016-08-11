@@ -95,11 +95,19 @@ RSpec.shared_examples 'no fees then a £20 fee' do |case_number, confirmation_co
 end
 
 RSpec.shared_examples 'report payment taken to glimr' do
+  let(:paymenttaken_response) {
+    {
+      feeLiabilityId: 123456789,
+      feeTransactionId: 123456789,
+      paidAmountInPence: 9999
+    }.to_json
+  }
+
   before do
     stub_request(:post, "https://glimr-test.dsd.io/paymenttaken").
       with(body: /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/,
            headers: { 'Accept' => 'application/json' }).
-      to_return(status: 200)
+      to_return(status: 200, body: paymenttaken_response)
   end
 end
 

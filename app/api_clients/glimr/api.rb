@@ -1,24 +1,43 @@
 module Glimr
-  class Api
+  module Api
+    class PaymentNotificationFailure < StandardError; end
     class Unavailable < StandardError; end
 
-    include HTTParty
-
-    base_uri Rails.configuration.glimr_api_url
-    default_timeout 8 # seconds
-    format :json
-    headers Accept: 'application/json'
-
-    def post(endpoint, body)
-      post_handler(endpoint, body)
-    rescue SocketError, Timeout::Error => e
-      raise Glimr::Api::Unavailable, e
+    def self.included(base)
+      base.extend(ClassMethods)
     end
 
-    private
+    module ClassMethods
+      def call(*args)
+        new(*args).call
+      end
+    end
 
-    def post_handler(endpoint, body)
-      self.class.post(endpoint, body: body)
+    def post
+      @post ||= RestClient.post(
+        "#{Rails.configuration.glimr_api_url}#{endpoint}",
+        request_body,
+        content_type: :json,
+        accept: :json
+      )
+    rescue RestClient::Exception => e
+      if endpoint == '/paymenttaken'
+        raise Glimr::Api::PaymentNotificationFailure, e
+      else
+        raise Glimr::Api::Unavailable, e
+      end
+    end
+
+    def ok?
+      post.code == 200
+    end
+
+    def response_body
+      @body ||= JSON.parse(post.body, symbolize_names: true)
+    end
+
+    def request_body
+      {}
     end
   end
 end

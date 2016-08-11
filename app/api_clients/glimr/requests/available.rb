@@ -1,23 +1,21 @@
 module Glimr
   module Requests
-    class Available < Base
+    class Available
+      include Glimr::Api
+
       def call
-        if response.success?
-          Responses::Availability.new(response)
+        unless ok? && available?
+          raise Glimr::Api::Unavailable, response_body
         else
-          # This is being tested by the feature, but simplecov does not
-          # seem to be able to work that out.
-          # :nocov:
-          Responses::Availability.new('glimrAvailable' => 'no')
-          # :nocov:
+          self
         end
       end
 
-      private
-
-      def response
-        @response ||= api.post(endpoint, {})
+      def available?
+        response_body[:glimrAvailable] == 'yes'
       end
+
+      private
 
       def endpoint
         '/glimravailable'

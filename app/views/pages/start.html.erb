@@ -15,10 +15,14 @@
       <%= t('.how_long_does_it_take') %>
     </p>
     <p>
-      <% if @glimr_available %>
-        <%= link_to t('.start_now') , new_case_request_path, class: 'button button-start' %>
+      <% if @glimr_payment_notification_error %>
+        <h1 class='heading-large'><%= t('glimr.payment_notifitcation_failure') %></h1>
+      <% end %>
+
+      <% if @service_is_not_available %>
+        <h1 class='heading-large'><%= t('apis.service_unavailable') %></h1>
       <% else %>
-        <h1 class='heading-large'><%= t('glimr.service_unavailable') %></h1>
+        <%= link_to t('.start_now') , new_case_request_path, class: 'button button-start' %>
       <% end %>
     </p>
     <h2 class="heading-medium"><%= t('.before_you_start') %></h2>
