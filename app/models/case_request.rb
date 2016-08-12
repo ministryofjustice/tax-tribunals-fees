@@ -5,9 +5,9 @@ class CaseRequest
     :confirmation_code,
     :fees
 
-  def initialize(opts)
-    @case_reference    = opts.fetch(:case_reference)
-    @confirmation_code = opts.fetch(:confirmation_code)
+  def initialize(case_reference, confirmation_code)
+    @case_reference    = case_reference
+    @confirmation_code = confirmation_code
     @fees              = []
   end
 
