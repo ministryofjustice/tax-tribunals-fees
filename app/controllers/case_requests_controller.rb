@@ -1,6 +1,9 @@
 class CaseRequestsController < ApplicationController
   def new
-    @case_request = CaseRequest.new
+    @case_request = CaseRequest.new(
+      case_reference:     nil,
+      confirmation_code:  nil
+    )
   end
 
   def create

@@ -25,6 +25,7 @@ group :development, :test do
   gem 'launchy'
   gem 'pry-byebug'
   gem 'rspec-rails'
+  gem 'mutant-rspec'
 end
 
 group :test do

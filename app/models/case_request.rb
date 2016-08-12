@@ -5,10 +5,10 @@ class CaseRequest
     :confirmation_code,
     :fees
 
-  def initialize(opts = {})
-    @case_reference = opts[:case_reference]
-    @confirmation_code = opts[:confirmation_code]
-    @fees = []
+  def initialize(opts)
+    @case_reference    = opts.fetch(:case_reference)
+    @confirmation_code = opts.fetch(:confirmation_code)
+    @fees              = []
   end
 
   validates :case_reference,
@@ -27,7 +27,7 @@ class CaseRequest
   end
 
   def all_fees_paid?
-    fees? && fees.all?(&:paid?)
+    fees.all?(&:paid?)
   end
 
   def fees?
