@@ -18,7 +18,10 @@ class CaseRequestsController < ApplicationController
   private
 
   def case_request_params
-    p = params.require(:case_request).permit(:case_reference, :confirmation_code).to_h
-    [ p.fetch(:case_reference), p.fetch(:confirmation_code) ]
+    p = params.
+        require(:case_request).
+        permit(:case_reference, :confirmation_code).
+        to_h
+    [p.fetch(:case_reference), p.fetch(:confirmation_code)]
   end
 end
