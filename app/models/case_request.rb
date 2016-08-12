@@ -21,8 +21,10 @@ class CaseRequest
   validate :case_must_exist_on_glimr, if: -> { errors.empty? }
 
   def process!
-    fee_liabilities.each do |fee|
-      prepare_fee(fee)
+    unless glimr_case_request.error?
+      fee_liabilities.each do |fee|
+        prepare_fee(fee)
+      end
     end
   end
 
