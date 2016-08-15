@@ -10,8 +10,6 @@ module Glimr
       def call
         if ok?
           Responses::FeePayment.new(response_body)
-        else
-          Responses::CaseNotFound.new(response_body)
         end
       end
 

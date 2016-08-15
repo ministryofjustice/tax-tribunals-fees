@@ -4,10 +4,10 @@ module Glimr
       include Glimr::Api
 
       def call
-        unless ok? && available?
-          raise Glimr::Api::Unavailable, response_body
-        else
+        if ok? && available?
           self
+        else
+          raise Glimr::Api::Unavailable, response_body
         end
       end
 

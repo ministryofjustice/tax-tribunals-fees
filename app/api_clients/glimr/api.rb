@@ -2,6 +2,7 @@ module Glimr
   module Api
     class PaymentNotificationFailure < StandardError; end
     class Unavailable < StandardError; end
+    class CaseNotFound < StandardError; end
 
     def self.included(base)
       base.extend(ClassMethods)
@@ -14,12 +15,9 @@ module Glimr
     end
 
     def post
-      @post ||= RestClient.post(
-        "#{Rails.configuration.glimr_api_url}#{endpoint}",
-        request_body,
-        content_type: :json,
-        accept: :json
-      )
+      @post ||= post_to_client
+    rescue RestClient::NotFound
+      raise Glimr::Api::CaseNotFound
     rescue RestClient::Exception => e
       if endpoint == '/paymenttaken'
         raise Glimr::Api::PaymentNotificationFailure, e
@@ -38,6 +36,17 @@ module Glimr
 
     def request_body
       {}
+    end
+
+    private
+
+    def post_to_client
+      RestClient.post(
+        "#{Rails.configuration.glimr_api_url}#{endpoint}",
+        request_body,
+        content_type: :json,
+        accept: :json
+      )
     end
   end
 end

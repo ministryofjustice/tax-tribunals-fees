@@ -11,14 +11,8 @@ class CaseRequest
     @fees = []
   end
 
-  validates :case_reference,
-    presence: true,
-    format: { with: %r{\A[a-z]+\/\d+\/\d+\z}i }
-  validates :confirmation_code,
-    presence: true
-
-  # Skip if there are already errors to save ourselves a roundtrip to GLiMR
-  validate :case_must_exist_on_glimr, if: -> { errors.empty? }
+  validates :case_reference, presence: true
+  validates :confirmation_code, presence: true
 
   def process!
     fee_liabilities.each do |fee|
@@ -55,10 +49,4 @@ class CaseRequest
   end
 
   delegate :fee_liabilities, :title, to: :glimr_case_request
-
-  def case_must_exist_on_glimr
-    if glimr_case_request.error?
-      errors.add(:base, I18n.t('case_requests.could_not_find_case'))
-    end
-  end
 end

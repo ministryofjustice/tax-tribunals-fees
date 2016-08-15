@@ -11,8 +11,6 @@ module Glimr
       def call
         if ok?
           Responses::CaseFees.new(response_body)
-        else
-          Responses::CaseNotFound.new(response_body)
         end
       end
 

@@ -50,10 +50,4 @@ class ProcessPayment
       payment.error_code,
       payment.error_message)
   end
-
-  def log_glimr_error
-    log_error('payment_processor_glimr_error',
-      glimr.error_code,
-      glimr.error_message)
-  end
 end
