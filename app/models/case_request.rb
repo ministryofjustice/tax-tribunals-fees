@@ -15,10 +15,8 @@ class CaseRequest
   validates :confirmation_code, presence: true
 
   def process!
-    unless glimr_case_request.error?
-      fee_liabilities.each do |fee|
-        prepare_fee(fee)
-      end
+    fee_liabilities.each do |fee|
+      prepare_fee(fee)
     end
   end
 
