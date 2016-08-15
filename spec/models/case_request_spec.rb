@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CaseRequest do
   let(:case_reference)    { "TC/2016/04512" }
-  let(:confirmation_code) { 'confcode'      }
+  let(:confirmation_code) { 'confcode' }
 
   subject(:case_request) { described_class.new(case_reference, confirmation_code) }
 

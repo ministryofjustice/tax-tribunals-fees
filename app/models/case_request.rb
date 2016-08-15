@@ -6,9 +6,9 @@ class CaseRequest
     :fees
 
   def initialize(case_reference, confirmation_code)
-    @case_reference    = case_reference
+    @case_reference = case_reference
     @confirmation_code = confirmation_code
-    @fees              = []
+    @fees = []
   end
 
   validates :case_reference, presence: true
