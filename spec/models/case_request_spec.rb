@@ -21,8 +21,7 @@ RSpec.describe CaseRequest do
     instance_double(
       Glimr::Responses::CaseFees,
       title:            "Glimr Case Request",
-      fee_liabilities:  fee_liabilities,
-      error?:           false
+      fee_liabilities:  fee_liabilities
     )
   }
 
@@ -54,22 +53,15 @@ RSpec.describe CaseRequest do
 
   describe '#process!' do
     context "when case does not exist in glimr" do
-      let(:glimr_case_request) {
-        instance_double(
-          Glimr::Responses::CaseNotFound,
-          error?: true
-        )
-      }
-
       before do
         allow(Fee).to receive(:create).and_return(fee)
-        allow(Glimr).to receive(:find_case).and_return(glimr_case_request)
+        allow(Glimr).to receive(:find_case).and_raise(Glimr::Api::CaseNotFound)
       end
 
-      it "adds case not found error" do
-        case_request.process!
-        expect(case_request).not_to be_valid
-        expect(case_request.errors.to_a).to eq(["Could not find a case on our systems with these details."])
+      it "raises an error" do
+        expect {
+          case_request.process!
+        }.to raise_error(Glimr::Api::CaseNotFound)
       end
     end
 

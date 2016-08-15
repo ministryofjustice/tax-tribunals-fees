@@ -1,7 +1,12 @@
 en:
   case_requests:
-    could_not_find_case: Could not find a case on our systems with these details.
+    could_not_find_case: We could not find your case
+    check_details: |
+      Please ensure you have entered all details correctly. If you are sure the
+      details are correct and you still cannot find your case, please contact
+      support.
     new:
+      find_your_case: Find your case
       find_case: Find case
       where_to_find_details: |
         You will find your case reference and confirmation code on the letter
@@ -9,12 +14,6 @@ en:
       dont_know_details: 'Don’t know your details?'
       enter_details: |
         Enter your case details from the letter the tribunal sent you.
-      find_your_case: Find your case
-      could_not_find_case: Sorry - we could not find your case.
-      check_details: |
-        Please ensure you have entered all details correctly. If you are sure
-        all details are correct, and you still cannot retrieve your case
-        details, please contact us.
     show:
       payments_are_up_to_date: All outstanding fee payments are up to date.
       other_fees_may_be_due: |
