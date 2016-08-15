@@ -1,3 +1,6 @@
 en:
   glimr:
     service_unavailable: The service is currently unavailable
+    payment_notifitcation_failure: |
+      There was an error updating your case with your payment details.
+      Please contact support.

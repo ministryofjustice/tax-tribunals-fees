@@ -11,7 +11,7 @@
 <% end %>
 
 <%= GovukElementsErrorsHelper.error_summary @case_request,
-  t('.could_not_find_case'), t('.check_details') %>
+  t('case_requests.could_not_find_case'), t('case_requests.check_details') %>
 
 <%= form_for @case_request do |f| %>
   <%= f.text_field :case_reference %>

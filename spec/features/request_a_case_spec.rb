@@ -37,7 +37,7 @@ RSpec.feature 'Request a brand new case' do
       scenario 'then we do not show the fee' do
         make_a_case_request
         # TODO: This is not ideal.  It should alert the user to the failure.
-        expect(page).to have_text('Sorry - we could not find your case.')
+        expect(page).to have_text('service is currently unavailable')
       end
     end
 
@@ -54,14 +54,28 @@ RSpec.feature 'Request a brand new case' do
   end
 
   describe 'with a bad case reference' do
-    scenario do
+    include_examples 'case not found'
+
+    scenario 'then tell the user the case cannot be found' do
       visit '/'
       click_on 'Start now'
       fill_in 'Case reference', with: 'some junk'
       fill_in 'Confirmation code', with: 'ABC123'
       click_on 'Find case'
-      expect(page).to have_text('Sorry - we could not find your case.')
-      expect(page).to have_text('Case reference is invalid')
+      expect(page).to have_text(/we could not find your case/i)
+    end
+  end
+
+  describe 'the case cannot be found' do
+    include_examples 'case not found'
+
+    scenario 'then tell the user the case cannot be found' do
+      visit '/'
+      click_on 'Start now'
+      fill_in 'Case reference', with: 'TC/2016/00001'
+      fill_in 'Confirmation code', with: 'ABC123'
+      click_on 'Find case'
+      expect(page).to have_text(/we could not find your case/i)
     end
   end
 
@@ -71,7 +85,7 @@ RSpec.feature 'Request a brand new case' do
       click_on 'Start now'
       fill_in 'Case reference', with: 'some junk'
       click_on 'Find case'
-      expect(page).to have_text('Sorry - we could not find your case.')
+      expect(page).to have_text(/we could not find your case/i)
       expect(page).to have_text("Confirmation code can't be blank")
     end
   end

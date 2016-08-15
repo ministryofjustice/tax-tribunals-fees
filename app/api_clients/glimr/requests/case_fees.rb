@@ -1,30 +1,26 @@
 module Glimr
   module Requests
-    class CaseFees < Base
+    class CaseFees
+      include Glimr::Api
+
       def initialize(case_reference:, confirmation_code:)
         @case_reference = case_reference
         @confirmation_code = confirmation_code
       end
 
       def call
-        if response.success?
-          Responses::CaseFees.new(response)
-        else
-          Responses::CaseNotFound.new(response)
+        if ok?
+          Responses::CaseFees.new(response_body)
         end
       end
 
       private
 
-      def response
-        @response ||= api.post(endpoint, body)
-      end
-
       def endpoint
         '/requestpayablecasefees'
       end
 
-      def body
+      def request_body
         {
           jurisdictionId: 8, # TODO: Remove when no longer required in API
           caseNumber: @case_reference,

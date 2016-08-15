@@ -28,6 +28,13 @@ RSpec.shared_examples 'generic glimr response' do |case_number, confirmation_cod
   end
 end
 
+RSpec.shared_examples 'case not found' do
+  before do
+    stub_request(:post, "https://glimr-test.dsd.io/requestpayablecasefees").
+      to_return(status: 404)
+  end
+end
+
 RSpec.shared_examples 'no new fees are due' do |case_number, confirmation_code|
   let(:response_body) {
     {
@@ -95,11 +102,19 @@ RSpec.shared_examples 'no fees then a £20 fee' do |case_number, confirmation_co
 end
 
 RSpec.shared_examples 'report payment taken to glimr' do
+  let(:paymenttaken_response) {
+    {
+      feeLiabilityId: 1234,
+      feeTransactionId: 1234,
+      paidAmountInPence: 9999
+    }.to_json
+  }
+
   before do
     stub_request(:post, "https://glimr-test.dsd.io/paymenttaken").
       with(body: /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/,
            headers: { 'Accept' => 'application/json' }).
-      to_return(status: 200)
+      to_return(status: 200, body: paymenttaken_response)
   end
 end
 
