@@ -2,9 +2,11 @@ require 'simplecov'
 require 'simplecov-rcov'
 SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 SimpleCov.minimum_coverage 100
-SimpleCov.start do
-  add_filter "/spec/"
-  add_filter ".bundle/"
+unless ENV['NOCOVERAGE'] # simplecov conflicts with mutant. This lets us turn it off, when necessary.
+  SimpleCov.start do
+    add_filter "/spec/"
+    add_filter ".bundle/"
+  end
 end
 
 RSpec.configure do |config|

@@ -1,10 +1,14 @@
-CLASSES = [
-  'CaseRequest'
+CLASSES = %w[
+  CaseRequest
 ].freeze
 
 task :mutant do
   CLASSES.each do |klass|
-    system "RAILS_ENV=test mutant -r ./config/environment --use rspec #{klass}"
+    vars = 'RAILS_ENV=test NOCOVERAGE=true'
+    flags = '--use rspec --fail-fast'
+    unless system("#{vars} mutant -r ./config/environment #{flags} #{klass}")
+      raise 'Mutation testing failed'
+    end
   end
 end
 
