@@ -10,11 +10,11 @@ module Govpay
       end
 
       def govpay_id
-        @govpay_response['payment_id']
+        @govpay_response[:payment_id]
       end
 
       def payment_url
-        @govpay_response['_links']['next_url']['href']
+        @govpay_response[:_links][:next_url][:href]
       end
     end
   end

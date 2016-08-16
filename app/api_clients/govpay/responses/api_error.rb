@@ -1,6 +1,8 @@
 module Govpay
   module Responses
     class ApiError
+      include Glimr::Api
+
       def initialize(error)
         @error = error
       end

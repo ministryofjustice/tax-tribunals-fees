@@ -10,11 +10,11 @@ module Govpay
       end
 
       def status
-        @govpay_response['state']['status']
+        @govpay_response[:state][:status]
       end
 
       def message
-        @govpay_response['state']['message']
+        @govpay_response[:state][:message]
       end
     end
   end

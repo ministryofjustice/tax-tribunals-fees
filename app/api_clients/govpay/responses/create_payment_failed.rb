@@ -10,12 +10,12 @@ module Govpay
       end
 
       def error_code
-        @govpay_response && @govpay_response['code']
+        @govpay_response && @govpay_response[:code]
       end
 
       def error_message
         return unless @govpay_response
-        @govpay_response['message'] || @govpay_response['description']
+        @govpay_response[:message] || @govpay_response[:description]
       end
     end
   end

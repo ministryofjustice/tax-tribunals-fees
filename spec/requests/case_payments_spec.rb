@@ -23,33 +23,39 @@ RSpec.describe 'Pay for a case', type: :request do
     context 'the GovPay API returns a 404' do
       include_examples 'govpay returns a 404'
 
-      it 'redirects to the govpay payment URL' do
+      it 'alerts the user the service is unavailable' do
         get "/fees/#{fee.id}/pay"
-        expect(response).to redirect_to(root_url)
+        expect(flash[:alert]).to eq('The service is currently unavailable')
+        expect(response).to redirect_to(
+          root_url
+        )
       end
     end
 
     context 'govpay times out' do
       include_examples 'govpay times out'
 
-      it 'alerts the user' do
+      it 'alerts the user the service is unavailable' do
         get "/fees/#{fee.id}/pay"
-        expect(response.body).to include('The service is currently unavailable')
+        expect(flash[:alert]).to eq('The service is currently unavailable')
+        expect(response).to redirect_to(
+          root_url
+        )
       end
     end
   end
 
   # TODO: spec the unhappy path for the race condition whereby the fee
-  # fee gets called early and does not yet have a govpay_payment_id
+  # gets called early and does not yet have a govpay_payment_id
   describe '#post_pay' do
-    context 'successful payment' do
+    context 'a successful payment' do
       include_examples 'report payment taken to glimr'
 
       before do
         get "/fees/#{fee.id}/pay"
       end
 
-      it 'tells the user their payment was taken' do
+      it 'notifies the user that their payment was taken' do
         get "/fees/#{fee.id}/post_pay"
         fee.reload
         expect(response.body).to include(fee.case_reference)
@@ -103,9 +109,8 @@ RSpec.describe 'Pay for a case', type: :request do
       it 'alerts the user to the failure and reason' do
         get "/fees/#{fee.id}/post_pay"
         fee.reload
-        expect(response.body).to include('try making the payment again')
-        expect(response.body).to include('Govpay is not working')
         expect(response.body).to include('we couldn’t take your payment')
+        expect(response.body).to include('try making the payment again')
       end
     end
 
@@ -121,9 +126,9 @@ RSpec.describe 'Pay for a case', type: :request do
         get "/fees/#{fee.id}/post_pay"
       end
 
-      it 'alerts the user to the failure and reason' do
-        expect(response.body).to include('The service is currently unavailable')
+      it 'alerts the user to the failure' do
         get "/fees/#{fee.id}/post_pay"
+        expect(response.body).to include('There was an error updating your case after payment')
       end
     end
 
