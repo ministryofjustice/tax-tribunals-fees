@@ -15,19 +15,17 @@ module Glimr
     end
 
     def post
-      @post ||= post_to_client
-    rescue RestClient::NotFound
-      raise Glimr::Api::CaseNotFound
-    rescue RestClient::Exception => e
-      if endpoint == '/paymenttaken'
-        raise Glimr::Api::PaymentNotificationFailure, e
-      else
-        raise Glimr::Api::Unavailable, e
-      end
+      @post ||=
+        client.post(path: endpoint, body: request_body.to_query).tap { |resp|
+          # Only timeouts and network issues raise errors.
+          handle_response_errors(resp)
+        }
+    rescue Excon::Error => e
+      raise Glimr::Api::Unavailable, e
     end
 
     def ok?
-      post.code == 200
+      post.status == 200
     end
 
     def response_body
@@ -40,12 +38,24 @@ module Glimr
 
     private
 
-    def post_to_client
-      RestClient.post(
-        "#{Rails.configuration.glimr_api_url}#{endpoint}",
-        request_body,
-        content_type: :json,
-        accept: :json
+    def handle_response_errors(resp)
+      if resp.status == 404
+        raise Glimr::Api::CaseNotFound
+      elsif (400..599).cover?(resp.status) && endpoint == '/paymenttaken'
+        raise Glimr::Api::PaymentNotificationFailure, resp.status
+      elsif (400..599).cover?(resp.status)
+        raise Glimr::Api::Unavailable, resp.status
+      end
+    end
+
+    def client
+      @client ||= Excon.new(
+        Rails.configuration.glimr_api_url,
+        headers: {
+          'Content-Type' => 'application/json',
+          'Accept' => 'application/json'
+        },
+        persistent: true
       )
     end
   end

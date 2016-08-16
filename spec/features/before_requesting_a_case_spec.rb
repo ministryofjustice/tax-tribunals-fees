@@ -2,9 +2,8 @@ require 'rails_helper'
 require 'support/shared_examples_for_glimr'
 
 RSpec.feature 'Before requesting a case' do
-  context 'Glimr is up' do
+  context 'Glimr is up' do # This is the default in rails_helper.
     describe 'users can start a new case ' do
-      include_examples 'glimr availability request', glimrAvailable: 'yes'
       scenario do
         visit '/'
         expect(page).to have_text('Start now')
@@ -15,12 +14,29 @@ RSpec.feature 'Before requesting a case' do
   context 'Glimr is down' do
     describe 'users cannot start a new case ' do
       include_examples 'glimr availability request', glimrAvailable: 'no'
-      it_behaves_like 'service is not available'
+
+      scenario 'and are told the service is unavailable' do
+        visit '/'
+        expect(page).not_to have_text('Start now')
+        expect(page).to have_text('The service is currently unavailable')
+      end
     end
 
     describe 'when there is a network error' do
-      include_examples 'network error'
-      it_behaves_like 'service is not available'
+      let(:excon) {
+        class_double(Excon)
+      }
+
+      before do
+        expect(excon).to receive(:post).and_raise(Excon::Errors::SocketError)
+        expect(Excon).to receive(:new).and_return(excon)
+      end
+
+      scenario 'and users are told the service is unavailable' do
+        visit '/'
+        expect(page).not_to have_text('Start now')
+        expect(page).to have_text('The service is currently unavailable')
+      end
     end
   end
 end
