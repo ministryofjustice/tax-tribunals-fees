@@ -2,8 +2,6 @@ require 'rails_helper'
 require 'support/shared_examples_for_glimr'
 
 RSpec.feature 'Request a brand new case' do
-  include_examples 'glimr availability request', glimrAvailable: 'yes'
-
   case_number = 'TC/2012/00001'
   confirmation_code = 'ABC123'
 
@@ -42,8 +40,13 @@ RSpec.feature 'Request a brand new case' do
     end
 
     describe 'and glimr times out' do
+      let(:excon) {
+        class_double(Excon)
+      }
+
       before do
-        stub_request(:post, 'https://glimr-test.dsd.io/glimravailable').to_timeout
+        expect(excon).to receive(:post).and_raise(Excon::Errors::Timeout)
+        expect(Excon).to receive(:new).and_return(excon)
       end
 
       scenario 'we alert the user' do

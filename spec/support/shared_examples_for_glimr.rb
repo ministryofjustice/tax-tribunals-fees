@@ -1,8 +1,9 @@
 RSpec.shared_examples 'glimr availability request' do |glimr_response|
   before do
-    stub_request(:post, 'https://glimr-test.dsd.io/glimravailable').
-      with(headers: { 'Accept' => 'application/json' }).
-      to_return(status: 200, body: glimr_response.to_json)
+    Excon.stub(
+      { host: 'glimr-test.dsd.io', path: '/glimravailable' },
+      status: 200, body: glimr_response.to_json
+    )
   end
 end
 
@@ -20,39 +21,54 @@ RSpec.shared_examples 'service is not available' do
   end
 end
 
-RSpec.shared_examples 'generic glimr response' do |case_number, confirmation_code, status, glimr_response|
+RSpec.shared_examples 'generic glimr response' do |case_number, _confirmation_code, status, glimr_response|
   before do
-    stub_request(:post, "https://glimr-test.dsd.io/requestpayablecasefees").
-      with(body: "jurisdictionId=8&caseNumber=#{CGI.escape(case_number)}&caseConfirmationCode=#{confirmation_code}").
-      to_return(status: status, body: glimr_response.to_json)
+    Excon.stub(
+      {
+        host: 'glimr-test.dsd.io',
+        body: /caseNumber=#{CGI.escape(case_number)}/,
+        path: '/requestpayablecasefees'
+      },
+      status: status, body: glimr_response.to_json
+    )
   end
 end
 
 RSpec.shared_examples 'case not found' do
   before do
-    stub_request(:post, "https://glimr-test.dsd.io/requestpayablecasefees").
-      to_return(status: 404)
+    Excon.stub(
+      {
+        host: 'glimr-test.dsd.io',
+        path: '/requestpayablecasefees'
+      },
+      status: 404
+    )
   end
 end
 
-RSpec.shared_examples 'no new fees are due' do |case_number, confirmation_code|
+RSpec.shared_examples 'no new fees are due' do |case_number, _confirmation_code|
   let(:response_body) {
     {
       'jurisdictionId' => 8,
       'tribunalCaseId' => 60_029,
       'caseTitle' => 'You vs HM Revenue & Customs',
       'feeLiabilities' => []
-    }.to_json
+    }
   }
 
   before do
-    stub_request(:post, "https://glimr-test.dsd.io/requestpayablecasefees").
-      with(body: "jurisdictionId=8&caseNumber=#{CGI.escape(case_number)}&caseConfirmationCode=#{confirmation_code}").
-      to_return(status: 200, body: response_body)
+    Excon.stub(
+      {
+        host: 'glimr-test.dsd.io',
+        body: /caseNumber=#{CGI.escape(case_number)}/,
+        path: '/requestpayablecasefees'
+      },
+      status: 200, body: response_body.to_json
+    )
   end
 end
 
-RSpec.shared_examples 'a case fee of £20 is due' do |case_number, confirmation_code|
+RSpec.shared_examples 'a case fee of £20 is due' do |case_number, _confirmation_code|
   let(:response_body) {
     {
       'jurisdictionId' => 8,
@@ -66,20 +82,26 @@ RSpec.shared_examples 'a case fee of £20 is due' do |case_number, confirmation_
   }
 
   before do
-    stub_request(:post, "https://glimr-test.dsd.io/requestpayablecasefees").
-      with(body: "jurisdictionId=8&caseNumber=#{CGI.escape(case_number)}&caseConfirmationCode=#{confirmation_code}").
-      to_return(status: 200, body: response_body)
+    Excon.stub(
+      {
+        method: :post,
+        host: 'glimr-test.dsd.io',
+        body: /caseNumber=#{CGI.escape(case_number)}/,
+        path: '/requestpayablecasefees'
+      },
+      status: 200, body: response_body
+    )
   end
 end
 
-RSpec.shared_examples 'no fees then a £20 fee' do |case_number, confirmation_code|
+RSpec.shared_examples 'no fees then a £20 fee' do |case_number, _confirmation_code|
   let(:no_fees) {
     {
       'jurisdictionId' => 8,
       'tribunalCaseId' => 60_029,
       'caseTitle' => 'You vs HM Revenue & Customs',
       'feeLiabilities' => []
-    }.to_json
+    }
   }
 
   let(:twenty_pound_fee) {
@@ -91,13 +113,29 @@ RSpec.shared_examples 'no fees then a £20 fee' do |case_number, confirmation_co
       [{ 'feeLiabilityId' => 7,
          'onlineFeeTypeDescription' => 'Lodgement Fee',
          'payableWithUnclearedInPence' => 2000 }]
-    }.to_json
+    }
   }
 
   before do
-    stub_request(:post, 'https://glimr-test.dsd.io/requestpayablecasefees').
-      with(body: "jurisdictionId=8&caseNumber=#{CGI.escape(case_number)}&caseConfirmationCode=#{confirmation_code}").
-      to_return([{ body: no_fees }, { body: twenty_pound_fee }])
+    Excon.stub(
+      {
+        method: :post,
+        host: 'glimr-test.dsd.io',
+        body: /caseNumber=#{CGI.escape(case_number)}/,
+        path: '/requestpayablecasefees'
+      },
+      status: 200, body: no_fees.to_json
+    )
+
+    Excon.stub(
+      {
+        method: :post,
+        host: 'glimr-test.dsd.io',
+        body: /caseNumber=#{CGI.escape(case_number)}/,
+        path: '/requestpayablecasefees'
+      },
+      status: 200, body: twenty_pound_fee.to_json
+    )
   end
 end
 
@@ -107,22 +145,31 @@ RSpec.shared_examples 'report payment taken to glimr' do
       feeLiabilityId: 1234,
       feeTransactionId: 1234,
       paidAmountInPence: 9999
-    }.to_json
+    }
   }
 
   before do
-    stub_request(:post, "https://glimr-test.dsd.io/paymenttaken").
-      with(body: /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/,
-           headers: { 'Accept' => 'application/json' }).
-      to_return(status: 200, body: paymenttaken_response)
+    Excon.stub(
+      {
+        method: :post,
+        host: 'glimr-test.dsd.io',
+        body: /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/,
+        path: '/paymenttaken'
+      },
+      status: 200, body: paymenttaken_response.to_json
+    )
   end
 end
 
 RSpec.shared_examples 'glimr fee_paid returns a 500' do
   before do
-    stub_request(:post, "https://glimr-test.dsd.io/paymenttaken").
-      with(body: /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/,
-           headers: { 'Accept' => 'application/json' }).
-      to_return(status: 500)
+    Excon.stub(
+      {
+        method: :post,
+        host: 'glimr-test.dsd.io',
+        path: '/paymenttaken'
+      },
+      status: 500
+    )
   end
 end
