@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'timecop'
 
 RSpec.describe Fee do
   let(:params) {
@@ -15,7 +14,7 @@ RSpec.describe Fee do
 
   it "sets govpay_reference" do
     allow(Time).to receive(:zone).and_return(ActiveSupport::TimeZone["Samoa"])
-    Timecop.freeze(Time.zone.parse("2016-03-17 16:23:00")) do
+    travel_to(Time.zone.parse("2016-03-17 16:23:00")) do
       expect { fee.save }.to change(fee, :govpay_reference).from(nil).to("2345G20160317162300")
     end
   end
