@@ -1,14 +1,77 @@
 require 'rails_helper'
+require 'timecop'
 
 RSpec.describe Fee do
-  let(:params) { {
-    case_reference: 'caseref',
-    description: 'Someone vs. HMRC',
-    glimr_id: '2345',
-    amount: 1234
-  } }
+  let(:params) {
+    {
+      case_reference: 'caseref',
+      description: 'Someone vs. HMRC',
+      glimr_id: '2345',
+      amount: 1234
+    }
+  }
 
   subject(:fee) { described_class.new(params) }
+
+  it "sets govpay_reference" do
+    Timecop.freeze(Time.local(2016, 8, 17, 16, 23, 0, 0)) do
+      expect {
+        fee.save
+      }.to change(fee, :govpay_reference).from(nil).to("2345G20160817152300")
+    end
+  end
+
+  it "sets govpay_description" do
+    expect(fee.govpay_description).to eq('caseref - Someone vs. HMRC')
+  end
+
+  context 'when payment succeeded' do
+    let(:params) { super().merge(govpay_payment_status: 'success') }
+
+    it "has succeeded" do
+      expect(fee.paid?).to be_truthy
+    end
+
+    it "hasn't failed" do
+      expect(fee.failed?).to be_falsey
+    end
+
+    it "has known status" do
+      expect(fee.status_known?).to eq(true)
+    end
+  end
+
+  context 'when payment failed' do
+    let(:params) { super().merge(govpay_payment_status: 'some other value') }
+
+    it "hasn't succeeded" do
+      expect(fee.paid?).to be_falsey
+    end
+
+    it "has failed" do
+      expect(fee.failed?).to be_truthy
+    end
+
+    it "has known status" do
+      expect(fee.status_known?).to eq(true)
+    end
+  end
+
+  context 'when status is unknown' do
+    let(:params) { super().merge(govpay_payment_status: nil) }
+
+    it "hasn't failed" do
+      expect(fee.failed?).to be_falsey
+    end
+
+    it "hasn't succeeded" do
+      expect(fee.paid?).to be_falsey
+    end
+
+    it "has unknown status" do
+      expect(fee.status_known?).to eq(false)
+    end
+  end
 
   describe '#amount_in_pounds' do
     it "divides by 100" do
@@ -20,7 +83,12 @@ RSpec.describe Fee do
     let(:params) { super().merge(confirmation_code: 'CONFIRM') }
 
     it "stores digest on save" do
-      expect(BCrypt::Password).to receive(:create).twice().with('CONFIRM')
+      fee.save
+      expect(fee.confirmation_code_digest).not_to be_nil
+    end
+
+    it "encrypts the confirmation code" do
+      expect(BCrypt::Password).to receive(:create).twice.with('CONFIRM')
       fee.save
     end
   end

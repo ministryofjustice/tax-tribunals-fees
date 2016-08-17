@@ -1,5 +1,6 @@
 CLASSES = %w[
   CaseRequest
+  Fee
 ].freeze
 
 task :mutant do
