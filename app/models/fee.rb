@@ -27,7 +27,7 @@ class Fee < ApplicationRecord
   end
 
   def paid?
-    govpay_payment_status == 'success'
+    govpay_payment_status.eql?('success')
   end
 
   def failed?
