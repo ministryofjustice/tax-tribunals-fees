@@ -10,20 +10,23 @@ class ProcessPayment
 
   attr_reader :fee, :payment, :glimr
 
+  def self.call(*args)
+    new(*args).call
+  end
+
   def initialize(fee_id)
     @fee = Fee.find(fee_id)
-    @payment = Govpay.get_payment(@fee).tap { |gp|
-      @fee.update(govpay_payment_status: gp.status,
-                  govpay_payment_message: gp.message)
-    }
-    if @fee.paid? && !@payment.error? && UPDATE_GLIMR
-      @glimr = Glimr.fee_paid(fee)
-    end
+  end
+
+  def call
+    process_payment!
+    update_glimr! if fee.paid? && UPDATE_GLIMR
     log_errors if error?
+    self
   end
 
   def error?
-    payment.error? || fee.failed? || glimr.try(:error?)
+    fee.failed? || glimr.try(:error?)
   end
 
   def error_message
@@ -33,9 +36,19 @@ class ProcessPayment
 
   private
 
+  def process_payment!
+    @payment = Govpay.get_payment(fee).tap { |gp|
+      fee.update(govpay_payment_status: gp.status,
+                 govpay_payment_message: gp.message)
+    }
+  end
+
+  def update_glimr!
+    @glimr = Glimr.fee_paid(fee)
+  end
+
   def log_errors
     log_fee_error if fee.failed?
-    log_govpay_error if payment.error?
     log_glimr_error if glimr.try(:error?)
   end
 
@@ -43,11 +56,5 @@ class ProcessPayment
     log_error('payment_processor_fee_failure',
       fee.govpay_payment_status,
       fee.govpay_payment_message)
-  end
-
-  def log_govpay_error
-    log_error('payment_processor_govpay_error',
-      payment.error_code,
-      payment.error_message)
   end
 end

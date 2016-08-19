@@ -5,10 +5,6 @@ module Govpay
         @govpay_response = govpay_response
       end
 
-      def error?
-        false
-      end
-
       def status
         @govpay_response[:state][:status]
       end

@@ -19,13 +19,18 @@ module Glimr
         client.post(path: endpoint, body: request_body.to_query).tap { |resp|
           # Only timeouts and network issues raise errors.
           handle_response_errors(resp)
+          @status = resp.status
         }
     rescue Excon::Error => e
       raise Glimr::Api::Unavailable, e
     end
 
     def ok?
-      post.status == 200
+      #:nocov:
+      # Only here to ensure devs understand why it might break.
+      raise 'Client action (post) must be called before ok?' if @post.blank?
+      #:nocov:
+      @status == 200
     end
 
     def response_body

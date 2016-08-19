@@ -1,4 +1,42 @@
 module GovpayExample
+  module Mocks
+    def glimr_api_call
+      class_double(
+        Excon,
+        'glimr availability check',
+        post: instance_double(
+          Excon::Response,
+          status: 200,
+          body: { glimrAvailable: 'yes' }.to_json
+        )
+      )
+    end
+
+    def a_create_payment_success(initial_payment_response)
+      class_double(
+        Excon,
+        'glimr availability check',
+        post: instance_double(
+          Excon::Response,
+          status: 200,
+          body: initial_payment_response
+        )
+      )
+    end
+
+    def a_create_payment_timeout
+      class_double(Excon, 'create payment timeout').tap { |ex|
+        expect(ex).to receive(:post).and_raise(Excon::Errors::Timeout)
+      }
+    end
+
+    def a_payment_status_timeout
+      class_double(Excon, 'create payment timeout').tap { |ex|
+        expect(ex).to receive(:get).and_raise(Excon::Errors::Timeout)
+      }
+    end
+  end
+
   module Responses
     def initial_payment_response(payment_id = 'rmpaurrjuehgpvtqg997bt50f')
       {
@@ -43,31 +81,31 @@ module GovpayExample
     end
 
     def post_pay_response
-    {
-      'payment_id' => 'oio28jhr7mj6rqc9g12pff2i44',
-      'payment_provider' => 'sandbox', 'amount' => 2000,
-      'state' => {
-        'status' => 'success',
-        'finished' => true
-      },
-      'description' => 'TC/2016/00001 - Lodgement Fee',
-      'return_url' => 'https://replace-me-with-localhost.com/liabilities/7f475fde-b509-4612-bffb-e2dac0066f4c/post_pay',
-      'reference' => '7G20160725115358',
-      'created_date' => '2016-07-25T10:54:00.294Z',
-      '_links' => {
-        'self' => {
-          'href' => 'https://publicapi.pymnt.uk/v1/payments/oio28jhr7mj6rqc9g12pff2i44',
-          'method' => 'GET'
+      {
+        'payment_id' => 'oio28jhr7mj6rqc9g12pff2i44',
+        'payment_provider' => 'sandbox', 'amount' => 2000,
+        'state' => {
+          'status' => 'success',
+          'finished' => true
         },
-        'next_url' => nil,
-        'next_url_post' => nil,
-        'events' => {
-          'href' => 'https://publicapi.pymnt.uk/v1/payments/oio28jhr7mj6rqc9g12pff2i44/events',
-          'method' => 'GET'
-        },
-        'cancel' => nil
-      }
-    }.to_json
+        'description' => 'TC/2016/00001 - Lodgement Fee',
+        'return_url' => 'https://replace-me-with-localhost.com/liabilities/7f475fde-b509-4612-bffb-e2dac0066f4c/post_pay',
+        'reference' => '7G20160725115358',
+        'created_date' => '2016-07-25T10:54:00.294Z',
+        '_links' => {
+          'self' => {
+            'href' => 'https://publicapi.pymnt.uk/v1/payments/oio28jhr7mj6rqc9g12pff2i44',
+            'method' => 'GET'
+          },
+          'next_url' => nil,
+          'next_url_post' => nil,
+          'events' => {
+            'href' => 'https://publicapi.pymnt.uk/v1/payments/oio28jhr7mj6rqc9g12pff2i44/events',
+            'method' => 'GET'
+          },
+          'cancel' => nil
+        }
+      }.to_json
     end
   end
 end
@@ -95,7 +133,7 @@ RSpec.shared_examples 'govpay payment response' do
         body: request_body,
         path: '/payments'
       },
-      status: 200, body: initial_payment_response(govpay_payment_id)
+      status: 201, body: initial_payment_response(govpay_payment_id)
     )
 
     Excon.stub(
@@ -149,56 +187,35 @@ RSpec.shared_examples 'govpay post_pay returns a 500' do
   end
 end
 
-RSpec.shared_examples 'govpay times out' do
+RSpec.shared_examples 'govpay payment status times out' do
   include GovpayExample::Responses
-
-  let(:glimr_check) {
-    class_double(Excon, 'glimr availability')
-  }
-
-  let(:get_payment) {
-    class_double(Excon, 'get_payment')
-  }
-
-  let(:payment_timeout) {
-    class_double(Excon, 'payment_timeout')
-  }
-
-  let(:available) {
-    instance_double(
-      Excon::Response, status: 200, body: { glimrAvailable: 'yes' }.to_json
-    )
-  }
-
-  let(:payment_status) {
-    instance_double(Excon::Response, status: 200, body: initial_payment_response)
-  }
+  include GovpayExample::Mocks
 
   before do
-    # These are all `allows` to permit for the various different use-cases
-    # without having to write individual definitions for each
-    # (FeesController#pay vs. FeesController#post_pay, for example)
-    allow(glimr_check).
-      to receive(:post).
-      with(path: '/glimravailable', body: '').
-      and_return(available)
-
-    allow(payment_timeout).
-      to receive(:post).
-      with(path: '/payments', body: anything).
-      and_raise(Excon::Errors::Timeout)
-
-    allow(get_payment).
-      to receive(:get).
-      with(path: '/payments/', body: anything).
-      and_return(payment_status)
-
     allow(Excon).to receive(:new).
       with(Rails.configuration.glimr_api_url, anything).
-      and_return(glimr_check)
+      and_return(glimr_api_call)
 
-    allow(Excon).to receive(:new).
+    expect(Excon).to receive(:new).
       with(Rails.configuration.govpay_api_url, anything).
-      and_return(payment_timeout, get_payment)
+      and_return(
+        a_create_payment_success(initial_payment_response),
+        a_payment_status_timeout
+      )
+  end
+end
+
+RSpec.shared_examples 'govpay create payment times out' do
+  include GovpayExample::Responses
+  include GovpayExample::Mocks
+
+  before do
+    allow(Excon).to receive(:new).
+      with(Rails.configuration.glimr_api_url, anything).
+      and_return(glimr_api_call)
+
+    expect(Excon).to receive(:new).
+      with(Rails.configuration.govpay_api_url, anything).
+      and_return(a_create_payment_timeout)
   end
 end

@@ -11,8 +11,6 @@ module Govpay
         get
         if ok?
           Responses::PaymentStatus.new(response_body)
-        else
-          Responses::ApiError.new(StandardError.new(response_body))
         end
       end
 

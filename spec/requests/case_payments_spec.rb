@@ -11,7 +11,7 @@ RSpec.describe 'Pay for a case', type: :request do
 
   # The fee is set up in the shared example
   describe '#pay' do
-    context 'the GovPay API returns a valid response' do
+    context 'succeeds' do
       it 'redirects to the govpay payment URL' do
         get "/fees/#{fee.id}/pay"
         expect(response).to redirect_to(
@@ -26,21 +26,17 @@ RSpec.describe 'Pay for a case', type: :request do
       it 'alerts the user the service is unavailable' do
         get "/fees/#{fee.id}/pay"
         expect(flash[:alert]).to eq('The service is currently unavailable')
-        expect(response).to redirect_to(
-          root_url
-        )
+        expect(response).to redirect_to(root_url)
       end
     end
 
     context 'govpay times out' do
-      include_examples 'govpay times out'
+      include_examples 'govpay create payment times out'
 
       it 'alerts the user the service is unavailable' do
         get "/fees/#{fee.id}/pay"
         expect(flash[:alert]).to eq('The service is currently unavailable')
-        expect(response).to redirect_to(
-          root_url
-        )
+        expect(response).to redirect_to(root_url)
       end
     end
   end
@@ -109,13 +105,13 @@ RSpec.describe 'Pay for a case', type: :request do
       it 'alerts the user to the failure and reason' do
         get "/fees/#{fee.id}/post_pay"
         fee.reload
-        expect(response.body).to include('we couldn’t take your payment')
-        expect(response.body).to include('try making the payment again')
+        expect(flash[:alert]).to eq('We couldn’t find your payment details.')
+        expect(response).to redirect_to(root_url)
       end
     end
 
-    context 'govpay times out' do
-      include_examples 'govpay times out'
+    context 'govpay payment status times out' do
+      include_examples 'govpay payment status times out'
 
       before do
         get "/fees/#{fee.id}/pay"
@@ -128,7 +124,8 @@ RSpec.describe 'Pay for a case', type: :request do
 
       it 'alerts the user to the failure' do
         get "/fees/#{fee.id}/post_pay"
-        expect(response.body).to include('There was an error updating your case after payment')
+        expect(flash[:alert]).to eq('We couldn’t find your payment details.')
+        expect(response).to redirect_to(root_url)
       end
     end
 

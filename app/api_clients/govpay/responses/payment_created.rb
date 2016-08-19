@@ -5,10 +5,6 @@ module Govpay
         @govpay_response = govpay_response
       end
 
-      def error?
-        false
-      end
-
       def govpay_id
         @govpay_response[:payment_id]
       end

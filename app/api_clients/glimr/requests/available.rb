@@ -4,6 +4,7 @@ module Glimr
       include Glimr::Api
 
       def call
+        post
         if ok? && available?
           self
         else

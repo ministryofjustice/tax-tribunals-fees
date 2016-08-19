@@ -46,11 +46,6 @@ RSpec.describe Govpay::Requests::GetPaymentStatus do
           status: 404
         )
       end
-
-      #it 'creates a new Responses::CaseNotFound instance' do
-        #expect(subject.call).
-          #to be_an_instance_of(Govpay::Responses::ApiError)
-      #end
     end
   end
 end

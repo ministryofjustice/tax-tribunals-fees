@@ -37,7 +37,12 @@ module Govpay
     end
 
     def ok?
-      @status == 200
+      #:nocov:
+      if @post.blank? && @get.blank?
+        raise 'Client action (post || get) must be called before ok?'
+      end
+      #:nocov:
+      [200, 201].include?(@status)
     end
 
     def response_body

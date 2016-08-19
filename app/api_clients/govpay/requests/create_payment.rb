@@ -11,8 +11,6 @@ module Govpay
         post
         if ok?
           Responses::PaymentCreated.new(response_body)
-        else
-          Responses::CreatePaymentFailed.new(response_body)
         end
       end
 
