@@ -2,19 +2,18 @@
 def classes_to_mutate
   Rails.initialize!
   Rails.application.eager_load!
-  grep_model_files_for_classes
+  ['app/models', 'app/operations'].map { |dir|
+    grep_dir_for_classes(dir)
+  }.flatten
 end
 
-# This is a nasty hack. If we didn't have PORO models, we could just use
-# ApplicationRecord.descendants, but that wouldn't pick up e.g. CaseRequest
-#
-# Grepping through the source code seemed to be the most pragmatic solution
-# so that developers don't need to remember to add new classes to a list for
-# mutation testing, but it's not ideal
-def grep_model_files_for_classes
+# Grepping through the source code is a nasty hack, but it works.
+# The purpose is so that developers don't need to remember to add
+# new classes to a list for mutation testing.
+def grep_dir_for_classes(dir)
   re = /class (?<klass>\w+)/
 
-  Dir.glob(Rails.root.join('app/models/*.rb')).
+  Dir.glob(Rails.root.join("#{dir}/*.rb")).
     map { |f| File.readlines(f).grep(/\bclass /) }.flatten.
     map { |s| re.match(s)[:klass] }.map(&:constantize).
     reject do |klass|

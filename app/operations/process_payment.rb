@@ -8,7 +8,7 @@ class ProcessPayment
   # consider it paid.
   UPDATE_GLIMR = ENV['UPDATE_GLIMR'] || !Rails.env.development?
 
-  attr_reader :fee, :payment, :glimr
+  attr_reader :fee, :payment
 
   def self.call(*args)
     new(*args).call
@@ -20,39 +20,26 @@ class ProcessPayment
 
   def call
     process_payment!
-    update_glimr! if fee.paid? && UPDATE_GLIMR
-    log_errors if error?
+    Glimr.fee_paid(fee) if fee.paid? && UPDATE_GLIMR
+    log_errors if fee.failed?
     self
   end
 
-  def error?
-    fee.failed? || glimr.try(:error?)
-  end
-
   def error_message
-    # The fee error message is a copy of the govpay message.
-    payment.message || glimr.try(:error_message)
+    # The fee error message is a copy of the govpay message. If there is a
+    # govpay message, that indicates something went wrong.
+    payment.message
   end
 
   private
 
   def process_payment!
-    @payment = Govpay.get_payment(fee).tap { |gp|
-      fee.update(govpay_payment_status: gp.status,
-                 govpay_payment_message: gp.message)
-    }
-  end
-
-  def update_glimr!
-    @glimr = Glimr.fee_paid(fee)
+    @payment = Govpay.get_payment(fee)
+    fee.update(govpay_payment_status: payment.status,
+               govpay_payment_message: payment.message)
   end
 
   def log_errors
-    log_fee_error if fee.failed?
-    log_glimr_error if glimr.try(:error?)
-  end
-
-  def log_fee_error
     log_error('payment_processor_fee_failure',
       fee.govpay_payment_status,
       fee.govpay_payment_message)
