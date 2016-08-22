@@ -8,6 +8,7 @@ module Glimr
       end
 
       def call
+        post
         if ok?
           Responses::FeePayment.new(response_body)
         end

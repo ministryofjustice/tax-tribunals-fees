@@ -9,6 +9,7 @@ module Glimr
       end
 
       def call
+        post
         if ok?
           Responses::CaseFees.new(response_body)
         end

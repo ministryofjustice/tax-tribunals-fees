@@ -19,15 +19,14 @@ RSpec.describe Govpay::Requests::GetPaymentStatus do
   describe '#call' do
     context 'successful' do
       before do
-        stub_request(
-          :get, "https://govpay-test.dsd.io/payments/1234"
-        ).with(
-          headers: {
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer deadbeef',
-            'Content-Type' => 'application/json'
-          }
-        ).to_return(status: 200)
+        Excon.stub(
+          {
+            method: :get,
+            host: 'govpay-test.dsd.io',
+            path: '/payments/1234'
+          },
+          status: 200, body: {}.to_json
+        )
       end
 
       it 'creates a new Responses::CaseFees instance' do
@@ -38,20 +37,14 @@ RSpec.describe Govpay::Requests::GetPaymentStatus do
 
     context 'unsuccessful' do
       before do
-        stub_request(
-          :get, "https://govpay-test.dsd.io/payments/1234"
-        ).with(
-          headers: {
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer deadbeef',
-            'Content-Type' => 'application/json'
-          }
-        ).to_return(status: 404)
-      end
-
-      it 'creates a new Responses::CaseNotFound instance' do
-        expect(subject.call).
-          to be_an_instance_of(Govpay::Responses::ApiError)
+        Excon.stub(
+          {
+            method: :get,
+            host: 'govpay-test.dsd.io',
+            path: '/payments/1234'
+          },
+          status: 404
+        )
       end
     end
   end

@@ -1,3 +1,4 @@
 en:
   apis:
     service_unavailable: The service is currently unavailable
+    payment_status_unavailable: We couldn’t find your payment details.

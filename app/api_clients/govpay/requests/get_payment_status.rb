@@ -1,23 +1,20 @@
 module Govpay
   module Requests
-    class GetPaymentStatus < Base
+    class GetPaymentStatus
+      include Govpay::Api
+
       def initialize(fee)
         @fee = fee
       end
 
       def call
-        if response.success?
-          Responses::PaymentStatus.new(response)
-        else
-          Responses::ApiError.new(StandardError.new(response))
+        get
+        if ok?
+          Responses::PaymentStatus.new(response_body)
         end
       end
 
       private
-
-      def response
-        @response ||= api.get(endpoint)
-      end
 
       def endpoint
         "/payments/#{@fee.govpay_payment_id}"

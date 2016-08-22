@@ -5,16 +5,12 @@ module Govpay
         @govpay_response = govpay_response
       end
 
-      def error?
-        false
-      end
-
       def govpay_id
-        @govpay_response['payment_id']
+        @govpay_response.fetch(:payment_id)
       end
 
       def payment_url
-        @govpay_response['_links']['next_url']['href']
+        @govpay_response.fetch(:_links).fetch(:next_url).fetch(:href)
       end
     end
   end

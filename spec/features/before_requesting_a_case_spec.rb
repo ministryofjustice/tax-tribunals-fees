@@ -23,14 +23,7 @@ RSpec.feature 'Before requesting a case' do
     end
 
     describe 'when there is a network error' do
-      let(:excon) {
-        class_double(Excon)
-      }
-
-      before do
-        expect(excon).to receive(:post).and_raise(Excon::Errors::SocketError)
-        expect(Excon).to receive(:new).and_return(excon)
-      end
+      include_examples 'glimr has a socket error'
 
       scenario 'and users are told the service is unavailable' do
         visit '/'
