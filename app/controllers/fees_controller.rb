@@ -10,7 +10,7 @@ class FeesController < ApplicationController
     operation = ProcessPayment.call(params[:id])
 
     @fee = operation.fee
-    if operation.error?
+    if operation.error_message.present?
       flash[:error] = operation.error_message || t('.payment_error')
       render 'post_pay_error'
     else
