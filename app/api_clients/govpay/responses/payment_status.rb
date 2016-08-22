@@ -6,11 +6,19 @@ module Govpay
       end
 
       def status
-        @govpay_response[:state][:status]
+        state.fetch(:status)
       end
 
       def message
-        @govpay_response[:state][:message]
+        # Messages only occur in the event of an api error. See the api
+        # document for details: https://gds-payments.gelato.io
+        state.fetch(:message) if state.key?(:message)
+      end
+
+      private
+
+      def state
+        @state ||= @govpay_response.fetch(:state)
       end
     end
   end

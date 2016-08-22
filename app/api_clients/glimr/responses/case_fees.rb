@@ -12,15 +12,15 @@ module Glimr
       end
 
       def title
-        @glimr_response[:caseTitle]
+        @glimr_response.fetch(:caseTitle)
       end
 
       def fee_liabilities
-        @glimr_response[:feeLiabilities].map do |fee|
+        @glimr_response.fetch(:feeLiabilities).map do |fee|
           FeeLiability.new(
-            fee[:feeLiabilityId].to_i,
-            fee[:onlineFeeTypeDescription],
-            fee[:payableWithUnclearedInPence].to_i
+            fee.fetch(:feeLiabilityId).to_i,
+            fee.fetch(:onlineFeeTypeDescription),
+            fee.fetch(:payableWithUnclearedInPence).to_i
           )
         end
       end
