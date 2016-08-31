@@ -45,7 +45,8 @@ RSpec.describe 'Pay for a case', type: :request do
   # gets called early and does not yet have a govpay_payment_id
   describe '#post_pay' do
     context 'a successful payment' do
-      include_examples 'report payment taken to glimr'
+      include_examples 'report payment taken to glimr',
+        /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/
 
       before do
         get "/fees/#{fee.id}/pay"
@@ -76,7 +77,7 @@ RSpec.describe 'Pay for a case', type: :request do
       end
 
       it 'does not try to update glimr' do
-        expect(Glimr).not_to receive(:fee_paid)
+        expect(GlimrApiClient::Update).not_to receive(:call)
         get "/fees/#{fee.id}/post_pay"
       end
 
@@ -98,7 +99,7 @@ RSpec.describe 'Pay for a case', type: :request do
       end
 
       it 'does not try to update glimr' do
-        expect(Glimr).not_to receive(:fee_paid)
+        expect(GlimrApiClient::Update).not_to receive(:call)
         get "/fees/#{fee.id}/post_pay"
       end
 
@@ -118,7 +119,7 @@ RSpec.describe 'Pay for a case', type: :request do
       end
 
       it 'does not try to update glimr' do
-        expect(Glimr).not_to receive(:fee_paid)
+        expect(GlimrApiClient::Update).not_to receive(:call)
         get "/fees/#{fee.id}/post_pay"
       end
 

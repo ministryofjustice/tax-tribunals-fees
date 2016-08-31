@@ -44,7 +44,7 @@ class ProcessPayment
   end
 
   def update_glimr!
-    @glimr = Glimr.fee_paid(fee)
+    @glimr = GlimrApiClient::Update.call(fee)
   end
 
   def log_errors
