@@ -22,7 +22,7 @@
         <%= t('.payments_are_up_to_date') %>
         <%= t('.other_fees_may_be_due') %>
       <% else %>
-        <%= render @case_request.fees %>
+        <%= render @case_request.case_fees %>
       <% end %>
     </div>
 <% else %>

@@ -9,6 +9,7 @@ require 'action_mailer/railtie'
 require 'action_view/railtie'
 require 'action_cable/engine'
 require 'sprockets/railtie'
+require 'glimr_api_client'
 
 Bundler.require(*Rails.groups)
 

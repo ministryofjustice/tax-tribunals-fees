@@ -32,14 +32,6 @@ RSpec.configure do |config|
     )
   end
 
-  config.before(:each, js: true) do
-    DatabaseCleaner.strategy = :truncation
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
   config.after(:each) do
     DatabaseCleaner.clean
     Excon.stubs.clear
