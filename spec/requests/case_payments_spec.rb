@@ -2,12 +2,23 @@ require 'rails_helper'
 require 'support/shared_examples_for_govpay'
 require 'support/shared_examples_for_glimr'
 
+def fee
+  Fee.create(
+    glimr_id: 1,
+    case_reference: 'TT/2016/00001',
+    case_title: 'You vs HMRC',
+    description: 'Lodgement Fee',
+    amount: 2000,
+    govpay_payment_id: 'rmpaurrjuehgpvtqg997bt50f'
+  )
+end
+
 RSpec.describe 'Pay for a case', type: :request do
   case_number = 'TC/2012/00001'
   confirmation_code = 'ABC123'
 
   include_examples 'a case fee of £20 is due', case_number, confirmation_code
-  include_examples 'govpay payment response'
+  include_examples 'govpay payment response', fee, fee.govpay_payment_id
 
   # The fee is set up in the shared example
   describe '#pay' do
@@ -21,7 +32,7 @@ RSpec.describe 'Pay for a case', type: :request do
     end
 
     context 'the GovPay API returns a 404' do
-      include_examples 'govpay returns a 404'
+      include_examples 'govpay returns a 404', fee
 
       it 'alerts the user the service is unavailable' do
         get "/fees/#{fee.id}/pay"
@@ -41,8 +52,6 @@ RSpec.describe 'Pay for a case', type: :request do
     end
   end
 
-  # TODO: spec the unhappy path for the race condition whereby the fee
-  # gets called early and does not yet have a govpay_payment_id
   describe '#post_pay' do
     context 'a successful payment' do
       include_examples 'report payment taken to glimr',
@@ -62,15 +71,15 @@ RSpec.describe 'Pay for a case', type: :request do
     end
 
     context 'failed payment' do
-      let(:post_pay_response) {
+      def post_pay_response
         {
           'state' =>
-            {
-              'status' => 'failed',
-              'message' => '3D secure failed'
-            }
+          {
+            'status' => 'failed',
+            'message' => '3D secure failed'
+          }
         }.to_json
-      }
+      end
 
       before do
         get "/fees/#{fee.id}/pay"

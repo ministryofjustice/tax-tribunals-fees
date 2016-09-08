@@ -1,8 +1,8 @@
 class FeesController < ApplicationController
   def pay
-    operation = CreatePayment.new(params[:id])
-    redirect_to operation.payment_url
-  rescue Govpay::Api::Unavailable
+    operation = CreatePayment.call(params[:id])
+    redirect_to operation.next_url
+  rescue GovukPayApiClient::Unavailable
     redirect_to root_path, alert: t('apis.service_unavailable')
   end
 
@@ -16,7 +16,7 @@ class FeesController < ApplicationController
     else
       render 'post_pay_success'
     end
-  rescue Govpay::Api::Unavailable
+  rescue GovukPayApiClient::Unavailable
     redirect_to root_path, alert: t('apis.payment_status_unavailable')
   end
 end
