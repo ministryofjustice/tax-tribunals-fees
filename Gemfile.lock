@@ -97,7 +97,7 @@ GEM
       excon (~> 0.51)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
-    govuk-pay-api-client (0.1.1)
+    govuk-pay-api-client (0.1.4)
       excon (~> 0.51)
     govuk_elements_rails (2.0.0)
       govuk_frontend_toolkit (>= 4.14.1)
