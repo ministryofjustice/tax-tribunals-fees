@@ -37,7 +37,7 @@ class ProcessPayment
   private
 
   def process_payment!
-    @payment = Govpay.get_payment(fee).tap { |gp|
+    @payment = GovukPayApiClient::GetStatus.call(fee).tap { |gp|
       fee.update(govpay_payment_status: gp.status,
                  govpay_payment_message: gp.message)
     }

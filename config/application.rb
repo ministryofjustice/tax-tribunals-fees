@@ -10,6 +10,7 @@ require 'action_view/railtie'
 require 'action_cable/engine'
 require 'sprockets/railtie'
 require 'glimr_api_client'
+require 'govuk_pay_api_client'
 
 Bundler.require(*Rails.groups)
 

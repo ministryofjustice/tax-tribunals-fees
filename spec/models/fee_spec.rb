@@ -1,16 +1,17 @@
 require 'rails_helper'
 
 RSpec.describe Fee do
+  subject(:fee) { described_class.new(params) }
+
   let(:params) {
     {
       case_reference: 'caseref',
       description: 'Someone vs. HMRC',
       glimr_id: '2345',
-      amount: 1234
+      amount: 1234,
+      confirmation_code: 'ABC123'
     }
   }
-
-  subject(:fee) { described_class.new(params) }
 
   it "sets govpay_reference" do
     allow(Time).to receive(:zone).and_return(ActiveSupport::TimeZone["Samoa"])
@@ -78,16 +79,16 @@ RSpec.describe Fee do
   end
 
   describe 'confirmation_code' do
-    let(:params) { super().merge(confirmation_code: 'CONFIRM') }
+    before do
+      fee.save
+    end
 
     it "stores digest on save" do
-      fee.save
       expect(fee.confirmation_code_digest).not_to be_nil
     end
 
     it "encrypts the confirmation code" do
-      expect(BCrypt::Password).to receive(:create).twice.with('CONFIRM')
-      fee.save
+      expect(BCrypt::Password.new(fee.confirmation_code_digest)).to eq('ABC123')
     end
   end
 end

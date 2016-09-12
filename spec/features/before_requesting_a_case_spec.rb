@@ -17,7 +17,6 @@ RSpec.feature 'Before requesting a case' do
 
       scenario 'and are told the service is unavailable' do
         visit '/'
-        expect(page).not_to have_text('Start now')
         expect(page).to have_text('The service is currently unavailable')
       end
     end
@@ -27,7 +26,6 @@ RSpec.feature 'Before requesting a case' do
 
       scenario 'and users are told the service is unavailable' do
         visit '/'
-        expect(page).not_to have_text('Start now')
         expect(page).to have_text('The service is currently unavailable')
       end
     end

@@ -1,3 +1,17 @@
+RSpec.shared_examples 'glimr update gets called' do
+  it 'so it updates glimr with payment details' do
+    expect(GlimrApiClient::Update).to receive(:call)
+    visit post_pay_fee_url(fee)
+  end
+end
+
+RSpec.shared_examples 'glimr update does not get called' do
+  it 'so it does not try update glimr with a payment' do
+    expect(GlimrApiClient::Update).not_to receive(:call)
+    visit post_pay_fee_url(fee)
+  end
+end
+
 RSpec.shared_examples 'glimr availability request' do |glimr_response|
   before do
     Excon.stub(
@@ -19,7 +33,6 @@ end
 RSpec.shared_examples 'service is not available' do
   scenario do
     visit '/'
-    expect(page).not_to have_text('Start now')
     expect(page).to have_text('The service is currently unavailable')
   end
 end
@@ -178,35 +191,21 @@ RSpec.shared_examples 'glimr fee_paid returns a 500' do
 end
 
 RSpec.shared_examples 'glimr times out' do
-  let(:glimr_check) {
-    class_double(Excon, 'glimr availability')
-  }
-
   before do
-    expect(glimr_check).
-      to receive(:post).
-      with(path: '/glimravailable', body: '').
-      and_raise(Excon::Errors::Timeout)
-
-    expect(Excon).to receive(:new).
-      with(Rails.configuration.glimr_api_url, anything).
-      and_return(glimr_check)
+    Excon.stub(
+      host: 'glimr-test.dsd.io'
+    ) {
+      raise Excon::Errors::Timeout
+    }
   end
 end
 
 RSpec.shared_examples 'glimr has a socket error' do
-  let(:glimr_check) {
-    class_double(Excon, 'glimr availability')
-  }
-
   before do
-    expect(glimr_check).
-      to receive(:post).
-      with(path: '/glimravailable', body: '').
-      and_raise(Excon::Errors::SocketError)
-
-    expect(Excon).to receive(:new).
-      with('https://glimr-test.dsd.io', anything).
-      and_return(glimr_check)
+    Excon.stub(
+      host: 'glimr-test.dsd.io'
+    ) {
+      raise Excon::Errors::SocketError
+    }
   end
 end
