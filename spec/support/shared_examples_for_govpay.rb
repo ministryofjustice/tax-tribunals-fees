@@ -56,24 +56,15 @@ module GovpayExample
   end
 end
 
-RSpec.shared_examples 'govpay payment response' do |fee, govpay_payment_id|
+RSpec.shared_examples 'govpay payment response' do |govpay_payment_id|
   include GovpayExample::Responses
-
-  let(:request_body) {
-    {
-      return_url: 'the_return_url',
-      description: fee.description,
-      reference: fee.govpay_reference,
-      amount: fee.amount
-    }.to_json
-  }
 
   before do
     Excon.stub(
       {
         method: :post,
         host: 'govpay-test.dsd.io',
-        body: request_body,
+        body: /#{govpay_payment_id}/,
         path: '/payments'
       },
       status: 201, body: initial_payment_response(govpay_payment_id)
@@ -85,13 +76,36 @@ RSpec.shared_examples 'govpay payment response' do |fee, govpay_payment_id|
         host: 'govpay-test.dsd.io',
         path: "/payments/#{govpay_payment_id}"
       },
-      status: 200, body: post_pay_response
+      status: 200, body: defined?(failure) ? failure : post_pay_response
+    )
+  end
+end
+
+RSpec.shared_examples 'govpay create payment response' do |govpay_payment_id|
+  include GovpayExample::Responses
+
+  before do
+    Excon.stub(
+      {
+        method: :post,
+        host: 'govpay-test.dsd.io',
+        path: '/payments'
+      },
+      status: 201, body: initial_payment_response(govpay_payment_id)
+    )
+
+    Excon.stub(
+      {
+        method: :get,
+        host: 'govpay-test.dsd.io',
+        path: "/payments/#{govpay_payment_id}"
+      },
+      status: 200, body: defined?(failure) ? failure : post_pay_response
     )
   end
 end
 
 RSpec.shared_examples 'govpay returns a 404' do |fee|
-
   let(:request_body) {
     {
       return_url: 'the_return_url',
@@ -106,7 +120,7 @@ RSpec.shared_examples 'govpay returns a 404' do |fee|
       {
         method: :post,
         host: 'govpay-test.dsd.io',
-        body: request_body,
+        body: /#{fee.govpay_payment_id}/,
         path: '/payments'
       },
       status: 404
@@ -132,11 +146,9 @@ RSpec.shared_examples 'govpay payment status times out' do |govpay_payment_id|
 
   before do
     Excon.stub(
-      {
-        method: :get,
-        host: 'govpay-test.dsd.io',
-        path: "/payments/#{govpay_payment_id}"
-      }
+      method: :get,
+      host: 'govpay-test.dsd.io',
+      path: "/payments/#{govpay_payment_id}"
     ) { raise Excon::Errors::Timeout }
   end
 end
@@ -146,11 +158,9 @@ RSpec.shared_examples 'govpay create payment times out' do
 
   before do
     Excon.stub(
-      {
-        method: :post,
-        host: 'govpay-test.dsd.io',
-        path: '/payments'
-      }
+      method: :post,
+      host: 'govpay-test.dsd.io',
+      path: '/payments'
     ) { raise Excon::Errors::Timeout }
   end
 end
