@@ -1,3 +1,17 @@
+RSpec.shared_examples 'glimr update gets called' do
+  it 'so it updates glimr with payment details' do
+    expect(GlimrApiClient::Update).to receive(:call)
+    visit post_pay_fee_url(fee)
+  end
+end
+
+RSpec.shared_examples 'glimr update does not get called' do
+  it 'so it does not try update glimr with a payment' do
+    expect(GlimrApiClient::Update).not_to receive(:call)
+    visit post_pay_fee_url(fee)
+  end
+end
+
 RSpec.shared_examples 'glimr availability request' do |glimr_response|
   before do
     Excon.stub(

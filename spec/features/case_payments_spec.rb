@@ -10,33 +10,36 @@ RSpec.feature 'Pay for a case' do
 
     include_examples 'a case fee of £20 is due', case_number, confirmation_code
     include_examples 'govpay payment response', fee.govpay_payment_id
+    # This is already tested by the Excon stubs, which are excercised by many
+    # of the specs in this block. However, for completeness, I have included
+    # this spec, which mirrors the negative version(s) used in the failure
+    # spec, below.
+    it_should_behave_like 'glimr update gets called'
 
-    describe '#post_pay' do
+    before do
+      fee.update(govpay_payment_id: 'rmpaurrjuehgpvtqg997bt50f')
+    end
+
+    context 'a successful payment' do
+      include_examples 'report payment taken to glimr',
+        /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/
+
       before do
-        fee.update(govpay_payment_id: 'rmpaurrjuehgpvtqg997bt50f')
+        visit post_pay_fee_url(fee)
       end
 
-      context 'a successful payment' do
-        include_examples 'report payment taken to glimr',
-          /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/
+      it 'shows the case reference' do
+        expect(page).to have_text(fee.case_reference)
+      end
 
-        before do
-          visit post_pay_fee_url(fee)
-        end
+      it 'shows the payment id' do
+        visit post_pay_fee_url(fee)
+        expect(page).to have_text(fee.govpay_payment_id.upcase)
+      end
 
-        it 'shows the case reference' do
-          expect(page).to have_text(fee.case_reference)
-        end
-
-        it 'shows the payment id' do
-          visit post_pay_fee_url(fee)
-          expect(page).to have_text(fee.govpay_payment_id.upcase)
-        end
-
-        it 'shows the case title' do
-          visit post_pay_fee_url(fee)
-          expect(page).to have_text(fee.case_title)
-        end
+      it 'shows the case title' do
+        visit post_pay_fee_url(fee)
+        expect(page).to have_text(fee.case_title)
       end
     end
 
@@ -77,11 +80,7 @@ RSpec.feature 'Pay for a case' do
       end
 
       include_examples 'govpay post_pay returns a 500', fee.govpay_payment_id
-
-      it 'does not try to update glimr' do
-        expect(GlimrApiClient::Update).not_to receive(:call)
-        visit post_pay_fee_url(fee)
-      end
+      it_should_behave_like 'glimr update does not get called'
 
       it 'alerts the user to the failure and reason' do
         visit post_pay_fee_url(fee)
@@ -91,11 +90,7 @@ RSpec.feature 'Pay for a case' do
 
     context 'govpay payment status times out' do
       include_examples 'govpay payment status times out', fee.govpay_payment_id
-
-      it 'does not try to update glimr' do
-        expect(GlimrApiClient::Update).not_to receive(:call)
-        visit post_pay_fee_url(fee)
-      end
+      it_should_behave_like 'glimr update does not get called'
 
       it 'alerts the user to the failure' do
         visit post_pay_fee_url(fee)
@@ -119,6 +114,7 @@ RSpec.feature 'Pay for a case' do
   describe '#pay' do
     context 'the GovPay API returns a 404' do
       include_examples 'govpay returns a 404', fee
+      it_should_behave_like 'glimr update does not get called'
 
       it 'alerts the user the service is unavailable' do
         visit pay_fee_url(fee)
@@ -128,6 +124,7 @@ RSpec.feature 'Pay for a case' do
 
     context 'govpay times out' do
       include_examples 'govpay create payment times out', fee
+      it_should_behave_like 'glimr update does not get called'
 
       it 'alerts the user the service is unavailable' do
         visit pay_fee_url(fee)
