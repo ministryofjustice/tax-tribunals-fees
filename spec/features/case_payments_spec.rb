@@ -12,7 +12,6 @@ RSpec.feature 'Pay for a case' do
     include_examples 'govpay payment response', fee.govpay_payment_id
 
     describe '#post_pay' do
-
       before do
         fee.update(govpay_payment_id: 'rmpaurrjuehgpvtqg997bt50f')
       end
@@ -21,12 +20,22 @@ RSpec.feature 'Pay for a case' do
         include_examples 'report payment taken to glimr',
           /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/
 
-
-        it 'notifies the user that their payment was taken' do
+        before do
           visit post_pay_fee_url(fee)
+        end
+
+        it 'shows the case reference' do
           expect(page).to have_text(fee.case_reference)
-          expect(page).to have_text(fee.case_title)
+        end
+
+        it 'shows the payment id' do
+          visit post_pay_fee_url(fee)
           expect(page).to have_text(fee.govpay_payment_id.upcase)
+        end
+
+        it 'shows the case title' do
+          visit post_pay_fee_url(fee)
+          expect(page).to have_text(fee.case_title)
         end
       end
     end

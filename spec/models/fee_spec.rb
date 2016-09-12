@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Fee do
+  subject(:fee) { described_class.new(params) }
+
   let(:params) {
     {
       case_reference: 'caseref',
@@ -10,8 +12,6 @@ RSpec.describe Fee do
       confirmation_code: 'ABC123'
     }
   }
-
-  subject(:fee) { described_class.new(params) }
 
   it "sets govpay_reference" do
     allow(Time).to receive(:zone).and_return(ActiveSupport::TimeZone["Samoa"])

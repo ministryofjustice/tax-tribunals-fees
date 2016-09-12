@@ -21,10 +21,9 @@ class CreatePayment
   private
 
   def create_payment!
-    @create_payment = GovukPayApiClient::CreatePayment.
-      call(fee, return_url).tap { |p|
+    @create_payment =
+      GovukPayApiClient::CreatePayment.call(fee, return_url).tap { |p|
         fee.update(govpay_payment_id: p.payment_id)
-    }
+      }
   end
-
 end

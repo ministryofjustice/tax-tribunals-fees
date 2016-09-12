@@ -29,7 +29,6 @@ RSpec.feature 'Request a case that has already been paid for' do
 
     scenario 'we explain that there are no outstanding fees' do
       make_a_case_request(case_number, confirmation_code)
-      expect(page).to have_text('You vs HM Revenue & Customs')
       expect(page).to have_text('There are currently no outstanding fees on your case')
     end
   end
@@ -49,7 +48,6 @@ RSpec.feature 'Request a case that has already been paid for' do
 
     scenario 'we explain that there are no outstanding fees' do
       make_a_case_request(case_number, confirmation_code)
-      expect(page).to have_text('You vs HM Revenue & Customs')
       expect(page).to have_text('£20.00')
     end
   end
