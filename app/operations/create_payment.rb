@@ -1,6 +1,6 @@
 class CreatePayment
   include SimplifiedLogging
-  attr_reader :fee, :payment_url
+  attr_reader :fee, :return_url
 
   def self.call(*args)
     new(*args).call
@@ -8,7 +8,7 @@ class CreatePayment
 
   def initialize(fee_id)
     @fee = Fee.find(fee_id)
-    @payment_url = Rails.application.routes.url_helpers.post_pay_fee_url(@fee)
+    @return_url = Rails.application.routes.url_helpers.post_pay_fee_url(@fee)
   end
 
   def call
@@ -22,8 +22,8 @@ class CreatePayment
 
   def create_payment!
     @create_payment = GovukPayApiClient::CreatePayment.
-      call(fee, payment_url).tap { |p|
-        fee.update(govpay_payment_id: p.govpay_id)
+      call(fee, return_url).tap { |p|
+        fee.update(govpay_payment_id: p.payment_id)
     }
   end
 
