@@ -102,6 +102,9 @@ Style/StringLiterals:
   Exclude:
     - 'spec/**/*'
 
+RSpec/MessageExpectation:
+  Enabled: false
+
 # Prefer sensible naming to comments everywhere.
 Documentation:
   Description: Document classes and non-namespace modules.
