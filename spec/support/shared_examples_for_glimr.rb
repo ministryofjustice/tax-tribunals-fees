@@ -19,7 +19,6 @@ end
 RSpec.shared_examples 'service is not available' do
   scenario do
     visit '/'
-    expect(page).not_to have_text('Start now')
     expect(page).to have_text('The service is currently unavailable')
   end
 end
@@ -180,7 +179,7 @@ end
 RSpec.shared_examples 'glimr times out' do
   before do
     Excon.stub(
-       host: 'glimr-test.dsd.io'
+      host: 'glimr-test.dsd.io'
     ) {
       raise Excon::Errors::Timeout
     }
@@ -190,7 +189,7 @@ end
 RSpec.shared_examples 'glimr has a socket error' do
   before do
     Excon.stub(
-       host: 'glimr-test.dsd.io'
+      host: 'glimr-test.dsd.io'
     ) {
       raise Excon::Errors::SocketError
     }
