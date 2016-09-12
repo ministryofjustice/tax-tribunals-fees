@@ -178,35 +178,21 @@ RSpec.shared_examples 'glimr fee_paid returns a 500' do
 end
 
 RSpec.shared_examples 'glimr times out' do
-  let(:glimr_check) {
-    class_double(Excon, 'glimr availability')
-  }
-
   before do
-    expect(glimr_check).
-      to receive(:post).
-      with(path: '/glimravailable', body: '').
-      and_raise(Excon::Errors::Timeout)
-
-    expect(Excon).to receive(:new).
-      with(Rails.configuration.glimr_api_url, anything).
-      and_return(glimr_check)
+    Excon.stub(
+       host: 'glimr-test.dsd.io'
+    ) {
+      raise Excon::Errors::Timeout
+    }
   end
 end
 
 RSpec.shared_examples 'glimr has a socket error' do
-  let(:glimr_check) {
-    class_double(Excon, 'glimr availability')
-  }
-
   before do
-    expect(glimr_check).
-      to receive(:post).
-      with(path: '/glimravailable', body: '').
-      and_raise(Excon::Errors::SocketError)
-
-    expect(Excon).to receive(:new).
-      with('https://glimr-test.dsd.io', anything).
-      and_return(glimr_check)
+    Excon.stub(
+       host: 'glimr-test.dsd.io'
+    ) {
+      raise Excon::Errors::SocketError
+    }
   end
 end
