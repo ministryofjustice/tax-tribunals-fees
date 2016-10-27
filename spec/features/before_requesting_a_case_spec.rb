@@ -1,8 +1,11 @@
 require 'rails_helper'
-require 'support/shared_examples_for_glimr'
 
 RSpec.feature 'Before requesting a case' do
-  context 'Glimr is up' do # This is the default in rails_helper.
+  context 'Glimr is up' do
+    before do
+      allow(GlimrApiClient::Available).to receive_message_chain([:call, :available?]).and_return(true)
+    end
+
     describe 'users can start a new case ' do
       scenario do
         visit '/'
@@ -13,18 +16,11 @@ RSpec.feature 'Before requesting a case' do
 
   context 'Glimr is down' do
     describe 'users cannot start a new case ' do
-      include_examples 'glimr availability request', glimrAvailable: 'no'
+      before do
+        allow(GlimrApiClient::Available).to receive_message_chain([:call, :available?]).and_raise(GlimrApiClient::Unavailable)
+      end
 
       scenario 'and are told the service is unavailable' do
-        visit '/'
-        expect(page).to have_text('The service is currently unavailable')
-      end
-    end
-
-    describe 'when there is a network error' do
-      include_examples 'glimr has a socket error'
-
-      scenario 'and users are told the service is unavailable' do
         visit '/'
         expect(page).to have_text('The service is currently unavailable')
       end

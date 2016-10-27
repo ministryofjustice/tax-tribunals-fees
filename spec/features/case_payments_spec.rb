@@ -1,31 +1,29 @@
 require 'rails_helper'
 require 'support/shared_examples_for_govpay'
-require 'support/shared_examples_for_glimr'
 require 'support/create_a_fee'
 
 RSpec.feature 'Pay for a case' do
-  describe '#post_pay' do
-    case_number = 'TC/2012/00001'
-    confirmation_code = 'ABC123'
+  before do
+    allow(GlimrApiClient::Available).to receive_message_chain([:call, :available?]).and_return(true)
+  end
 
-    include_examples 'a case fee of £20 is due', case_number, confirmation_code
+  describe '#post_pay' do
     include_examples 'govpay payment response', fee.govpay_payment_id
-    # This is already tested by the Excon stubs, which are excercised by many
-    # of the specs in this block. However, for completeness, I have included
-    # this spec, which mirrors the negative version(s) used in the failure
-    # spec, below.
-    it_should_behave_like 'glimr update gets called'
+
+    let(:govpay_payment_id) { 'rmpaurrjuehgpvtqg997bt50f' }
 
     before do
-      fee.update(govpay_payment_id: 'rmpaurrjuehgpvtqg997bt50f')
+      allow(GlimrApiClient::Update).to receive(:call)
+      fee.update(govpay_payment_id: govpay_payment_id)
     end
 
     context 'a successful payment' do
-      include_examples 'report payment taken to glimr',
-        /govpayReference=rmpaurrjuehgpvtqg997bt50f&paidAmountInPence=2000/
-
       before do
         visit post_pay_fee_url(fee)
+      end
+
+      it 'updates the case in GLiMR' do
+        expect(GlimrApiClient::Update).to have_received(:call).with(an_instance_of(Fee))
       end
 
       it 'shows the case reference' do
@@ -57,7 +55,7 @@ RSpec.feature 'Pay for a case' do
       include_examples 'govpay payment response', fee.govpay_payment_id
 
       before do
-        fee.update(govpay_payment_id: 'rmpaurrjuehgpvtqg997bt50f')
+        fee.update(govpay_payment_id: govpay_payment_id)
       end
 
       it 'does not try to update glimr' do
@@ -76,21 +74,25 @@ RSpec.feature 'Pay for a case' do
       # inability to explicitly pass `let` blocks into shared examples outside
       # of `it` declarations.
       before do
-        fee.update(govpay_payment_id: 'rmpaurrjuehgpvtqg997bt50f')
+        fee.update(govpay_payment_id: govpay_payment_id)
       end
 
       include_examples 'govpay post_pay returns a 500', fee.govpay_payment_id
-      it_should_behave_like 'glimr update does not get called'
 
       it 'alerts the user to the failure and reason' do
         visit post_pay_fee_url(fee)
+        expect(GlimrApiClient::Update).not_to receive(:call)
         expect(page).to have_text('We couldn’t find your payment details.')
       end
     end
 
     context 'govpay payment status times out' do
       include_examples 'govpay payment status times out', fee.govpay_payment_id
-      it_should_behave_like 'glimr update does not get called'
+
+      it 'does not try to update glimr' do
+        expect(GlimrApiClient::Update).not_to receive(:call)
+        visit post_pay_fee_url(fee)
+      end
 
       it 'alerts the user to the failure' do
         visit post_pay_fee_url(fee)
@@ -99,12 +101,17 @@ RSpec.feature 'Pay for a case' do
     end
 
     context 'glimr update fails' do
-      include_examples 'glimr fee_paid returns a 500'
+      # include_examples 'glimr fee_paid returns a 500'
+      before do
+        allow(GlimrApiClient::Update).to receive(:call).and_raise(GlimrApiClient::RequestError)
+      end
 
-      it 'alerts the user to the failure and reason' do
-        visit post_pay_fee_url(fee)
-        expect(page).
-          to have_text('error updating your case with your payment details')
+      # TODO: This issue will go away, once we move notifying GLiMR about
+      # successful payments to a background queue
+      it 'does not handle the exception from the GlimrApiClient gem' do
+        expect {
+          visit post_pay_fee_url(fee)
+        }.to raise_error(GlimrApiClient::RequestError)
       end
     end
   end
@@ -114,7 +121,11 @@ RSpec.feature 'Pay for a case' do
   describe '#pay' do
     context 'the GovPay API returns a 404' do
       include_examples 'govpay returns a 404', fee
-      it_should_behave_like 'glimr update does not get called'
+
+      it 'does not update glimr' do
+        expect(GlimrApiClient::Update).not_to receive(:call)
+        visit post_pay_fee_url(fee)
+      end
 
       it 'alerts the user the service is unavailable' do
         visit pay_fee_url(fee)
@@ -124,7 +135,11 @@ RSpec.feature 'Pay for a case' do
 
     context 'govpay times out' do
       include_examples 'govpay create payment times out', fee
-      it_should_behave_like 'glimr update does not get called'
+
+      it 'does not update glimr' do
+        expect(GlimrApiClient::Update).not_to receive(:call)
+        visit post_pay_fee_url(fee)
+      end
 
       it 'alerts the user the service is unavailable' do
         visit pay_fee_url(fee)

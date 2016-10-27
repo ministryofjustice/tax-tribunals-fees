@@ -1,8 +1,17 @@
 require 'rails_helper'
-require 'support/shared_examples_for_glimr'
 
 RSpec.feature 'Request a case that has already been paid for' do
-  include_examples 'glimr availability request', glimrAvailable: 'yes'
+  let(:fees) { [] }
+
+  let(:glimr_case) { double(
+    title: 'You vs HM Revenue & Customs',
+    fees: fees
+  ) }
+
+  before do
+    allow(GlimrApiClient::Available).to receive_message_chain([:call, :available?]).and_return(true)
+    allow(GlimrApiClient::Case).to receive(:find).and_return(glimr_case)
+  end
 
   # Because let blocks cannot be passes as arguments to shared examples.
   case_number = 'TC/2012/00001'
@@ -19,7 +28,7 @@ RSpec.feature 'Request a case that has already been paid for' do
   end
 
   describe 'and there are no new fees' do
-    include_examples 'no new fees are due', case_number, confirmation_code
+    let(:fees) { [] }
 
     scenario 'No new fees are recorded locally' do
       expect {
@@ -33,12 +42,12 @@ RSpec.feature 'Request a case that has already been paid for' do
     end
   end
 
-  describe 'and there is a new fee' do
-    include_examples 'no fees then a £20 fee', case_number, confirmation_code
-
-    before do
-      make_a_case_request(case_number, confirmation_code)
-    end
+  describe 'and there is an unpaid fee' do
+    let(:fees) { [ double(
+      glimr_id: 7,
+      description: 'Lodgement Fee',
+      amount: 2000
+    ) ] }
 
     scenario 'One new fee is recorded locally' do
       expect {
@@ -46,7 +55,7 @@ RSpec.feature 'Request a case that has already been paid for' do
       }.to change { Fee.count }.by(1)
     end
 
-    scenario 'we explain that there are no outstanding fees' do
+    scenario 'we explain that there is an outstanding fee' do
       make_a_case_request(case_number, confirmation_code)
       expect(page).to have_text('£20.00')
     end
