@@ -15,10 +15,6 @@
       <%= t('.how_long_does_it_take') %>
     </p>
     <p>
-      <% if @glimr_payment_notification_error %>
-        <h1 class='heading-large'><%= t('glimr.payment_notifitcation_failure') %></h1>
-      <% end %>
-
       <% if @glimr_is_not_available %>
         <h1 class='heading-large'><%= t('apis.service_unavailable') %></h1>
       <% elsif @case_not_found %>
