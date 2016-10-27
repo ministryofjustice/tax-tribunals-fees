@@ -2,8 +2,10 @@ require 'rails_helper'
 
 RSpec.feature 'Before requesting a case' do
   context 'Glimr is up' do
+    let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
+
     before do
-      allow(GlimrApiClient::Available).to receive_message_chain([:call, :available?]).and_return(true)
+      allow(GlimrApiClient::Available).to receive(:call).and_return(api_available)
     end
 
     describe 'users can start a new case ' do
@@ -15,11 +17,14 @@ RSpec.feature 'Before requesting a case' do
   end
 
   context 'Glimr is down' do
-    describe 'users cannot start a new case ' do
-      before do
-        allow(GlimrApiClient::Available).to receive_message_chain([:call, :available?]).and_raise(GlimrApiClient::Unavailable)
-      end
+    let(:api_down) { instance_double(GlimrApiClient::Available) }
 
+    before do
+      allow(api_down).to receive(:available?).and_raise(GlimrApiClient::Unavailable)
+      allow(GlimrApiClient::Available).to receive(:call).and_return(api_down)
+    end
+
+    describe 'users cannot start a new case ' do
       scenario 'and are told the service is unavailable' do
         visit '/'
         expect(page).to have_text('The service is currently unavailable')

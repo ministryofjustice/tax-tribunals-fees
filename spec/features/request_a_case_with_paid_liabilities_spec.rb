@@ -3,13 +3,18 @@ require 'rails_helper'
 RSpec.feature 'Request a case that has already been paid for' do
   let(:fees) { [] }
 
-  let(:glimr_case) { double(
-    title: 'You vs HM Revenue & Customs',
-    fees: fees
-  ) }
+  let(:glimr_case) {
+    instance_double(
+      GlimrApiClient::Case,
+      title: 'You vs HM Revenue & Customs',
+      fees: fees
+    )
+  }
+
+  let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
 
   before do
-    allow(GlimrApiClient::Available).to receive_message_chain([:call, :available?]).and_return(true)
+    allow(GlimrApiClient::Available).to receive(:call).and_return(api_available)
     allow(GlimrApiClient::Case).to receive(:find).and_return(glimr_case)
   end
 
@@ -43,11 +48,15 @@ RSpec.feature 'Request a case that has already been paid for' do
   end
 
   describe 'and there is an unpaid fee' do
-    let(:fees) { [ double(
-      glimr_id: 7,
-      description: 'Lodgement Fee',
-      amount: 2000
-    ) ] }
+    let(:fees) {
+      [
+        OpenStruct.new(
+          glimr_id: 7,
+          description: 'Lodgement Fee',
+          amount: 2000
+        )
+      ]
+    }
 
     scenario 'One new fee is recorded locally' do
       expect {

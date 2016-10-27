@@ -14,16 +14,19 @@ RSpec.feature 'Request a brand new case' do
     }
 
     describe 'and glimr responds normally' do
-      let(:glimr_case) { double(
-        title: 'You vs HM Revenue & Customs',
-        fees: [
-          double(
-            glimr_id: 7,
-            description: 'Lodgement Fee',
-            amount: 2000
-          )
-        ]
-      ) }
+      let(:glimr_case) {
+        instance_double(
+          GlimrApiClient::Case,
+          title: 'You vs HM Revenue & Customs',
+          fees: [
+            OpenStruct.new(
+              glimr_id: 7,
+              description: 'Lodgement Fee',
+              amount: 2000
+            )
+          ]
+        )
+      }
 
       before do
         allow(GlimrApiClient::Case).to receive(:find).and_return(glimr_case)

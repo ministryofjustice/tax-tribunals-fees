@@ -9,8 +9,10 @@ RSpec.describe 'Pay for a case', type: :request do
 
   include_examples 'govpay create payment response', fee, fee.govpay_payment_id
 
+  let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
+
   before do
-    allow(GlimrApiClient::Available).to receive_message_chain([:call, :available?]).and_return(true)
+    allow(GlimrApiClient::Available).to receive(:call).and_return(api_available)
   end
 
   describe '#pay' do

@@ -3,8 +3,10 @@ require 'support/shared_examples_for_govpay'
 require 'support/create_a_fee'
 
 RSpec.feature 'Pay for a case' do
+  let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
+
   before do
-    allow(GlimrApiClient::Available).to receive_message_chain([:call, :available?]).and_return(true)
+    allow(GlimrApiClient::Available).to receive(:call).and_return(api_available)
   end
 
   describe '#post_pay' do
@@ -63,7 +65,7 @@ RSpec.feature 'Pay for a case' do
         visit post_pay_fee_url(fee)
       end
 
-      it 'alerts the user to the failure and reason' do
+      it 'notifies the user' do
         visit post_pay_fee_url(fee)
         expect(page).to have_text('we couldn’t take your payment')
       end
@@ -79,9 +81,13 @@ RSpec.feature 'Pay for a case' do
 
       include_examples 'govpay post_pay returns a 500', fee.govpay_payment_id
 
-      it 'alerts the user to the failure and reason' do
+      it 'does not update glimr' do
         visit post_pay_fee_url(fee)
         expect(GlimrApiClient::Update).not_to receive(:call)
+      end
+
+      it 'notifies the user' do
+        visit post_pay_fee_url(fee)
         expect(page).to have_text('We couldn’t find your payment details.')
       end
     end
