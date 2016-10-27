@@ -26,5 +26,16 @@ RSpec.describe 'Pay for a case', type: :request do
         expect(response).to redirect_to(next_url)
       end
     end
+
+    context 'when govuk pay fails' do
+      before do
+        allow(GovukPayApiClient::CreatePayment).to receive(:call).and_raise(GovukPayApiClient::Unavailable)
+      end
+
+      it 'redirects to the application root URL' do
+        get "/fees/#{fee.id}/pay"
+        expect(response).to redirect_to(root_url)
+      end
+    end
   end
 end
