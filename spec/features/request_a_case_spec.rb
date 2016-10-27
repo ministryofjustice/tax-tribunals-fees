@@ -4,6 +4,12 @@ RSpec.feature 'Request a brand new case' do
   case_number = 'TC/2012/00001'
   confirmation_code = 'ABC123'
 
+  let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
+
+  before do
+    allow(GlimrApiClient::Available).to receive(:call).and_return(api_available)
+  end
+
   describe 'happy path' do
     let(:make_a_case_request) {
       visit '/'
