@@ -14,26 +14,15 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include ActiveSupport::Testing::TimeHelpers
 
-  config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
   config.before(:all) do
     Excon.defaults[:mock] = true
   end
 
   config.before(:each) do
     I18n.locale = I18n.default_locale
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.start
-    Excon.stub(
-      { host: 'glimr-test.dsd.io', path: '/glimravailable' },
-      { status: 200, body: { glimrAvailable: 'yes' }.to_json }
-    )
   end
 
   config.after(:each) do
-    DatabaseCleaner.clean
     Excon.stubs.clear
   end
 end

@@ -20,7 +20,16 @@ class ProcessPayment
 
   def call
     process_payment!
+
+    # TODO: Updating GLiMR to notify it that the fee has been paid
+    # should not be done in-process here. Instead, we should add a
+    # message to a queue, so that if GLiMR is down for a short
+    # period, the notification is done as soon as it is back up.
+    # From the users POV, once they've paid, that should be the
+    # end of the procedure. Subsequent system issues are our
+    # problem, not theirs.
     update_glimr! if fee.paid? && UPDATE_GLIMR
+
     log_errors if error?
     self
   end

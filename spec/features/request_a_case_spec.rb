@@ -1,9 +1,14 @@
 require 'rails_helper'
-require 'support/shared_examples_for_glimr'
 
 RSpec.feature 'Request a brand new case' do
   case_number = 'TC/2012/00001'
   confirmation_code = 'ABC123'
+
+  let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
+
+  before do
+    allow(GlimrApiClient::Available).to receive(:call).and_return(api_available)
+  end
 
   describe 'happy path' do
     let(:make_a_case_request) {
@@ -15,7 +20,23 @@ RSpec.feature 'Request a brand new case' do
     }
 
     describe 'and glimr responds normally' do
-      include_examples 'a case fee of £20 is due', case_number, confirmation_code
+      let(:glimr_case) {
+        instance_double(
+          GlimrApiClient::Case,
+          title: 'You vs HM Revenue & Customs',
+          fees: [
+            OpenStruct.new(
+              glimr_id: 7,
+              description: 'Lodgement Fee',
+              amount: 2000
+            )
+          ]
+        )
+      }
+
+      before do
+        allow(GlimrApiClient::Case).to receive(:find).and_return(glimr_case)
+      end
 
       scenario 'then we show the fee' do
         make_a_case_request
@@ -29,32 +50,14 @@ RSpec.feature 'Request a brand new case' do
     end
 
     describe 'and glimr returns an error' do
-      include_examples 'generic glimr response',
-        case_number,
-        confirmation_code,
-        418,
-        glimrerrorcode: 418, message: 'I’m a teapot'
+      before do
+        expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::Unavailable)
+      end
 
       scenario 'then we do not show the fee' do
         make_a_case_request
         # TODO: This is not ideal.  It should alert the user to the failure.
         expect(page).to have_text('service is currently unavailable')
-      end
-    end
-
-    describe 'and glimr times out' do
-      let(:excon) {
-        class_double(Excon)
-      }
-
-      before do
-        expect(excon).to receive(:post).and_raise(Excon::Errors::Timeout)
-        expect(Excon).to receive(:new).and_return(excon)
-      end
-
-      scenario 'we alert the user' do
-        visit '/'
-        expect(page).to have_text('The service is currently unavailable')
       end
     end
   end
@@ -66,7 +69,9 @@ RSpec.feature 'Request a brand new case' do
     end
 
     describe 'a bad case reference' do
-      include_examples 'case not found'
+      before do
+        expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::CaseNotFound)
+      end
 
       scenario 'then tell the user the case cannot be found' do
         fill_in 'Case reference', with: 'some junk'
@@ -77,7 +82,9 @@ RSpec.feature 'Request a brand new case' do
     end
 
     describe 'a non-existent case' do
-      include_examples 'case not found'
+      before do
+        expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::CaseNotFound)
+      end
 
       scenario 'then tell the user the case cannot be found' do
         fill_in 'Case reference', with: 'TC/2016/00001'

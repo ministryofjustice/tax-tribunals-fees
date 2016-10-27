@@ -1,7 +1,5 @@
 class ApplicationController < ActionController::Base
   rescue_from GlimrApiClient::Unavailable, with: :alert_glimr_is_not_available
-  rescue_from GlimrApiClient::PaymentNotificationFailure,
-    with: :alert_glimr_payment_notification_failure
   rescue_from GlimrApiClient::CaseNotFound, with: :case_not_found
 
   protect_from_forgery with: :exception
@@ -17,11 +15,6 @@ class ApplicationController < ActionController::Base
 
   def alert_glimr_is_not_available
     @glimr_is_not_available = true
-    render 'pages/start'
-  end
-
-  def alert_glimr_payment_notification_failure
-    @glimr_payment_notification_error = true
     render 'pages/start'
   end
 
