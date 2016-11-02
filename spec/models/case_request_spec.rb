@@ -85,7 +85,7 @@ RSpec.describe CaseRequest do
       end
 
       it "finds the case in glimr" do
-        expect(GlimrApiClient::Case).to receive(:find).with(case_reference)
+        expect(GlimrApiClient::Case).to receive(:find).with(case_reference, confirmation_code)
         case_request.process!
       end
 
