@@ -42,7 +42,10 @@ class CaseRequest
   end
 
   def glimr_case_request
-    @glimr_case_request ||= GlimrApiClient::Case.find(case_reference, confirmation_code)
+    @glimr_case_request ||= GlimrApiClient::Case.find(
+      case_reference,
+      confirmation_code
+    )
   end
 
   delegate :fees, :title, to: :glimr_case_request
