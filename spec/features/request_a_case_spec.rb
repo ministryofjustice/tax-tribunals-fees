@@ -70,7 +70,7 @@ RSpec.feature 'Request a brand new case' do
 
     describe 'a bad case reference' do
       before do
-        expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::CaseNotFound)
+        expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::Case::InvalidCaseNumber)
       end
 
       scenario 'then tell the user the case cannot be found' do
@@ -83,7 +83,7 @@ RSpec.feature 'Request a brand new case' do
 
     describe 'a non-existent case' do
       before do
-        expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::CaseNotFound)
+        expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::Case::InvalidCaseNumber)
       end
 
       scenario 'then tell the user the case cannot be found' do
