@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   rescue_from GlimrApiClient::Unavailable, with: :alert_glimr_is_not_available
-  rescue_from GlimrApiClient::CaseNotFound, with: :case_not_found
+  rescue_from GlimrApiClient::Case::InvalidCaseNumber, with: :case_not_found
 
   protect_from_forgery with: :exception
 

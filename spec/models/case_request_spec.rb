@@ -52,13 +52,13 @@ RSpec.describe CaseRequest do
     context "when case does not exist in glimr" do
       before do
         allow(Fee).to receive(:create!).and_return(fee)
-        allow(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::CaseNotFound)
+        allow(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::Case::InvalidCaseNumber)
       end
 
       it "raises an error" do
         expect {
           case_request.process!
-        }.to raise_error(GlimrApiClient::CaseNotFound)
+        }.to raise_error(GlimrApiClient::Case::InvalidCaseNumber)
       end
     end
 
