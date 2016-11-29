@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'support/shared_examples_for_govpay'
 require 'support/create_a_fee'
 
 RSpec.feature 'Pay for a case' do
@@ -7,12 +6,12 @@ RSpec.feature 'Pay for a case' do
 
   before do
     allow(GlimrApiClient::Available).to receive(:call).and_return(api_available)
+    allow(GovukPayApiClient::GetStatus).to receive(:call).and_return(payment_status)
   end
 
   describe '#post_pay' do
-    include_examples 'govpay payment response', fee.govpay_payment_id
-
     let(:govpay_payment_id) { 'rmpaurrjuehgpvtqg997bt50f' }
+    let(:payment_status) { OpenStruct.new(status: 'success') }
 
     before do
       allow(GlimrApiClient::Update).to receive(:call)
@@ -44,17 +43,7 @@ RSpec.feature 'Pay for a case' do
     end
 
     context 'failed payment' do
-      def failure
-        {
-          'state' =>
-          {
-            'status' => 'failed',
-            'message' => '3D secure failed'
-          }
-        }.to_json
-      end
-
-      include_examples 'govpay payment response', fee.govpay_payment_id
+      let(:payment_status) { OpenStruct.new(status: 'failed') }
 
       before do
         fee.update(govpay_payment_id: govpay_payment_id)
@@ -72,14 +61,14 @@ RSpec.feature 'Pay for a case' do
     end
 
     context 'govpay fails' do
-      # This signals that a fee has been paid. Not using fixtures due to the
-      # inability to explicitly pass `let` blocks into shared examples outside
-      # of `it` declarations.
       before do
+        allow(GovukPayApiClient::GetStatus).to receive(:call).and_raise(GovukPayApiClient::Unavailable)
+
+        # This signals that a fee has been paid. Not using fixtures due to the
+        # inability to explicitly pass `let` blocks into shared examples outside
+        # of `it` declarations.
         fee.update(govpay_payment_id: govpay_payment_id)
       end
-
-      include_examples 'govpay post_pay returns a 500', fee.govpay_payment_id
 
       it 'does not update glimr' do
         visit post_pay_fee_url(fee)
@@ -92,22 +81,7 @@ RSpec.feature 'Pay for a case' do
       end
     end
 
-    context 'govpay payment status times out' do
-      include_examples 'govpay payment status times out', fee.govpay_payment_id
-
-      it 'does not try to update glimr' do
-        expect(GlimrApiClient::Update).not_to receive(:call)
-        visit post_pay_fee_url(fee)
-      end
-
-      it 'alerts the user to the failure' do
-        visit post_pay_fee_url(fee)
-        expect(page).to have_text('We couldn’t find your payment details.')
-      end
-    end
-
     context 'glimr update fails' do
-      # include_examples 'glimr fee_paid returns a 500'
       before do
         allow(GlimrApiClient::Update).to receive(:call).and_raise(GlimrApiClient::RequestError)
       end
@@ -118,38 +92,6 @@ RSpec.feature 'Pay for a case' do
         expect {
           visit post_pay_fee_url(fee)
         }.to raise_error(GlimrApiClient::RequestError)
-      end
-    end
-  end
-
-  # A successful call to `#pay` is tested with a request spec as it involves a
-  # redirect to the Gov UK Payment gateway.
-  describe '#pay' do
-    context 'the GovPay API returns a 404' do
-      include_examples 'govpay returns a 404', fee
-
-      it 'does not update glimr' do
-        expect(GlimrApiClient::Update).not_to receive(:call)
-        visit post_pay_fee_url(fee)
-      end
-
-      it 'alerts the user the service is unavailable' do
-        visit pay_fee_url(fee)
-        expect(page).to have_text('The service is currently unavailable')
-      end
-    end
-
-    context 'govpay times out' do
-      include_examples 'govpay create payment times out', fee
-
-      it 'does not update glimr' do
-        expect(GlimrApiClient::Update).not_to receive(:call)
-        visit post_pay_fee_url(fee)
-      end
-
-      it 'alerts the user the service is unavailable' do
-        visit pay_fee_url(fee)
-        expect(page).to have_text('The service is currently unavailable')
       end
     end
   end

@@ -14,15 +14,7 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include ActiveSupport::Testing::TimeHelpers
 
-  config.before(:all) do
-    Excon.defaults[:mock] = true
-  end
-
   config.before(:each) do
     I18n.locale = I18n.default_locale
-  end
-
-  config.after(:each) do
-    Excon.stubs.clear
   end
 end
