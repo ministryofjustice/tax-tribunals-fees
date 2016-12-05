@@ -1,5 +1,7 @@
 en:
   application:
+    title: GOV.UK - Pay your tax tribunal fees
+    proposition: Pay your tax tribunal fees
     alpha_html: |
       <div class="phase-banner-alpha">
        <p>

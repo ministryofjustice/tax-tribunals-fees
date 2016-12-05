@@ -1,5 +1,5 @@
 <% content_for(:homepage_url) { "/" } %>
-<% content_for(:page_title) { "GOV.UK - Pay your tax tribunal fees" } %>
+<% content_for(:page_title) { t('application.title') } %>
 
 <% content_for(:head) do %>
   <%= csrf_meta_tags %>
@@ -9,7 +9,7 @@
 <% content_for(:inside_header) do %>
   <div class="header-proposition">
     <div class="content">
-      <a href="/" id="proposition-name">Pay your tax tribunal fees</a>
+      <a href="/" id="proposition-name"><%= t('application.proposition') %></a>
     </div>
   </div>
 <% end %>
