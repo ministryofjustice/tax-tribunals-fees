@@ -12,37 +12,37 @@
   <p><%= t('.you_need_to_pay') %></p>
 
   <div class="notice notice-payment util_mt-large">
-    <i class="icon icon-important"><span class="visuallyhidden"><%= t('.warning') %></span></i>
+    <i class="icon icon-important">
+      <span class="visuallyhidden"><%= t('.warning') %></span>
+    </i>
     <strong class="bold-small">
       <%= t('.lose_the_right') %>
     </strong>
   </div>
 
-    <div class="liabilities-list">
-      <% if @case_request.all_fees_paid? %>
-        <%= t('.payments_are_up_to_date') %>
-        <%= t('.other_fees_may_be_due') %>
-      <% else %>
-        <div class="liabilities-list">
-          <%= render @case_request.case_fees %>
-        </div>
-        <p><%= t('.select_payment_method') %></p>
-        <label class='block-label selection-button-radio'>
-          <%= radio_button_tag(:payment_method, :card) %>
-          <strong><%= t('.debit_or_credit_card') %></strong>
-        </label>
-        <label class='block-label selection-button-radio'>
-          <%= radio_button_tag(:payment_method, :help_with_fees) %>
-          <strong><%= t('.help_with_fees') %></strong>
-          <br />
-          <%= t('.when_to_request_help_with_fees') %>
-        </label>
-        <label class='block-label selection-button-radio'>
-          <%= radio_button_tag(:payment_method, :cheque) %>
-          <strong><%= t('.cheque') %></strong>
-        </label>
-      <% end %>
-    </div>
+    <% if @case_request.all_fees_paid? %>
+      <%= t('.payments_are_up_to_date') %>
+      <%= t('.other_fees_may_be_due') %>
+    <% else %>
+      <div class="liabilities-list">
+        <%= render @case_request.case_fees %>
+      </div>
+      <p><%= t('.select_payment_method') %></p>
+      <label class='block-label selection-button-radio'>
+        <%= radio_button_tag(:payment_method, :card) %>
+        <strong><%= t('.debit_or_credit_card') %></strong>
+      </label>
+      <label class='block-label selection-button-radio'>
+        <%= radio_button_tag(:payment_method, :help_with_fees) %>
+        <strong><%= t('.help_with_fees') %></strong>
+        <br />
+        <%= t('.when_to_request_help_with_fees') %>
+      </label>
+      <label class='block-label selection-button-radio'>
+        <%= radio_button_tag(:payment_method, :cheque) %>
+        <strong><%= t('.cheque') %></strong>
+      </label>
+    <% end %>
 <% else %>
   <p class="lede">
     <%= t('.no_outstanding_fees') %>
