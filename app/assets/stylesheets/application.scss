@@ -1,7 +1,5 @@
 // Import GOV.UK elements from /govuk-modules/, this will import the frontend toolkit and some base styles.
 // Take a look in /govuk-modules/_govuk-elements.scss to see which files are imported.
-$path: "/public/images/";
-
 @import 'govuk-elements';
 
 // Take a look at in app/assets/sass/patterns/ to see which files are imported.
