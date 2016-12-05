@@ -3,6 +3,9 @@
 </h1>
 
 <% if @case_request.fees? %>
+  <p>
+    <!-- Step numbering goes here -->
+  </p>
   <p class="lede">
     <%= t('.case_reference_html', case_reference: @case_request.case_reference) %>
   </p>
@@ -13,7 +16,7 @@
     <strong class="bold-small">
       <%= t('.lose_the_right') %>
     </strong>
-    </div>
+  </div>
 
     <div class="liabilities-list">
       <% if @case_request.all_fees_paid? %>
