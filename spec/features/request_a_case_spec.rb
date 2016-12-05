@@ -36,16 +36,41 @@ RSpec.feature 'Request a brand new case' do
 
       before do
         allow(GlimrApiClient::Case).to receive(:find).and_return(glimr_case)
+        make_a_case_request
       end
 
-      scenario 'then we show the fee' do
-        make_a_case_request
-        expect(page).to have_text('£20.00')
+      scenario 'show the case reference' do
+        expect(page).to have_text("Your case reference is #{case_number}")
       end
 
-      scenario 'then we show the type of fee' do
-        make_a_case_request
-        expect(page).to have_text('Lodgement Fee')
+      scenario 'highlight the need' do
+        expect(page).to have_text("You need to pay fees")
+      end
+
+      scenario 'highlight the urgency' do
+        expect(page).to have_text("pay your fee immediately")
+      end
+
+      scenario 'show the fee details' do
+        expect(page).to have_text("£20 fee to lodge your appeal")
+      end
+
+      describe 'payment methods' do
+        scenario 'select the method' do
+          expect(page).to have_text("Select your method of payment")
+        end
+
+        scenario 'by card' do
+          expect(page).to have_text("Debit or credit card")
+        end
+
+        scenario 'Help with fees' do
+          expect(page).to have_text("Help with fees")
+        end
+
+        scenario 'Cheque' do
+          expect(page).to have_text("Cheque")
+        end
       end
     end
 

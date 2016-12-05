@@ -1,6 +1,8 @@
 en:
   fees:
     fee:
+      header_html: |
+        %{amount} fee to lodge your appeal
       pay_via_help_with_fees: Pay via help with fees
       pay_now: Pay now
       gov_pay_redirect: |

@@ -1,12 +1,12 @@
 <h1 class="heading-large">
-  <span class="heading-secondary"><%= @case_request.case_reference %></span>
   <%= @case_request.title %>
 </h1>
 
 <% if @case_request.fees? %>
   <p class="lede">
-    <%= t('.you_need_to_pay') %>
+    <%= t('.case_reference_html', case_reference: @case_request.case_reference) %>
   </p>
+  <p><%= t('.you_need_to_pay') %></p>
 
   <div class="notice notice-payment">
     <i class="icon icon-important"><span class="visuallyhidden"><%= t('.warning') %></span></i>
@@ -20,7 +20,24 @@
         <%= t('.payments_are_up_to_date') %>
         <%= t('.other_fees_may_be_due') %>
       <% else %>
-        <%= render @case_request.case_fees %>
+        <div class="liabilities-list">
+          <%= render @case_request.case_fees %>
+        </div>
+        <p><%= t('.select_payment_method') %></p>
+        <label class='block-label selection-button-radio'>
+          <%= radio_button_tag(:payment_method, :card) %>
+          <strong><%= t('.debit_or_credit_card') %></strong>
+        </label>
+        <label class='block-label selection-button-radio'>
+          <%= radio_button_tag(:payment_method, :help_with_fees) %>
+          <strong><%= t('.help_with_fees') %></strong>
+          <br />
+          <%= t('.when_to_request_help_with_fees') %>
+        </label>
+        <label class='block-label selection-button-radio'>
+          <%= radio_button_tag(:payment_method, :cheque) %>
+          <strong><%= t('.cheque') %></strong>
+        </label>
       <% end %>
     </div>
 <% else %>
@@ -44,7 +61,3 @@
     <%= t('.if_you_believe') %>
   </p>
 <% end %>
-
-<p>
-  <%= link_to t('.find_another_case'), new_case_request_path, class: 'link-back' %>
-</p>
