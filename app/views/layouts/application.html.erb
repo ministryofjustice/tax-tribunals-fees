@@ -16,12 +16,7 @@
 
 <% content_for(:content) do %>
   <main id="content" role="main">
-    <div class="phase-banner-alpha">
-      <p>
-        <strong class="phase-tag">ALPHA</strong>
-        <span>This is a prototype. Do not enter personally identifiable information or credit card details.</span>
-      </p>
-    </div>
+    <%= t('application.alpha_html') %>
 
     <% if flash[:alert] %>
       <div class="error-summary">

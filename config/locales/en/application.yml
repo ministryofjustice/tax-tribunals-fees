@@ -1,0 +1,9 @@
+en:
+  application:
+    alpha_html: |
+      <div class="phase-banner-alpha">
+       <p>
+         <strong class="phase-tag">ALPHA</strong>
+         <span>This is a new service - your <a href='#'>feeback</a> will help up improve it.</span>
+       </p>
+      </div>
