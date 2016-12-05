@@ -4,7 +4,10 @@ en:
       <div class="phase-banner-alpha">
        <p>
          <strong class="phase-tag">ALPHA</strong>
-         <span>This is a new service - your <a href='#'>feeback</a> will help up improve it.</span>
+         <span>
+           This is a new service - your <a href='#'>feeback</a> will help up improve it.
+           If you need help using the online service, we can offer <a href='#'>technical help</a>.
+         </span>
        </p>
       </div>
     courts_sentencing: Courts, sentencing and tribunals
