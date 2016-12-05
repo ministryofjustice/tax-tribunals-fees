@@ -1,0 +1,73 @@
+ul.buttons {
+  li {
+    margin-bottom: $gutter;
+  }
+}
+
+.task-list {
+  font-size: 24px;
+  border-top: 1px solid $grey-2;
+  list-style-position: inside;
+  padding-left: 0;
+  margin-top: 45px;
+  margin-bottom: 45px;
+
+  li {
+    padding: 15px 0;
+    border-bottom: 1px solid $grey-2;
+    margin: 0;
+    position: relative;
+  }
+
+  a.task-link {
+    font-weight: bold;
+    display: block;
+  }
+
+  span.task-status {
+    display: none;
+
+    position: absolute;
+    right: 5px;
+    top: 20px;
+
+    padding: 2px 5px 0;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #fff;
+    background-color: $black;
+  }
+
+  a.button-start {
+    position: absolute;
+    right: 5px;
+    top: 20px;
+  }
+}
+
+.uploaded-files {
+
+  border-top: 1px solid $grey-2;
+
+  li {
+    padding: 10px;
+    border-bottom: 1px solid $grey-2;
+  }
+
+  .no-files {
+    padding-left: 0;
+  }
+
+  .file {
+    list-style-type: decimal;
+    list-style-position: inside;
+    padding-left: 20px;
+
+    a {
+      float: right;
+    }
+  }
+}
