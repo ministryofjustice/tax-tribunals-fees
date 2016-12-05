@@ -7,7 +7,11 @@
   </div>
   <div class="column-two-thirds">
     <p>
-    <%= link_to t('.pay_now'), pay_fee_url(fee), class: 'button' %>
+    <% if @help_with_fees %>
+      <%= link_to t('.pay_via_help_with_fees'), pay_fee_url(fee), class: 'button' %>
+    <% else %>
+      <%= link_to t('.pay_now'), pay_fee_url(fee), class: 'button' %>
+    <% end %>
     </p>
     <p class="font-xsmall">
     <%= t('.gov_pay_redirect') %>

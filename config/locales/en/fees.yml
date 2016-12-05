@@ -1,6 +1,7 @@
 en:
   fees:
     fee:
+      pay_via_help_with_fees: Pay via help with fees
       pay_now: Pay now
       gov_pay_redirect: |
         You will be redirected to GOV.UK Pay, an official secure payments
