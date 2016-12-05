@@ -28,7 +28,24 @@
         <%= yield %>
       </div>
       <div class="column-one-third">
-      </div>
+				<aside class="govuk-related-items">
+          <h2 class="heading-medium"><%= t('application.courts_sentencing') %></h2>
+          <nav role="navigation">
+            <ul class="font-xsmall">
+              <li><a href="https://www.gov.uk/court-fees-what-they-are"><%= t('application.court_fees') %></a></li>
+              <li><a href="https://www.gov.uk/tax-tribunal"><%= t('application.appeal') %></a></li>
+            </ul>
+          </nav>
+
+          <h2 class="heading-medium"><%= t('application.elsewhere') %></h2>
+          <nav role="navigation">
+            <ul class="font-xsmall">
+              <li><a href="https://www.gov.uk/tax-appeals"><%= t('application.disagree') %></a></li>
+              <li><a href="https://www.gov.uk/government/publications/tax-chamber-tribunal-procedure-rules"><%= t('application.procedure') %></a></li>
+            </ul>
+          </nav>
+        </aside>
+		</div>
     </div>
   </main>
 <% end %>
