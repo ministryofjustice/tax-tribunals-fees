@@ -4,6 +4,8 @@ class PaymentMethodsController < ApplicationController
     case payment_method
     when 'card'
       redirect_to pay_fee_url(params[:id])
+    when 'help_with_fees'
+      redirect_to help_with_fees_url(params[:id])
     end
   end
 
