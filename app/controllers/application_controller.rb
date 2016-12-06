@@ -9,8 +9,8 @@ class ApplicationController < ActionController::Base
   private
 
   def case_not_found
-    @case_not_found = true
-    render 'pages/start'
+    flash[:notice] = t('case_requests.could_not_find_case_html')
+    redirect_to case_requests_url
   end
 
   def alert_glimr_is_not_available

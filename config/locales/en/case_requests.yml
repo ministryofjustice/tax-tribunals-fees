@@ -1,10 +1,12 @@
 en:
   case_requests:
-    could_not_find_case: We could not find your case
-    check_details: |
+    could_not_find_case_html: |
+      <h1 class='heading-large'>We could not find your case</h1>
+      <p>
       Please ensure you have entered all details correctly. If you are sure the
       details are correct and you still cannot find your case, please contact
       support.
+      </p>
     new:
       find_your_case: Find your case
       find_case: Find case

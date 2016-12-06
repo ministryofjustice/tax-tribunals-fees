@@ -14,9 +14,6 @@
   <p>
   <% if @glimr_is_not_available %>
     <h1 class='heading-large'><%= t('apis.service_unavailable') %></h1>
-  <% elsif @case_not_found %>
-    <h1 class='heading-large'><%= t('case_requests.could_not_find_case') %></h1>
-    <h2><%= t('case_requests.check_details') %></h2>
   <% else %>
     <%= link_to t('.start_now') , new_case_request_path, class: 'button button-start' %>
   <% end %>
