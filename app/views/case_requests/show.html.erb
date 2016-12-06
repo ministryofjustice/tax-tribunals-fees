@@ -29,9 +29,8 @@
       </div>
       <p><%= t('.select_payment_method') %></p>
 
-      <%= form_tag(payment_method_case_requests_url) %>
+      <%= form_tag(payment_method_url(@case_request.case_fees.first.id), method: :put) %>
       <fieldset>
-          <%= hidden_field_tag(:fee_id, @case_request.case_fees.first.id) %>
           <label class='block-label selection-button-radio'>
             <%= radio_button_tag(:payment_method, :card) %>
             <strong><%= t('.debit_or_credit_card') %></strong>
