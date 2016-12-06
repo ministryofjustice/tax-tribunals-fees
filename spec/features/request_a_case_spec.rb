@@ -44,7 +44,7 @@ RSpec.feature 'Request a brand new case' do
       end
 
       scenario 'highlight the need' do
-        expect(page).to have_text("You need to pay fees")
+        expect(page).to have_text("You need to pay the following fee")
       end
 
       scenario 'highlight the urgency' do

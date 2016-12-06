@@ -25,23 +25,32 @@
       <%= t('.other_fees_may_be_due') %>
     <% else %>
       <div class="liabilities-list">
-        <%= render @case_request.case_fees %>
+        <%= render @case_request.case_fees.first %>
       </div>
       <p><%= t('.select_payment_method') %></p>
-      <label class='block-label selection-button-radio'>
-        <%= radio_button_tag(:payment_method, :card) %>
-        <strong><%= t('.debit_or_credit_card') %></strong>
-      </label>
-      <label class='block-label selection-button-radio'>
-        <%= radio_button_tag(:payment_method, :help_with_fees) %>
-        <strong><%= t('.help_with_fees') %></strong>
-        <br />
-        <%= t('.when_to_request_help_with_fees') %>
-      </label>
-      <label class='block-label selection-button-radio'>
-        <%= radio_button_tag(:payment_method, :cheque) %>
-        <strong><%= t('.cheque') %></strong>
-      </label>
+
+      <%= form_tag(payment_method_case_requests_url) %>
+      <fieldset>
+          <%= hidden_field_tag(:fee_id, @case_request.case_fees.first.id) %>
+          <label class='block-label selection-button-radio'>
+            <%= radio_button_tag(:payment_method, :card) %>
+            <strong><%= t('.debit_or_credit_card') %></strong>
+          </label>
+          <label class='block-label selection-button-radio'>
+            <%= radio_button_tag(:payment_method, :help_with_fees) %>
+            <strong><%= t('.help_with_fees') %></strong>
+            <br />
+            <%= t('.when_to_request_help_with_fees') %>
+          </label>
+          <label class='block-label selection-button-radio'>
+            <%= radio_button_tag(:payment_method, :cheque) %>
+            <strong><%= t('.cheque') %></strong>
+          </label>
+        </fieldset>
+        <p>
+          <%= submit_tag(t('.continue')) %>
+        </p>
+      </form>
     <% end %>
 <% else %>
   <p class="lede">

@@ -15,6 +15,7 @@ en:
       enter_details: |
         Enter your case details from the letter the tribunal sent you.
     show:
+      continue: Continue
       case_reference_html: |
         Your case reference is <strong
         data-key="tc_number">%{case_reference}</strong>. Please make a note of

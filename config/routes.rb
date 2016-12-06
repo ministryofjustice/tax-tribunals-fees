@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   resources :case_requests, only: [:new, :create], path_names: { new: '' } do
     collection do
       post :help_with_fees
+      post :payment_method
     end
   end
 
