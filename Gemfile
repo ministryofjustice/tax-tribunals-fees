@@ -41,6 +41,7 @@ group :test do
   gem 'shoulda'
   gem 'simplecov', require: false
   gem 'simplecov-rcov'
+  gem 'webmock'
 end
 
 group :development do
