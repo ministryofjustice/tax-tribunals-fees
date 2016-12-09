@@ -11,14 +11,14 @@
 
   <%= form_tag(help_with_fees_url(@fee), method: :put, class: 'js_route') do %>
     <div class="form-group">
-      <label class="form-label" for="hwf-reference"><%= t('.reference_number') %></label>
-      <input class="form-control" type="text" id="hwf-reference" data-store="">
+      <%= label_tag(:help_with_fees_reference, t('.reference_number'), class: 'form-label') %>
+      <%= text_field_tag(:help_with_fees_reference, nil, class: 'form-control') %>
     </div>
 
     <p>
     <input class="button" type="submit" value="Continue">
-    </p>
   <% end %>
+    </p>
 <% end %>
 
 <% content_for(:right_column) do %>
