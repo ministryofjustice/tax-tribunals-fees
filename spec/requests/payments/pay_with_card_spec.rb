@@ -9,7 +9,7 @@ RSpec.describe 'pay by card spec', type: :request do
 
   context 'happy path' do
     specify {
-      put '/payment_methods/abc123', params: { payment_method: 'card' }
+      put '/payments/abc123', params: { payment_method: 'card' }
       expect(response).to redirect_to('/fees/abc123/pay')
     }
   end

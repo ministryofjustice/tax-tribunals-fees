@@ -5,7 +5,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :payment_methods, only: [:update]
+  resources :payments, only: [:show, :update]
   resources :help_with_fees, only: [:show, :update]
 
   resources :fees, only: [] do

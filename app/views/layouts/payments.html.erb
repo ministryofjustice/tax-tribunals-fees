@@ -16,20 +16,13 @@
 
 <% content_for(:content) do %>
   <main id="content" role="main">
-    <%= t('application.alpha_html') %>
-    <div class="grid-row">
-      <div class="column-two-thirds">
-        <% if flash[:alert] %>
-        <div class="error-summary">
-          <%= flash[:alert] %>
-        </div>
-        <% end %>
-        <%= yield(:left_column) %>
-      </div>
-      <div class="column-one-third">
-        <%= yield(:right_column) %>
-      </div>
+  <%= t('application.alpha_html') %>
+  <% if flash[:alert] %>
+    <div class="error-summary">
+      <%= flash[:alert] %>
     </div>
+  <% end %>
+  <%= yield %>
   </main>
 <% end %>
 
