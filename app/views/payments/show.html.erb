@@ -7,7 +7,8 @@
   <h1 class="bold-large"><%= t('.payment_successful') %></h1>
 
   <p>
-    <%= raw @paid_via_copy %>
+    <%= @paid_via_copy %>
+    <strong class="heading-medium" data-key="hwf-reference"><%= @reference %></strong>
   </p>
 </div>
 <p><%= t('.confirmation_email') %></p>

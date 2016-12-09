@@ -21,10 +21,6 @@ class ProcessHelpWithFees
     fee.failed? || glimr.try(:error?)
   end
 
-  def error_message
-    payment.message || glimr.try(:error_message)
-  end
-
   private
 
   def process_payment!
@@ -33,10 +29,5 @@ class ProcessHelpWithFees
       hwfRequestReference: fee.help_with_fees_reference,
       amountToPayInPence: fee.amount
     )
-  end
-
-  def log_errors
-    log_fee_error if fee.failed?
-    log_glimr_error if glimr.try(:error?)
   end
 end

@@ -1,11 +1,7 @@
 en:
   payments:
-    paid_via_help_with_fees_html: |
-       Fee paid via help with fees reference <strong class="heading-medium"
-       data-key="hwf-reference">%{reference}</strong>
-    paid_via_card_html: |
-       Your payment reference is <strong class="heading-medium"
-       data-key="hwf-reference">%{reference}</strong>
+    paid_via_help_with_fees: Fee paid via help with fees reference
+    paid_via_card: Your payment reference is
     show:
       payment_successful: Payment successful
       your_payment_reference: Your payment reference is

@@ -47,6 +47,9 @@ RSpec.feature 'Help with fees' do
 
       scenario 'has the correct case' do
         expect(page).to have_text(case_number)
+      end
+
+      scenario 'has the correct case title' do
         expect(page).to have_text('You vs HM Revenue & Customs')
       end
 
@@ -59,16 +62,18 @@ RSpec.feature 'Help with fees' do
       end
 
       describe 'submit' do
-        scenario 'send data to glimr and do not require a data response' do
-          expect(GlimrApiClient::HwfRequested).to receive(:call).with(
-            { feeLiabilityId: 7,
-              hwfRequestReference: 'ABC123',
-              amountToPayInPence: 2000 }
+        before do
+          allow(GlimrApiClient::HwfRequested).to receive(:call).with(
+            feeLiabilityId: 7,
+            hwfRequestReference: 'ABC123',
+            amountToPayInPence: 2000
           )
+        end
+
+        scenario 'send data to glimr and do not require a data response' do
           fill_in 'Help with fees reference number', with: 'ABC123'
           click_on 'Continue'
-          expect(page).to have_text('Payment successful')
-          expect(page).to have_text('Fee paid via help with fees reference ABC123' )
+          expect(page).to have_text('Fee paid via help with fees reference ABC123')
         end
       end
     end

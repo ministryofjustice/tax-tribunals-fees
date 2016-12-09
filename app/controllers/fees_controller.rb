@@ -12,7 +12,10 @@ class FeesController < ApplicationController
     @fee = operation.fee
     if operation.error?
       flash[:error] = operation.error_message || t('.payment_error')
+      # rubocop:disable Style/AndOr
+      # Know rubocop issue.
       render 'post_pay_error' and return
+      # rubocop:enable Style/AndOr
     end
     redirect_to payment_url(@fee)
   rescue GovukPayApiClient::Unavailable
