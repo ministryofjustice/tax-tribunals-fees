@@ -9,3 +9,17 @@ en:
         You will be redirected to GOV.UK Pay, an official secure payments
         service.
     find_another_case: Fine another case
+    post_pay_error:
+      payment_not_taken: Sorry, we couldn’t take your payment.
+      try_again: Try again
+      try_again_copy: |
+        You can try making the payment again. Check that you have sufficient money in
+        your account, try using a different card, or check that your bank has not
+        blocked your card for security checks.
+      made_in_error: |
+        If you believe this is an error on our side, please contact the tribunal
+        immediately and tell them the error message above.
+      warning: Warning
+      lose_the_right_to_appeal: |
+        You may lose the right to appeal if you do not pay your fee within the
+        time limit we give you.

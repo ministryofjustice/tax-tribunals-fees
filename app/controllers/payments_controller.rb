@@ -12,11 +12,17 @@ class PaymentsController < ApplicationController
   def show
     @fee = Fee.find(params[:id])
     @paid_via_copy =
-      if @fee.help_with_fees_reference.present?
+      if @fee.govpay_payment_status.present?
+        I18n.t(
+          '.payments.paid_via_card_html',
+          reference: @fee.govpay_payment_id.upcase
+        )
+      elsif @fee.help_with_fees_reference.present?
         I18n.t(
           '.payments.paid_via_help_with_fees_html',
           reference: @fee.help_with_fees_reference
         )
+
       end
   end
 
