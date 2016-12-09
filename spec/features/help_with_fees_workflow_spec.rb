@@ -59,7 +59,12 @@ RSpec.feature 'Help with fees' do
       end
 
       describe 'submit' do
-        scenario do
+        scenario 'send data to glimr and do not require a data response' do
+          expect(GlimrApiClient::HwfRequested).to receive(:call).with(
+            { feeLiabilityId: 7,
+              hwfRequestReference: 'ABC123',
+              amountToPayInPence: 2000 }
+          )
           fill_in 'Help with fees reference number', with: 'ABC123'
           click_on 'Continue'
           expect(page).to have_text('Payment successful')

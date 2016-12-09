@@ -5,9 +5,8 @@ class HelpWithFeesController < ApplicationController
 
   def update
     @fee = Fee.find(params[:id])
-    if @fee
-      @fee.update_column(:help_with_fees_reference, help_with_fees_params)
-    end
+    @fee.update_column(:help_with_fees_reference, help_with_fees_params)
+    ProcessHelpWithFees.call(@fee.id)
     redirect_to payment_url(@fee)
   end
 

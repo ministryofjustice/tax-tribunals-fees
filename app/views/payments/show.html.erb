@@ -5,9 +5,10 @@
 
 <div class="govuk-box-highlight">
   <h1 class="bold-large"><%= t('.payment_successful') %></h1>
-<p>
-<%= t('.your_payment_reference') %></ br>
-</p>
+
+  <p>
+    <%= raw @paid_via_copy %>
+  </p>
 </div>
 <p><%= t('.confirmation_email') %></p>
 

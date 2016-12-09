@@ -1,5 +1,8 @@
 en:
   payments:
+    paid_via_help_with_fees_html: |
+       Fee paid via help with fees reference <strong class="heading-medium"
+       data-key="hwf-reference">%{reference}</strong>
     show:
       payment_error: |
         There was an error updating your case after payment. Please contact the
