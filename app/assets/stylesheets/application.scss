@@ -2,21 +2,11 @@
 // Take a look in /govuk-modules/_govuk-elements.scss to see which files are imported.
 @import 'govuk-elements';
 
-// Take a look at in app/assets/sass/patterns/ to see which files are imported.
-@import 'patterns/check-your-answers';
-@import 'patterns/unbranded';
-
 // local styles added to tax tribs prototype
 @import 'local/page-navigation';
 @import 'local/typography';
-@import 'local/details';
-@import 'local/panels';
-@import 'local/banners';
-@import 'local/tables';
-@import 'local/lists';
 @import 'local/inputs';
 @import 'local/forms';
-@import 'local/dropzone';
 @import 'local/utilities';
 
 // Related items
