@@ -1,0 +1,38 @@
+<% content_for(:left_column) do %>
+  <h1 class="heading-large">
+    <span class="heading-secondary" data-key="tc_number"><%= @fee.case_reference %></span>
+    <%= @fee.case_title %>
+  </h1>
+
+  <h2 class="heading-medium"><%= t('.pay') %></h2>
+
+  <p><%= t('.account') %></p>
+
+  <%= form_tag(pay_by_account_url(@fee), method: :put, class: 'js_route') do %>
+    <div class="form-group">
+      <%= label_tag(:pay_by_account_reference, t('.reference'), class: 'form-label') %>
+      <%= text_field_tag(:pay_by_account_reference, nil, class: 'form-control') %>
+      <%= label_tag(:pay_by_account_confirmation, t('.confirmation'), class: 'form-label') %>
+      <%= text_field_tag(:pay_by_account_confirmation, nil, class: 'form-control') %>
+    </div>
+
+    <p>
+    <input class="button" type="submit" value="Continue">
+  <% end %>
+    </p>
+<% end %>
+
+<% content_for(:right_column) do %>
+  <aside class="payment-summary">
+    <div class="inner js-stick-at-top-when-scrolling" style="width: 250px;">
+      <h2>Payment summary</h2>
+      <p>
+      <span id="payment-description"><span data-key="tc_number"><%= @fee.case_reference %></span> - <%= @fee.description %></span>
+      </p>
+      <p>
+      <%= t('.total') %>
+      <span id="amount" class="amount"><%= number_to_currency(@fee.amount/100, precision: 0) %></span>
+      </p>
+    </div>
+  </aside>
+<% end %>

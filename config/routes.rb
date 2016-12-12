@@ -7,6 +7,7 @@ Rails.application.routes.draw do
 
   resources :payments, only: [:show, :update]
   resources :help_with_fees, only: [:show, :update]
+  resources :pay_by_account, only: [:show, :update]
 
   resources :fees, only: [] do
     member do

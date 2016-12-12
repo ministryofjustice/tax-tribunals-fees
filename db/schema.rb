@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161209112904) do
+ActiveRecord::Schema.define(version: 20161212134632) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,9 +27,12 @@ ActiveRecord::Schema.define(version: 20161209112904) do
     t.string   "govpay_payment_message"
     t.string   "govpay_reference"
     t.string   "govpay_payment_id"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.string   "help_with_fees_reference"
+    t.string   "pay_by_account_reference"
+    t.string   "pay_by_account_confirmation"
+    t.string   "pay_by_account_transaction_reference"
     t.index ["case_reference"], name: "index_fees_on_case_reference", using: :btree
   end
 
