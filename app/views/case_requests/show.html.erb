@@ -1,30 +1,56 @@
 <h1 class="heading-large">
-  <span class="heading-secondary"><%= @case_request.case_reference %></span>
   <%= @case_request.title %>
 </h1>
 
 <% if @case_request.fees? %>
-  <p class="lede">
-    <%= t('.you_need_to_pay') %>
+  <p>
+    <!-- Step numbering goes here -->
   </p>
+  <p class="lede">
+    <%= t('.case_reference_html', case_reference: @case_request.case_reference) %>
+  </p>
+  <p><%= t('.you_need_to_pay') %></p>
 
-  <div class="notice notice-payment">
+  <div class="notice notice-payment util_mt-large">
     <i class="icon icon-important">
       <span class="visuallyhidden"><%= t('.warning') %></span>
     </i>
     <strong class="bold-small">
       <%= t('.lose_the_right') %>
     </strong>
-    </div>
+  </div>
 
-    <div class="liabilities-list">
-      <% if @case_request.all_fees_paid? %>
-        <%= t('.payments_are_up_to_date') %>
-        <%= t('.other_fees_may_be_due') %>
-      <% else %>
-        <%= render @case_request.case_fees %>
+    <% if @case_request.all_fees_paid? %>
+      <%= t('.payments_are_up_to_date') %>
+      <%= t('.other_fees_may_be_due') %>
+    <% else %>
+      <div class="liabilities-list">
+        <%= render @case_request.case_fees.first %>
+      </div>
+      <p><%= t('.select_payment_method') %></p>
+
+      <%= form_tag(payment_url(@case_request.case_fees.first.id), method: :put, class: 'js_route') do %>
+      <fieldset>
+          <label class='block-label selection-button-radio'>
+            <%= radio_button_tag(:payment_method, :card) %>
+            <strong><%= t('.debit_or_credit_card') %></strong>
+          </label>
+          <label class='block-label selection-button-radio'>
+            <%= radio_button_tag(:payment_method, :help_with_fees) %>
+            <strong><%= t('.help_with_fees') %></strong>
+            <br />
+            <%= t('.when_to_request_help_with_fees') %>
+          </label>
+          <label class='block-label selection-button-radio'>
+            <%= radio_button_tag(:payment_method, :cheque) %>
+            <strong><%= t('.cheque') %></strong>
+          </label>
+        </fieldset>
+        <p>
+          <%= submit_tag(t('.continue'), class: 'button') %>
+        </p>
       <% end %>
-    </div>
+    <% end %>
 <% else %>
   <p class="lede">
     <%= t('.no_outstanding_fees') %>
@@ -46,7 +72,3 @@
     <%= t('.if_you_believe') %>
   </p>
 <% end %>
-
-<p>
-  <%= link_to t('.find_another_case'), new_case_request_path, class: 'link-back' %>
-</p>

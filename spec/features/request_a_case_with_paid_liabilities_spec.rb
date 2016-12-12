@@ -66,7 +66,7 @@ RSpec.feature 'Request a case that has already been paid for' do
 
     scenario 'we explain that there is an outstanding fee' do
       make_a_case_request(case_number, confirmation_code)
-      expect(page).to have_text('£20.00')
+      expect(page).to have_text('£20 fee')
     end
   end
 end

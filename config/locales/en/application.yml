@@ -1,0 +1,20 @@
+en:
+  application:
+    title: GOV.UK - Pay your tax tribunal fees
+    proposition: Pay your tax tribunal fees
+    alpha_html: |
+      <div class="phase-banner-alpha">
+       <p>
+         <strong class="phase-tag">ALPHA</strong>
+         <span>
+           This is a new service - your <a href='#'>feeback</a> will help up improve it.
+           If you need help using the online service, we can offer <a href='#'>technical help</a>.
+         </span>
+       </p>
+      </div>
+    courts_sentencing: Courts, sentencing and tribunals
+    elsewhere: Elsewhere on GOV.UK
+    court_fees: Court and tribunal fees
+    appeal: Appeal to a tax tribunal
+    disagree: Disagree with a tax decision
+    procedure: Tax tribunal procedure rules

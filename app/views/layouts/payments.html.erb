@@ -1,0 +1,29 @@
+<% content_for(:homepage_url) { "/" } %>
+<% content_for(:page_title) { t('application.title') } %>
+
+<% content_for(:head) do %>
+  <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+<% end %>
+
+<% content_for(:inside_header) do %>
+  <div class="header-proposition">
+    <div class="content">
+      <a href="/" id="proposition-name"><%= t('application.proposition') %></a>
+    </div>
+  </div>
+<% end %>
+
+<% content_for(:content) do %>
+  <main id="content" role="main">
+  <%= t('application.alpha_html') %>
+  <% if flash[:alert] %>
+    <div class="error-summary">
+      <%= flash[:alert] %>
+    </div>
+  <% end %>
+  <%= yield %>
+  </main>
+<% end %>
+
+<%= render template: "layouts/govuk_template" %>

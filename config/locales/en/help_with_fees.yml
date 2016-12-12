@@ -1,0 +1,16 @@
+en:
+  help_with_fees:
+      show:
+        pay: Pay via help with fees
+        already_applied: |
+          If you have successfully applied for help with fees, please enter
+          your reference number below.
+        apply_html: |
+          If you have not applied for help with fees, but would like to see if
+          you are eligible, visit <a
+          href="https://www.gov.uk/get-help-with-court-fees">the help with fees
+          service</a>. If your application is successful you will be able to
+          return to this service and enter your reference number later.
+        reference_number: Help with fees reference number
+        total: Total amount
+

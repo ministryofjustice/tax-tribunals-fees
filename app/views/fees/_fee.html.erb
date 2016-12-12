@@ -1,16 +1,3 @@
-<div class="grid-row payments-row">
-  <div class="column-one-third">
-    <div class="data">
-      <h2 class="bold-xlarge"><%= number_to_currency(fee.amount_in_pounds) %></h2>
-      <p class="bold-small"><%= fee.description %></p>
-    </div>
-  </div>
-  <div class="column-two-thirds">
-    <p>
-    <%= link_to t('.pay_now'), pay_fee_url(fee), class: 'button' %>
-    </p>
-    <p class="font-xsmall">
-    <%= t('.gov_pay_redirect') %>
-    </p>
-  </div>
-</div>
+<h2 class="heading-large">
+  <%= t('.header_html', amount: number_to_currency(fee.amount_in_pounds, precision: 0)) %>
+</h2>

@@ -1,21 +1,38 @@
 en:
   pages:
     start:
-      pay_your_fees: Pay your tax tribunal fees
+      appeal_to_the_tax_tribunal: Appeal to the tax tribunal
       leader: |
-        Pay for your tax tribunal fees online if you have an existing case with
-        the tribunal.
+        The Ministry of Justice (MOJ) runs the tax tribunal service. Every case
+        is decided by an independent judge.
       use_this_service_to: 'Use this service to:'
-      list_of_uses_html:
-        <li>view outstanding fees on your case</li>
-        <li>make a payment for fees</li>
+      try_to_settle_html:
+        Try and settle your dispute directly first. If you can't, a judge will listen
+        to both sides before making an impartial decision on your case. For more
+        information see the <a
+        href="https://moj-taxtribs-prototype.herokuapp.com/guidance/overview">guide
+        to tax tribunals</a>.
       how_long_does_it_take: Making a payment takes about 5 minutes.
       start_now: Start now
-      before_you_start: Before you start
-      what_you_need: |
-        You will need your case reference and
-        confirmation code, which you can find on the letter
-        from the tribunal.
-      useful_links: Useful Links
-      how_and_when_you_can_appeal: Information on when and how you can appeal.
-
+      before_you_start: What you will need before you start
+      paper_form_html: |
+        You can use <a class="external" rel="external"
+        href="http://hmctsformfinder.justice.gov.uk/HMCTS/GetForms.do?court_forms_category=Tax%20(First-tier%20Tribunal)">paper
+        forms</a> to submit an appeal (T240) or close an enquiry (T245)
+      send_your_form: "Send your form by post to First-tier Tribunal (Tax Chamber), PO Box 16972, Birmingham, B16 6TZ"
+      other_ways_header: Other ways to submit an appeal
+      warning_html: |
+        <i class="icon icon-important">
+          <span class="visuallyhidden">Warning</span>
+        </i>
+        <strong class="bold-small">
+          You can’t save details as you go. Please get everything ready before you start.
+        </strong>
+      what_you_need_html: |
+        <ul class="list list-bullet">
+        <li><strong>digital copies of the decision letter(s)</strong> - scan or take a photo of the original notice letter (or review conclusion letter if you had a review)</li>
+        <li><strong>reasons why you're appealing</strong> - write out your grounds of appeal so they are ready to copy and paste or upload as a document</li>
+        <li><strong>a way to pay your tribunal fee</strong> - you will need to pay an initial fee unless you're eligible for <a href="https://www.gov.uk/get-help-with-court-fees">help with fees</a></li>
+        <li><strong>approval to act for someone else</strong> - you will need <a href="https://drive.google.com/open?id=0B-4PgEZDV9SBczhkbGNDanJEa28">authorisation from the taxpayer</a> to receive correspondence or act as their representative
+        </li>
+        </ul>

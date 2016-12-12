@@ -1,0 +1,14 @@
+en:
+  payments:
+    paid_via_help_with_fees: Fee paid via help with fees reference
+    paid_via_card: Your payment reference is
+    show:
+      payment_successful: Payment successful
+      your_payment_reference: Your payment reference is
+      confirmation_email: We have sent you a confirmation email.
+      what_happens_next: What happens next
+      what_the_tribunal_will_do: |
+        The tribunal will continue to work on your case.  They will send you an
+        invoice and may contact you to ask for more information.
+      what_did_you_think_html: |
+        <a href="#">What did you think of this service?</a> (takes 30 seconds)

@@ -1,10 +1,12 @@
 en:
   case_requests:
-    could_not_find_case: We could not find your case
-    check_details: |
+    could_not_find_case_html: |
+      <h1 class='heading-large'>We could not find your case</h1>
+      <p>
       Please ensure you have entered all details correctly. If you are sure the
       details are correct and you still cannot find your case, please contact
       support.
+      </p>
     new:
       find_your_case: Find your case
       find_case: Find case
@@ -15,6 +17,11 @@ en:
       enter_details: |
         Enter your case details from the letter the tribunal sent you.
     show:
+      continue: Continue
+      case_reference_html: |
+        Your case reference is <strong
+        data-key="tc_number">%{case_reference}</strong>. Please make a note of
+        this in case you need to contact us about your case.
       payments_are_up_to_date: All outstanding fee payments are up to date.
       other_fees_may_be_due: |
         Depending on the nature of your case, other fees may be payable at a
@@ -31,8 +38,12 @@ en:
       if_you_believe: |
         if you believe there should be an outstanding fee.
       you_need_to_pay: |
-        You need to pay fees before the tribunal continues to work on your case.
+        You need to pay the following fee before the tribunal continues to work on your case.
       lose_the_right: |
-        You may lose the right to appeal if you do not pay your fee within the
-        time limit we give you.
+        If you do not pay your fee immediately you risk losing your right to appeal
+      debit_or_credit_card: Debit or credit card
+      help_with_fees: Help with fees
+      when_to_request_help_with_fees: if you’re on a low income or certain benefits
+      cheque: Cheque
+      select_payment_method: Select your method of payment
       warning: Warning

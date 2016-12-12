@@ -53,7 +53,12 @@ class ProcessPayment
   end
 
   def update_glimr!
-    @glimr = GlimrApiClient::Update.call(fee)
+    @glimr = GlimrApiClient::Update.call(
+      feeLiabilityId: fee.glimr_id,
+      paymentReference: fee.govpay_reference,
+      govpayReference: fee.govpay_payment_id,
+      paidAmountInPence: fee.amount
+    )
   end
 
   def log_errors

@@ -1,46 +1,30 @@
 <div class="grid-row">
-  <div class="column-two-thirds">
-    <h1 class="heading-large"><%= t('.pay_your_fees') %></h1>
-    <p class="lede">
-      <%= t('.leader') %>
-    </p>
-
-    <p>
-      <%= t('.use_this_service_to') %>
-    </p>
-    <ul class="list list-bullet">
-      <%= t('.list_of_uses_html') %>
-    </ul>
-    <p>
-      <%= t('.how_long_does_it_take') %>
-    </p>
-    <p>
-      <% if @glimr_is_not_available %>
-        <h1 class='heading-large'><%= t('apis.service_unavailable') %></h1>
-      <% elsif @case_not_found %>
-        <h1 class='heading-large'><%= t('case_requests.could_not_find_case') %></h1>
-        <h2><%= t('case_requests.check_details') %></h2>
-      <% else %>
-        <%= link_to t('.start_now') , new_case_request_path, class: 'button button-start' %>
-      <% end %>
-    </p>
-    <h2 class="heading-medium"><%= t('.before_you_start') %></h2>
-    <p>
-      <%= t('.what_you_need') %>
-    </p>
-  </div>
-
-  <div class="column-one-third">
-    <aside class="govuk-related-items" role="complementary">
-    <h2 class="heading-medium" id="subsection-title"><%= t('.useful_links') %></h2>
-      <nav role="navigation" aria-labelledby="subsection-title">
-        <ul class="font-xsmall">
-          <li>
-            <a href="https://www.gov.uk/courts-tribunals/first-tier-tribunal-tax" rel="external" target="_blank">About the tax tribunal </a><br />
-            <span class="related-link-hint"><%= t('.how_and_when_you_can_appeal') %></span>
-          </li>
-        </ul>
-      </nav>
-    </aside>
-  </div>
+  <h1 class="heading-large"><%= t('.appeal_to_the_tax_tribunal') %></h1>
+  <p class="lede">
+  <%= t('.leader') %>
+  </p>
+  <%= t('.try_to_settle_html') %>
+  <h2 class="heading-medium"><%= t('.before_you_start') %></h2>
+  <p>
+  <%= t('.what_you_need_html') %>
+  </p>
+  <p class="notice util_mt-large">
+  <%= t('.warning_html') %>
+  </p>
+  <p>
+  <% if @glimr_is_not_available %>
+    <h1 class='heading-large'><%= t('apis.service_unavailable') %></h1>
+  <% else %>
+    <%= link_to t('.start_now') , new_case_request_path, class: 'button button-start' %>
+  <% end %>
+  </p>
+	<h2 class="heading-medium"><%= t('.other_ways_header') %></h2>
+	<ul class="list list-bullet">
+		<li>
+			<%= t('.paper_form_html') %>
+		</li>
+    <li>
+      <%= t('.send_your_form') %>
+		</li>
+	</ul>
 </div>

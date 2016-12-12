@@ -24,7 +24,11 @@ RSpec.feature 'Pay for a case' do
       end
 
       it 'updates the case in GLiMR' do
-        expect(GlimrApiClient::Update).to have_received(:call).with(an_instance_of(Fee))
+        expect(GlimrApiClient::Update).to have_received(:call).with(
+          hash_including(feeLiabilityId: 1,
+                         govpayReference: 'rmpaurrjuehgpvtqg997bt50f',
+                         paidAmountInPence: 2000)
+        )
       end
 
       it 'shows the case reference' do
