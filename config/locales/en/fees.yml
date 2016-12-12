@@ -8,7 +8,7 @@ en:
       gov_pay_redirect: |
         You will be redirected to GOV.UK Pay, an official secure payments
         service.
-    find_another_case: Fine another case
+    find_another_case: Find another case
     post_pay_error:
       payment_not_taken: Sorry, we couldn’t take your payment.
       try_again: Try again
