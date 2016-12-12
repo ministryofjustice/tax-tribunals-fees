@@ -2,6 +2,7 @@ en:
   payments:
     paid_via_help_with_fees: Fee paid via help with fees reference
     paid_via_card: Your payment reference is
+    paid_via_account: Fee paid via account reference
     show:
       payment_successful: Payment successful
       your_payment_reference: Your payment reference is

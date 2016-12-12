@@ -42,6 +42,12 @@
             <%= t('.when_to_request_help_with_fees') %>
           </label>
           <label class='block-label selection-button-radio'>
+            <%= radio_button_tag(:payment_method, :authorised_account) %>
+            <strong><%= t('.authorised_account') %></strong>
+            <br />
+            <%= t('.if_you_have_an_account') %>
+          </label>
+          <label class='block-label selection-button-radio'>
             <%= radio_button_tag(:payment_method, :cheque) %>
             <strong><%= t('.cheque') %></strong>
           </label>

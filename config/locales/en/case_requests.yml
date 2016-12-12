@@ -44,6 +44,8 @@ en:
       debit_or_credit_card: Debit or credit card
       help_with_fees: Help with fees
       when_to_request_help_with_fees: if you’re on a low income or certain benefits
+      authorised_account: Authorised account
+      if_you_have_an_account: if you have an account with HMCTS
       cheque: Cheque
       select_payment_method: Select your method of payment
       warning: Warning

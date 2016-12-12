@@ -1,0 +1,14 @@
+en:
+  pay_by_account:
+      update:
+        account_not_found: Account not found.
+      show:
+        pay: Pay via authorised account
+        account: |
+          Appeals or applications from HM Revenue and Customs (HRMC), UK Border
+          Force (UKBF), National Crime Authority (NCA) or organisations with an
+          authorised account enter your account details below.
+        reference: Account reference
+        confirmation: Account confirmation code
+        total: Total amount
+
