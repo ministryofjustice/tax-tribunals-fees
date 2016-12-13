@@ -1,14 +1,9 @@
-class CaseRequest
-  include ActiveModel::Model
+class CaseRequest < ApplicationRecord
+  attr_accessor :case_fees
 
-  attr_accessor :case_reference,
-    :confirmation_code,
-    :case_fees
-
-  def initialize(case_reference, confirmation_code)
-    @case_reference = case_reference
-    @confirmation_code = confirmation_code
+  def initialize(args = {})
     @case_fees = []
+    super(args)
   end
 
   validates :case_reference, presence: true

@@ -10,11 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161212134632) do
+ActiveRecord::Schema.define(version: 20161213113345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
+
+  create_table "case_requests", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string   "case_reference",    null: false
+    t.string   "confirmation_code", null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
 
   create_table "fees", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string   "case_reference"
