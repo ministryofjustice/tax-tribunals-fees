@@ -45,6 +45,8 @@ class CaseRequestsController < ApplicationController
     if case_request.save
       case_request.process!
       render json: { return_url: case_request_url(@case_request.id) }
+    else
+      render json: { error: case_request.errors }
     end
   end
 

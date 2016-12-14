@@ -58,5 +58,33 @@ RSpec.describe 'Hypermedia link for datacapture api call', type: :request do
         expect(response.body).to eq('{"error":"case not found"}')
       end
     end
+
+    context 'the request is missing the confirmation code' do
+      let(:request_details) {
+        { case_request: { case_reference: 'ABC123' } }
+      }
+
+      it 'returns an error message' do
+        post '/case_requests',
+          params: request_details,
+          headers: headers,
+          as: :json
+        expect(response.body).to eq("{\"error\":{\"confirmation_code\":[\"can't be blank\"]}}")
+      end
+    end
+
+    context 'the request is missing the case reference' do
+      let(:request_details) {
+        { case_request: { confirmation_code: 'ABC123' } }
+      }
+
+      it 'returns an error message' do
+        post '/case_requests',
+          params: request_details,
+          headers: headers,
+          as: :json
+        expect(response.body).to eq("{\"error\":{\"case_reference\":[\"can't be blank\"]}}")
+      end
+    end
   end
 end
