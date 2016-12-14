@@ -38,4 +38,17 @@ RSpec.describe CaseRequestsController, '#show' do
       expect(response.body).to include(case_request.case_reference)
     end
   end
+
+  context 'case not found' do
+    it 'redirects to new' do
+      get case_request_url('junk')
+      expect(response).to redirect_to(new_case_request_url)
+    end
+
+    it 'explains the error' do
+      get case_request_url('junk')
+      follow_redirect!
+      expect(response.body).to include('Case not found')
+    end
+  end
 end
