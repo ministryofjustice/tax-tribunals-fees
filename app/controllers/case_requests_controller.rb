@@ -18,6 +18,13 @@ class CaseRequestsController < ApplicationController
     end
   end
 
+  def show
+    @case_request = CaseRequest.find(params[:id])
+    if @case_request
+      @case_request.process!
+    end
+  end
+
   private
 
   def case_not_found
