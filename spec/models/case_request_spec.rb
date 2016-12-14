@@ -1,13 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe CaseRequest do
-  let(:case_reference) { "TC/2016/04512" }
-  let(:confirmation_code) { 'confcode' }
   subject(:case_request) {
     build(:case_request,
-          case_reference: case_reference,
-          confirmation_code: confirmation_code)
+      case_reference: case_reference,
+      confirmation_code: confirmation_code)
   }
+
+  let(:case_reference) { "TC/2016/04512" }
+  let(:confirmation_code) { 'confcode' }
 
   let(:fee) {
     object_double(
@@ -27,6 +28,22 @@ RSpec.describe CaseRequest do
       fees: fees
     )
   }
+
+  describe '#initialize' do
+    it 'saves with valid attributes' do
+      expect { case_request.save! }.to change(described_class, :count).by(1)
+    end
+
+    it 'does not save without a case reference' do
+      expect { build(:case_request, case_reference: nil).save! }.
+        to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it 'does not save without a confirmation code' do
+      expect { build(:case_request, confirmation_code: nil).save! }.
+        to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
 
   describe '#all_fees_paid?' do
     it "knows all fees are paid" do

@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
-  resources :case_requests, only: [:new, :create], path_names: { new: '' } do
-    collection do
-      post :help_with_fees
+  resources :case_requests,
+    only: [:new, :create, :show],
+    path_names: { new: '' } do
+      collection do
+        post :help_with_fees
+      end
     end
-  end
 
   resources :payments, only: [:show, :update]
   resources :help_with_fees, only: [:show, :update]
