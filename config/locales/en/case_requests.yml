@@ -49,3 +49,5 @@ en:
       cheque: Cheque
       select_payment_method: Select your method of payment
       warning: Warning
+    create:
+      case_not_found: case not found

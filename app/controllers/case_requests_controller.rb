@@ -1,4 +1,6 @@
 class CaseRequestsController < ApplicationController
+  rescue_from GlimrApiClient::Case::InvalidCaseNumber, with: :case_not_found
+
   def new
     @case_request = CaseRequest.new
   end
@@ -18,6 +20,18 @@ class CaseRequestsController < ApplicationController
 
   private
 
+  def case_not_found
+    respond_to do |format|
+      format.html do
+        flash[:notice] = t('case_requests.could_not_find_case_html')
+        redirect_to case_requests_url
+      end
+      format.json do
+        render json: { error: t('.case_not_found') }
+      end
+    end
+  end
+
   def process_html(case_request)
     if case_request.save
       case_request.process!
@@ -29,6 +43,7 @@ class CaseRequestsController < ApplicationController
 
   def process_json(case_request)
     if case_request.save
+      case_request.process!
       render json: { return_url: case_request_url(@case_request.id) }
     end
   end

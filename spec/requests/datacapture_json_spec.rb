@@ -18,7 +18,6 @@ RSpec.describe 'Hypermedia link for datacapture api call', type: :request do
   }
 
   before do
-    allow(GlimrApiClient::Case).to receive(:find).and_return(glimr_case)
     allow(GlimrApiClient::Available).to receive(:call).and_return(api_available)
   end
 
@@ -31,16 +30,33 @@ RSpec.describe 'Hypermedia link for datacapture api call', type: :request do
       { 'CONTENT_TYPE' => 'application/json' }
     }
 
-    before do
-      allow(CaseRequest).to receive(:new).and_return(instance_double(CaseRequest, id: 'ABC123').as_null_object)
+    context 'a case exists' do
+      before do
+        allow(GlimrApiClient::Case).to receive(:find).and_return(glimr_case)
+        allow(CaseRequest).to receive(:new).and_return(instance_double(CaseRequest, id: 'ABC123').as_null_object)
+      end
+
+      it 'returns a url for redirecting the user' do
+        post '/case_requests',
+          params: request_details,
+          headers: headers,
+          as: :json
+        expect(response.body).to eq('{"return_url":"http://www.example.com/case_requests/ABC123"}')
+      end
     end
 
-    it 'return a url for redirecting the user' do
-      post '/case_requests',
-        params: request_details,
-        headers: headers,
-        as: :json
-      expect(response.body).to eq('{"return_url":"http://www.example.com/case_requests/ABC123"}')
+    context 'the case does not exist on GLiMR' do
+      before do
+        expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::Case::InvalidCaseNumber)
+      end
+
+      it 'returns an error message' do
+        post '/case_requests',
+          params: request_details,
+          headers: headers,
+          as: :json
+        expect(response.body).to eq('{"error":"case not found"}')
+      end
     end
   end
 end
