@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161213113345) do
+ActiveRecord::Schema.define(version: 20161215103044) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20161213113345) do
     t.string   "pay_by_account_reference"
     t.string   "pay_by_account_confirmation"
     t.string   "pay_by_account_transaction_reference"
+    t.uuid     "case_request_id"
     t.index ["case_reference"], name: "index_fees_on_case_reference", using: :btree
   end
 

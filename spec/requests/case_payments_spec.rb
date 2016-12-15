@@ -1,10 +1,10 @@
 require 'rails_helper'
-require 'support/create_a_fee'
 
 RSpec.describe 'Pay for a case', type: :request do
   # `#post_pay` and failed calls to `#pay` are tested with feature specs as
   # they do not involve redirects to the govuk payment gateway and feature
   # specs are otherwise somewhat more declarative and easier to deal with.
+  let(:fee) { create(:fee) }
 
   let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
 

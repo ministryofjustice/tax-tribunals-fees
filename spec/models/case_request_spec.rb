@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe CaseRequest do
   subject(:case_request) {
-    build(:case_request,
+    create(:case_request,
       case_reference: case_reference,
       confirmation_code: confirmation_code)
   }
@@ -10,14 +10,18 @@ RSpec.describe CaseRequest do
   let(:case_reference) { "TC/2016/04512" }
   let(:confirmation_code) { 'confcode' }
 
-  let(:fee) {
-    object_double(
-      OpenStruct.new(description: 'desc', amount: 0, glimr_id: '1'),
-      description: 'Fee liability',
+  let(:fee_params) {
+    {
+      case_reference: case_reference,
+      case_title: "Glimr Case Request",
+      description: "Fee liability",
       amount: 10_000,
-      glimr_id: '12345'
-    )
+      glimr_id: 12_345,
+      confirmation_code: 'confcode'
+    }
   }
+
+  let(:fee) { build(:fee, fee_params) }
 
   let(:fees) { [fee] }
 
@@ -30,10 +34,6 @@ RSpec.describe CaseRequest do
   }
 
   describe '#initialize' do
-    it 'saves with valid attributes' do
-      expect { case_request.save! }.to change(described_class, :count).by(1)
-    end
-
     it 'does not save without a case reference' do
       expect { build(:case_request, case_reference: nil).save! }.
         to raise_error(ActiveRecord::RecordInvalid)
@@ -47,13 +47,13 @@ RSpec.describe CaseRequest do
 
   describe '#all_fees_paid?' do
     it "knows all fees are paid" do
-      case_request.case_fees << instance_double(Fee, paid?: true)
+      case_request.case_fees << build(:paid_fee)
       expect(case_request.all_fees_paid?).to be_truthy
     end
 
     it "knows not all fees are paid" do
-      case_request.case_fees << instance_double(Fee, paid?: true)
-      case_request.case_fees << instance_double(Fee, paid?: false)
+      case_request.case_fees << build(:paid_fee)
+      case_request.case_fees << build(:fee)
       expect(case_request.all_fees_paid?).to be_falsey
     end
   end
@@ -64,7 +64,7 @@ RSpec.describe CaseRequest do
     end
 
     it "has fees" do
-      case_request.case_fees << 1
+      case_request.case_fees << build(:fee)
       expect(case_request.fees?).to be_truthy
     end
   end
@@ -72,7 +72,7 @@ RSpec.describe CaseRequest do
   describe '#process!' do
     context "when case does not exist in glimr" do
       before do
-        allow(Fee).to receive(:create!).and_return(fee)
+        allow(Fee).to receive(:new).and_return(fee)
         allow(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::Case::InvalidCaseNumber)
       end
 
@@ -85,20 +85,9 @@ RSpec.describe CaseRequest do
 
     context "when case exists in glimr" do
       before do
-        allow(Fee).to receive(:create!).and_return(fee)
+        allow(Fee).to receive(:new).and_return(fee)
         allow(GlimrApiClient::Case).to receive(:find).and_return(glimr_case_request)
       end
-
-      let(:fee_params) {
-        {
-          case_reference: case_reference,
-          case_title: "Glimr Case Request",
-          description: "Fee liability",
-          amount: 10_000,
-          glimr_id: '12345',
-          confirmation_code: 'confcode'
-        }
-      }
 
       it "is valid" do
         case_request.process!
@@ -111,19 +100,27 @@ RSpec.describe CaseRequest do
       end
 
       it "creates a fee" do
-        expect(Fee).to receive(:create!).exactly(:once)
+        expect(Fee).to receive(:new).exactly(:once)
         case_request.process!
       end
 
       it "creates fee with correct parameters" do
-        expect(Fee).to receive(:create!).with(fee_params)
+        expect(Fee).to receive(:new).with(hash_including(fee_params))
         case_request.process!
       end
 
+      let(:case_request_without_fees) { create(:case_request) }
+
+      # A lambda-based change expectation isn't working.  The reasons for
+      # this are unclear.  These two specs are more verbose but achieve the
+      # same thing when taken together.
+      it "starts without fees" do
+        expect(case_request_without_fees.case_fees).to be_blank
+      end
+
       it "returns the fees created" do
-        expect {
-          case_request.process!
-        }.to change(case_request, :case_fees).from([]).to([fee])
+        case_request_without_fees.process!
+        expect(case_request_without_fees.case_fees).to match_array([fee])
       end
     end
   end
