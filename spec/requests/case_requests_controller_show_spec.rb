@@ -4,7 +4,7 @@ require 'rails_helper'
 # only covers the bare-bones of the show action, is here for completeness.
 RSpec.describe CaseRequestsController, '#show' do
   let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
-  let(:case_request) { create(:case_request) }
+  let!(:case_request) { create(:case_request_with_fee) }
 
   let(:glimr_case) {
     instance_double(

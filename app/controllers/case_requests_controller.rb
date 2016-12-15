@@ -20,9 +20,7 @@ class CaseRequestsController < ApplicationController
 
   def show
     @case_request = CaseRequest.find_by_id(params[:id])
-    if @case_request
-      @case_request.process!
-    else
+    unless @case_request
       flash[:alert] = t('.case_not_found')
       redirect_to new_case_request_url
     end
