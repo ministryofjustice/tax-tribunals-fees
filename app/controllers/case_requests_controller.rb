@@ -1,5 +1,6 @@
 class CaseRequestsController < ApplicationController
   rescue_from GlimrApiClient::Case::InvalidCaseNumber, with: :case_not_found
+  include SimplifiedLogging
 
   def new
     @case_request = CaseRequest.new
@@ -21,6 +22,7 @@ class CaseRequestsController < ApplicationController
   def show
     @case_request = CaseRequest.find_by_id(params[:id])
     unless @case_request
+      log_error(self.class.name, 'N/A', 'case_not_found', case_request_id: params[:id])
       flash[:alert] = t('.case_not_found')
       redirect_to new_case_request_url
     end
@@ -28,7 +30,8 @@ class CaseRequestsController < ApplicationController
 
   private
 
-  def case_not_found
+  def case_not_found(exception)
+    log_error(self.class.name, 'N/A', exception, case_request_id: params[:id])
     respond_to do |format|
       format.html do
         flash[:notice] = t('case_requests.could_not_find_case_html')
