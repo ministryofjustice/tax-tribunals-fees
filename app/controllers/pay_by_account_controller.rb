@@ -2,6 +2,7 @@ class PayByAccountController < ApplicationController
   rescue_from GlimrApiClient::PayByAccount::AccountNotFound,
     GlimrApiClient::PayByAccount::InvalidAccountAndConfirmation,
     with: :account_not_found
+  include SimplifiedLogging
 
   def show
     @fee = Fee.find(params[:id])
@@ -13,7 +14,8 @@ class PayByAccountController < ApplicationController
     redirect_to payment_url(@fee)
   end
 
-  def account_not_found
+  def account_not_found(exception)
+    log_error(self.class.name, 'N/A', exception)
     flash[:alert] = t('.account_not_found')
     @fee = Fee.find(params[:id])
     render 'show'

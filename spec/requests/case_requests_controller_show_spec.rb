@@ -50,5 +50,22 @@ RSpec.describe CaseRequestsController, '#show' do
       follow_redirect!
       expect(response.body).to include('Case not found')
     end
+
+    it 'logs the error' do
+      expect(Rails.logger).to receive(:error).with(/junk/)
+      get case_request_url('junk')
+    end
+  end
+
+  context 'glimr cannot find the case' do
+    before do
+      allow(GlimrApiClient::Available).to receive(:call).and_return(api_available)
+      allow(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::Case::InvalidCaseNumber)
+    end
+
+    it 'logs the glimr error' do
+      expect(Rails.logger).to receive(:error).with(/InvalidCaseNumber.+#{case_request.id}/)
+      get case_request_url(case_request)
+    end
   end
 end
