@@ -52,7 +52,7 @@ RSpec.describe CaseRequestsController, '#show' do
     end
 
     it 'logs the error' do
-      #expect(Rails.logger).to receive(:error).with(/junk/)
+      expect(Rails.logger).to receive(:error).with(/junk/)
       get case_request_url('junk')
     end
   end
