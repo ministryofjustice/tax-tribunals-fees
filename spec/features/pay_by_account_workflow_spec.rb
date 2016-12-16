@@ -90,10 +90,26 @@ RSpec.feature 'Pay by account' do
           expect(page).to have_text('Account not found')
         end
 
+        scenario 'logs bad account references' do
+          expect(Rails.logger).
+            to receive(:error).
+            with(/PayByAccountController.+AccountNotFound/)
+          stub_glimr_call.and_raise(GlimrApiClient::PayByAccount::AccountNotFound)
+          fill_form
+        end
+
         scenario 'handles bad confirmation codes' do
           stub_glimr_call.and_raise(GlimrApiClient::PayByAccount::InvalidAccountAndConfirmation)
           fill_form
           expect(page).to have_text('Account not found')
+        end
+
+        scenario 'logs bad confirmation codes' do
+          expect(Rails.logger).
+            to receive(:error).
+            with(/PayByAccountController.+InvalidAccountAndConfirmation/)
+          stub_glimr_call.and_raise(GlimrApiClient::PayByAccount::InvalidAccountAndConfirmation)
+          fill_form
         end
       end
     end
