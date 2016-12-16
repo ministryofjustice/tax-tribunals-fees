@@ -11,6 +11,8 @@ class Fee < ApplicationRecord
     :amount,
     presence: true
 
+  belongs_to :case_request
+
   before_save :crypt_confirmation_code, if: :confirmation_code
   after_create :set_govpay_reference!
 

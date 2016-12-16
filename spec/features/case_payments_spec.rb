@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'support/create_a_fee'
 
 RSpec.feature 'Pay for a case' do
   let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
@@ -12,6 +11,7 @@ RSpec.feature 'Pay for a case' do
   describe '#post_pay' do
     let(:govpay_payment_id) { 'rmpaurrjuehgpvtqg997bt50f' }
     let(:payment_status) { OpenStruct.new(status: 'success') }
+    let(:fee) { create(:fee, govpay_payment_id: govpay_payment_id) }
 
     before do
       allow(GlimrApiClient::Update).to receive(:call)
@@ -25,7 +25,7 @@ RSpec.feature 'Pay for a case' do
 
       it 'updates the case in GLiMR' do
         expect(GlimrApiClient::Update).to have_received(:call).with(
-          hash_including(feeLiabilityId: 1,
+          hash_including(feeLiabilityId: 0,
                          govpayReference: 'rmpaurrjuehgpvtqg997bt50f',
                          paidAmountInPence: 2000)
         )

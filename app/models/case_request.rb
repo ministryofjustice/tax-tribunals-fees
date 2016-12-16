@@ -1,15 +1,5 @@
-class CaseRequest
-  include ActiveModel::Model
-
-  attr_accessor :case_reference,
-    :confirmation_code,
-    :case_fees
-
-  def initialize(case_reference, confirmation_code)
-    @case_reference = case_reference
-    @confirmation_code = confirmation_code
-    @case_fees = []
-  end
+class CaseRequest < ApplicationRecord
+  has_many :case_fees, foreign_key: :case_request_id, class_name: Fee
 
   validates :case_reference, presence: true
   validates :confirmation_code, presence: true
@@ -31,7 +21,7 @@ class CaseRequest
   private
 
   def prepare_case_fee(fee)
-    case_fees << Fee.create!(
+    case_fees << Fee.new(
       case_reference: case_reference,
       case_title: title,
       description: fee.description,

@@ -7,6 +7,7 @@ FactoryGirl.define do
 
     description { 'You vs HMRC' }
     amount { 2000 }
+    case_request
     factory :paid_fee do
       govpay_payment_status { 'success' }
     end

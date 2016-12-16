@@ -17,6 +17,7 @@ en:
       enter_details: |
         Enter your case details from the letter the tribunal sent you.
     show:
+      case_not_found: Case not found
       continue: Continue
       case_reference_html: |
         Your case reference is <strong
@@ -49,3 +50,5 @@ en:
       cheque: Cheque
       select_payment_method: Select your method of payment
       warning: Warning
+    create:
+      case_not_found: case not found

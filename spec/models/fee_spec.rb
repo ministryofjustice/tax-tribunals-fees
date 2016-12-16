@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Fee do
-  subject(:fee) { described_class.new(params) }
+  subject(:fee) { build(:fee, params) }
 
   let(:params) {
     {
