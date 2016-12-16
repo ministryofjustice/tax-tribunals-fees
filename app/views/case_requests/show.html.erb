@@ -47,10 +47,6 @@
             <br />
             <%= t('.if_you_have_an_account') %>
           </label>
-          <label class='block-label selection-button-radio'>
-            <%= radio_button_tag(:payment_method, :cheque) %>
-            <strong><%= t('.cheque') %></strong>
-          </label>
         </fieldset>
         <p>
           <%= submit_tag(t('.continue'), class: 'button') %>
