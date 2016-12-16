@@ -67,10 +67,6 @@ RSpec.feature 'Request a brand new case' do
         scenario 'Help with fees' do
           expect(page).to have_text("Help with fees")
         end
-
-        scenario 'Cheque' do
-          expect(page).to have_text("Cheque")
-        end
       end
     end
 
