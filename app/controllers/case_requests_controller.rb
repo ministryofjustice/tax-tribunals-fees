@@ -22,7 +22,10 @@ class CaseRequestsController < ApplicationController
   def show
     @case_request = CaseRequest.find_by_id(params[:id])
     unless @case_request
-      log_error(self.class.name, 'N/A', 'case_not_found', case_request_id: params[:id])
+      log_error(self.class.name,
+        'N/A',
+        'case_not_found',
+        case_request_id: params[:id])
       flash[:alert] = t('.case_not_found')
       redirect_to new_case_request_url
     end
