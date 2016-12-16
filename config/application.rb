@@ -28,5 +28,6 @@ module TaxTribunalsFees
       application-ie6.css
       application.js
     ]
+    config.filter_parameters += [:confirmation_code]
   end
 end
