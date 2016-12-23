@@ -2,6 +2,8 @@ class CaseRequestsController < ApplicationController
   rescue_from GlimrApiClient::Case::InvalidCaseNumber, with: :case_not_found
   include SimplifiedLogging
 
+  protect_from_forgery unless: -> { request.format.json? }
+
   def new
     @case_request = CaseRequest.new
   end
