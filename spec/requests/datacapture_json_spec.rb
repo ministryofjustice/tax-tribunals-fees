@@ -43,6 +43,21 @@ RSpec.describe 'Hypermedia link for datacapture api call', type: :request do
           as: :json
         expect(response.body).to eq('{"return_url":"http://www.example.com/case_requests/ABC123"}')
       end
+
+      context "when EXTERNAL_URL is set" do
+        before do
+          allow(ENV).to receive(:[]).with('EXTERNAL_URL').and_return('https://external.url')
+        end
+
+        it 'returns a url for redirecting the user' do
+          post '/case_requests',
+            params: request_details,
+            headers: headers,
+            as: :json
+          expect(response.body).to eq('{"return_url":"https://external.url/case_requests/ABC123"}')
+        end
+      end
+
     end
 
     context 'the case does not exist on GLiMR' do
