@@ -60,9 +60,18 @@ class CaseRequestsController < ApplicationController
   def process_json(case_request)
     if case_request.save
       case_request.process!
-      render json: { return_url: case_request_url(@case_request.id) }
+
+      render json: { return_url: redirect_url }
     else
       render json: { error: case_request.errors }
+    end
+  end
+
+  def redirect_url
+    if ENV['EXTERNAL_URL']
+      ENV['EXTERNAL_URL'] + case_request_path(@case_request.id)
+    else
+      case_request_url(@case_request.id)
     end
   end
 
