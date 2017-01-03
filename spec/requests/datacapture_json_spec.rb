@@ -57,7 +57,6 @@ RSpec.describe 'Hypermedia link for datacapture api call', type: :request do
           expect(response.body).to eq('{"return_url":"https://external.url/case_requests/ABC123"}')
         end
       end
-
     end
 
     context 'the case does not exist on GLiMR' do
