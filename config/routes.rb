@@ -17,4 +17,6 @@ Rails.application.routes.draw do
       get :post_pay
     end
   end
+
+  resources :healthcheck, only: [:index]
 end
