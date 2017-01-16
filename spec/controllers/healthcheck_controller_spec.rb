@@ -7,7 +7,8 @@ RSpec.describe HealthcheckController do
       version: 'ABC123',
       dependencies: {
         glimr_status: 'ok',
-        database_status: 'ok'
+        database_status: 'ok',
+        govuk_pay_status: 'ok'
       }
     }.to_json
   end
@@ -18,7 +19,7 @@ RSpec.describe HealthcheckController do
     stub_request(:post, /glimravailable/).
       to_return(body: { glimrAvailable: 'yes' }.to_json)
     stub_request(:get, /healthcheck/).
-      to_return(status: 200, body: { service_status: 'ok' }.to_json)
+      to_return(body: '{"ping":{"healthy":true},"deadlocks":{"healthy":true}}')
     expect(ActiveRecord::Base).to receive(:connection).and_return(double)
     # This is an expediency to avoid having to add multiple extra stubs to
     # check something low-priority.

@@ -10,12 +10,29 @@ class Healthcheck
       version: version,
       dependencies: {
         glimr_status: glimr_status,
-        database_status: database_status
+        database_status: database_status,
+        govuk_pay_status: govuk_pay_status
       }
     }
   end
 
   private
+
+  # {"ping":{"healthy":true},"deadlocks":{"healthy":true}}
+  # A bit terse, I know.  Given the current return values from govuk pay,
+  # will fail if either fails.
+  def govuk_pay_status
+    @response ||=
+      if JSON.parse(
+        Excon.get("#{ENV.fetch('GOVUK_PAY_API_URL')}/healthcheck").body
+      ).values.map(&:values).flatten.all?
+        'ok'
+      else
+        'failed'
+      end
+  rescue JSON::ParserError
+    'failed'
+  end
 
   def version
     # This has been manually checked in a demo app in a docker container running
@@ -48,7 +65,9 @@ class Healthcheck
   end
 
   def service_status
-    if database_status.eql?('ok') && glimr_status.eql?('ok')
+    if database_status.eql?('ok') &&
+       glimr_status.eql?('ok') &&
+       govuk_pay_status.eql?('ok')
       'ok'
     else
       'failed'
