@@ -24,7 +24,7 @@ class Healthcheck
   def govuk_pay_status
     @response ||=
       if JSON.parse(
-        Excon.get("#{ENV.fetch('GOVUK_PAY_API_HEALTHCHECK_URL')}").body
+        Excon.get(ENV.fetch('GOVUK_PAY_API_HEALTHCHECK_URL').to_s).body
       ).values.map(&:values).flatten.all?
         'ok'
       else
