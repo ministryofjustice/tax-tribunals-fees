@@ -2,12 +2,13 @@ FROM ministryofjustice/ruby:2.3.1-webapp-onbuild
 
 ENV PUMA_PORT 3000
 
-ENV DATABASE_URL         replace_this_at_build_time
-ENV GLIMR_API_URL        replace_this_at_build_time
-ENV GOVUK_PAY_API_KEY    replace_this_at_build_time
-ENV GOVUK_PAY_API_URL    replace_this_at_build_time
-ENV GOV_UK_REDIRECT_HOST replace_this_at_build_time
-ENV EXTERNAL_URL         replace_this_at_build_time
+ENV DATABASE_URL                  replace_this_at_build_time
+ENV GLIMR_API_URL                 replace_this_at_build_time
+ENV GOVUK_PAY_API_KEY             replace_this_at_build_time
+ENV GOVUK_PAY_API_URL             replace_this_at_build_time
+ENV GOVUK_PAY_API_HEALTHCHECK_URL replace_this_at_build_time
+ENV GOV_UK_REDIRECT_HOST          replace_this_at_build_time
+ENV EXTERNAL_URL                  replace_this_at_build_time
 
 RUN touch /etc/inittab
 
