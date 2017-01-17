@@ -34,6 +34,28 @@ RSpec.describe CaseRequest do
   }
 
   describe '#initialize' do
+    context 'when InvalidCaseNumber fails to propagate' do
+      let(:case_req) { build(:case_request, case_reference: 'xxx', confirmation_code: 'yyy') }
+
+      before do
+        stub_request(:post, "https://glimr-test.dsd.io/requestcasefees").
+          with(
+            body: "{\"jurisdictionId\":8,\"caseNumber\":\"xxx\",\"confirmationCode\":\"yyy\"}",
+
+            headers: {
+              'Accept' => 'application/json',
+              'Content-Type' => 'application/json',
+              'Host' => 'glimr-test.dsd.io:443'
+            }
+          ).
+          to_return(status: 200, body: "{\"message\":\"Invalid CaseNumber/CaseConfirmationCode combination xxx / YYY\",\"glimrerrorcode\":213}", headers: {})
+      end
+
+      it "raises" do
+        expect { case_req.title }.to raise_error(GlimrApiClient::Case::InvalidCaseNumber)
+      end
+    end
+
     it 'does not save without a case reference' do
       expect { build(:case_request, case_reference: nil).save! }.
         to raise_error(ActiveRecord::RecordInvalid)
