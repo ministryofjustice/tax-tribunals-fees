@@ -1,4 +1,6 @@
 class HealthcheckController < ApplicationController
+  rescue_from GlimrApiClient::Unavailable, with: :index
+
   respond_to :json
 
   def index

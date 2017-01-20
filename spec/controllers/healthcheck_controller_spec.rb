@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe HealthcheckController do
-  let(:status) do
+  let(:status_response) do
     {
       service_status: 'ok',
       version: 'ABC123',
@@ -10,7 +10,7 @@ RSpec.describe HealthcheckController do
         database_status: 'ok',
         govuk_pay_status: 'ok'
       }
-    }.to_json
+    }
   end
 
   before do
@@ -31,7 +31,7 @@ RSpec.describe HealthcheckController do
   # This is very-happy-path to ensure the controller responds.  The bulk of the
   # healthcheck is tested in spec/services/healthcheck_spec.rb.
   describe '#index' do
-    describe 'happy path' do
+    context 'happy path' do
       before do
         get :index, format: :json
       end
@@ -41,7 +41,27 @@ RSpec.describe HealthcheckController do
       end
 
       specify do
-        expect(response.body).to eq(status)
+        expect(response.body).to eq(status_response.to_json)
+      end
+    end
+
+    context 'on GlimrApiClient::Unavailable' do
+      let(:glimr_client) { instance_double(GlimrApiClient::Available) }
+
+      before do
+        status_response[:service_status] = 'failed'
+        status_response[:dependencies] = status_response[:dependencies].merge(glimr_status: 'failed')
+        expect(glimr_client).to receive(:available?).at_least(:once).and_raise(GlimrApiClient::Unavailable)
+        expect(GlimrApiClient::Available).to receive(:call).at_least(:once).and_return(glimr_client)
+        get :index, format: :json
+      end
+
+      specify do
+        expect(response.status).to eq(200)
+      end
+
+      specify do
+        expect(response.body).to eq(status_response.to_json)
       end
     end
   end
