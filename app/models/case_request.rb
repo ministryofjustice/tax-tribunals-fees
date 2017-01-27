@@ -3,6 +3,7 @@ class CaseRequest < ApplicationRecord
 
   validates :case_reference, presence: true
   validates :confirmation_code, presence: true
+  before_save :upcase_case_reference
 
   def process!
     fees.each do |fee|
@@ -19,6 +20,10 @@ class CaseRequest < ApplicationRecord
   end
 
   private
+
+  def upcase_case_reference
+    case_reference.upcase!
+  end
 
   def prepare_case_fee(fee)
     case_fees << Fee.new(
