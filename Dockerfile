@@ -9,6 +9,7 @@ ENV GOVUK_PAY_API_URL             replace_this_at_build_time
 ENV GOVUK_PAY_API_HEALTHCHECK_URL replace_this_at_build_time
 ENV GOV_UK_REDIRECT_HOST          replace_this_at_build_time
 ENV EXTERNAL_URL                  replace_this_at_build_time
+ENV SENTRY_DSN                    replace_this_at_build_time
 
 RUN touch /etc/inittab
 
