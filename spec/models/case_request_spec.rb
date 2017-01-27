@@ -33,6 +33,20 @@ RSpec.describe CaseRequest do
     )
   }
 
+  describe '#case_reference' do
+    let(:case_reference) { "tc/2016/04512" }
+
+    before do
+      allow(Fee).to receive(:new).and_return(fee)
+      allow(GlimrApiClient::Case).to receive(:find).and_return(glimr_case_request)
+      case_request.process!
+    end
+
+    specify do
+      expect(case_request.case_reference).to eq(case_reference.upcase)
+    end
+  end
+
   describe '#initialize' do
     context 'when InvalidCaseNumber fails to propagate' do
       let(:case_req) { build(:case_request, case_reference: 'xxx', confirmation_code: 'yyy') }
