@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe HealthcheckController do
+RSpec.describe StatusController do
   let(:status_response) do
     {
       service_status: 'ok',
@@ -24,12 +24,12 @@ RSpec.describe HealthcheckController do
     # This is an expediency to avoid having to add multiple extra stubs to
     # check something low-priority.
     # rubocop:disable RSpec/AnyInstance
-    allow_any_instance_of(Healthcheck).to receive(:version).and_return('ABC123')
+    allow_any_instance_of(Status).to receive(:version).and_return('ABC123')
     # rubocop:enable RSpec/AnyInstance
   end
 
   # This is very-happy-path to ensure the controller responds.  The bulk of the
-  # healthcheck is tested in spec/services/healthcheck_spec.rb.
+  # statuscheck is tested in spec/services/status_spec.rb.
   describe '#index' do
     context 'happy path' do
       before do

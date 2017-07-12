@@ -18,5 +18,5 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :healthcheck, only: [:index]
+  resources :status, only: [:index]
 end
