@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Request a case that has already been paid for' do
+RSpec.describe 'Request a case that has already been paid for' do
   let(:fees) { [] }
 
   let(:glimr_case) {
@@ -35,13 +35,13 @@ RSpec.feature 'Request a case that has already been paid for' do
   describe 'and there are no new fees' do
     let(:fees) { [] }
 
-    scenario 'No new fees are recorded locally' do
+    it 'No new fees are recorded locally' do
       expect {
         make_a_case_request(case_number, confirmation_code)
-      }.not_to change { Fee.count }
+      }.not_to change(Fee, :count)
     end
 
-    scenario 'we explain that there are no outstanding fees' do
+    it 'we explain that there are no outstanding fees' do
       make_a_case_request(case_number, confirmation_code)
       expect(page).to have_text('There are currently no outstanding fees on your case')
     end
@@ -58,13 +58,13 @@ RSpec.feature 'Request a case that has already been paid for' do
       ]
     }
 
-    scenario 'One new fee is recorded locally' do
+    it 'One new fee is recorded locally' do
       expect {
         make_a_case_request(case_number, confirmation_code)
-      }.to change { Fee.count }.by(1)
+      }.to change(Fee, :count).by(1)
     end
 
-    scenario 'we explain that there is an outstanding fee' do
+    it 'we explain that there is an outstanding fee' do
       make_a_case_request(case_number, confirmation_code)
       expect(page).to have_text('£20 fee')
     end

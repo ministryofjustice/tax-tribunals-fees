@@ -22,7 +22,7 @@ class CaseRequestsController < ApplicationController
   end
 
   def show
-    @case_request = CaseRequest.find_by_id(params[:id])
+    @case_request = CaseRequest.find_by(id: params[:id])
     unless @case_request
       log_error(self.class.name,
         'N/A',

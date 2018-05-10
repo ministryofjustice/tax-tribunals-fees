@@ -24,7 +24,7 @@ class ProcessHelpWithFees
       hwfRequestReference: fee.help_with_fees_reference,
       amountToPayInPence: fee.amount
     )
-  rescue => e
+  rescue StandardError => e
     log_error(self.class.name, 'N/A', e)
     raise e
   end

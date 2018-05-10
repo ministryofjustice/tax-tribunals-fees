@@ -34,7 +34,7 @@ RSpec.describe CaseRequestsController, '#show' do
       expect(response.body).to include('You need to pay the following fee')
     end
 
-    scenario 'show the case reference' do
+    it 'show the case reference' do
       expect(response.body).to include(case_request.case_reference)
     end
   end

@@ -55,7 +55,6 @@ RSpec.describe CaseRequest do
         stub_request(:post, "https://glimr-test.dsd.io/requestcasefees").
           with(
             body: "{\"jurisdictionId\":8,\"caseNumber\":\"xxx\",\"confirmationCode\":\"yyy\"}",
-
             headers: {
               'Accept' => 'application/json',
               'Content-Type' => 'application/json',
@@ -84,24 +83,24 @@ RSpec.describe CaseRequest do
   describe '#all_fees_paid?' do
     it "knows all fees are paid" do
       case_request.case_fees << build(:paid_fee)
-      expect(case_request.all_fees_paid?).to be_truthy
+      expect(case_request).to be_all_fees_paid
     end
 
     it "knows not all fees are paid" do
       case_request.case_fees << build(:paid_fee)
       case_request.case_fees << build(:fee)
-      expect(case_request.all_fees_paid?).to be_falsey
+      expect(case_request).not_to be_all_fees_paid
     end
   end
 
   describe '#fees' do
     it "has no fees" do
-      expect(case_request.fees?).to be_falsey
+      expect(case_request).not_to be_fees
     end
 
     it "has fees" do
       case_request.case_fees << build(:fee)
-      expect(case_request.fees?).to be_truthy
+      expect(case_request).to be_fees
     end
   end
 
@@ -125,6 +124,8 @@ RSpec.describe CaseRequest do
         allow(GlimrApiClient::Case).to receive(:find).and_return(glimr_case_request)
       end
 
+      let(:case_request_without_fees) { create(:case_request) }
+
       it "is valid" do
         case_request.process!
         expect(case_request).to be_valid
@@ -144,8 +145,6 @@ RSpec.describe CaseRequest do
         expect(Fee).to receive(:new).with(hash_including(fee_params))
         case_request.process!
       end
-
-      let(:case_request_without_fees) { create(:case_request) }
 
       # A lambda-based change expectation isn't working.  The reasons for
       # this are unclear.  These two specs are more verbose but achieve the

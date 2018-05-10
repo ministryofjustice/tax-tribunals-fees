@@ -17,17 +17,18 @@ AllCops:
     - 'lib/tasks/brakeman.rake'
     - 'lib/tasks/elasticsearch.rake'
     - 'spec/dummy/db/**/*'
+    - 'spec/**/*'
 
 Style/FrozenStringLiteralComment:
   Enabled: false
 
 # private/protected/public
-Style/AccessModifierIndentation:
+Layout/AccessModifierIndentation:
   EnforcedStyle: indent
 
 # Just indent parameters by two spaces. It's less volatile if methods change,
 # and there's less busy work lining things up.
-Style/AlignParameters:
+Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
 
 Style/AsciiComments:
@@ -49,11 +50,11 @@ Style/CollectionMethods:
     reduce: 'inject'
 
 # Chain methods with trailing dots.
-Style/DotPosition:
+Layout/DotPosition:
   EnforcedStyle: trailing
 
 # The holidays file has extra spaces for ease of reading and comparison
-Style/ExtraSpacing:
+Layout/ExtraSpacing:
   Exclude:
     - 'config/initializers/holidays.rb'
 
@@ -75,7 +76,7 @@ Style/TrivialAccessors:
   AllowPredicates: true
 
 Metrics/LineLength:
-  Max: 80
+  Max: 100
   Exclude:
     - 'spec/**/*'
 
@@ -132,6 +133,28 @@ ClassAndModuleChildren:
 
 # This encourages bad style IMHO
 Rails/Delegate:
+  Enabled: false
+
+Style/WordArray:
+  EnforcedStyle: brackets
+
+Style/SymbolArray:
+  EnforcedStyle: brackets
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
+
+Metrics/LineLength:
+  Exclude:
+    - "Gemfile"
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Rails/FilePath:
   Enabled: false
 
 require: rubocop-rspec

@@ -28,11 +28,11 @@ RSpec.describe Fee do
     let(:params) { super().merge(govpay_payment_status: 'success') }
 
     it "has succeeded" do
-      expect(fee.paid?).to be_truthy
+      expect(fee).to be_paid
     end
 
     it "hasn't failed" do
-      expect(fee.failed?).to be_falsey
+      expect(fee).not_to be_failed
     end
 
     it "has known status" do
@@ -44,11 +44,11 @@ RSpec.describe Fee do
     let(:params) { super().merge(govpay_payment_status: 'some other value') }
 
     it "hasn't succeeded" do
-      expect(fee.paid?).to be_falsey
+      expect(fee).not_to be_paid
     end
 
     it "has failed" do
-      expect(fee.failed?).to be_truthy
+      expect(fee).to be_failed
     end
 
     it "has known status" do
@@ -60,11 +60,11 @@ RSpec.describe Fee do
     let(:params) { super().merge(govpay_payment_status: nil) }
 
     it "hasn't failed" do
-      expect(fee.failed?).to be_falsey
+      expect(fee).not_to be_failed
     end
 
     it "hasn't succeeded" do
-      expect(fee.paid?).to be_falsey
+      expect(fee).not_to be_paid
     end
 
     it "has unknown status" do
