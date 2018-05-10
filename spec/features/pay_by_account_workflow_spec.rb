@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Pay by account' do
+RSpec.describe 'Pay by account' do
   case_number = 'TC/2012/00001'
   confirmation_code = 'ABC123'
 
@@ -41,23 +41,23 @@ RSpec.feature 'Pay by account' do
         make_a_case_request
       end
 
-      scenario 'shows the correct page' do
+      it 'shows the correct page' do
         expect(page).to have_text("Pay via authorised account")
       end
 
-      scenario 'has the correct case' do
+      it 'has the correct case' do
         expect(page).to have_text(case_number)
       end
 
-      scenario 'has the correct case title' do
+      it 'has the correct case title' do
         expect(page).to have_text('You vs HM Revenue & Customs')
       end
 
-      scenario 'has the correct amount' do
+      it 'has the correct amount' do
         expect(page).to have_text('Total amount £20')
       end
 
-      scenario 'has the correct type' do
+      it 'has the correct type' do
         expect(page).to have_text('Lodgement Fee')
       end
 
@@ -78,19 +78,19 @@ RSpec.feature 'Pay by account' do
           click_on 'Continue'
         }
 
-        scenario 'sends data to glimr and does not require a data response' do
+        it 'sends data to glimr and does not require a data response' do
           stub_glimr_call
           fill_form
           expect(page).to have_text('Fee paid via account reference ABC123')
         end
 
-        scenario 'handles bad account references' do
+        it 'handles bad account references' do
           stub_glimr_call.and_raise(GlimrApiClient::PayByAccount::AccountNotFound)
           fill_form
           expect(page).to have_text('Account not found')
         end
 
-        scenario 'logs bad account references' do
+        it 'logs bad account references' do
           expect(Rails.logger).
             to receive(:error).
             with(/PayByAccountController.+AccountNotFound/)
@@ -98,13 +98,13 @@ RSpec.feature 'Pay by account' do
           fill_form
         end
 
-        scenario 'handles bad confirmation codes' do
+        it 'handles bad confirmation codes' do
           stub_glimr_call.and_raise(GlimrApiClient::PayByAccount::InvalidAccountAndConfirmation)
           fill_form
           expect(page).to have_text('Account not found')
         end
 
-        scenario 'logs bad confirmation codes' do
+        it 'logs bad confirmation codes' do
           expect(Rails.logger).
             to receive(:error).
             with(/PayByAccountController.+InvalidAccountAndConfirmation/)

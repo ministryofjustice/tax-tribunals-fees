@@ -32,6 +32,6 @@ task :mutant do
   end
 end
 
-if %w[development test].include? Rails.env
+if ['development', 'test'].include? Rails.env
   task(:default).prerequisites << task(:mutant)
 end

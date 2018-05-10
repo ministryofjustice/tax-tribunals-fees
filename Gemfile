@@ -1,13 +1,18 @@
 source 'https://rubygems.org'
 
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?('/')
+  "https://github.com/#{repo_name}.git"
+end
+
 gem 'bcrypt', '~> 3.1.7'
 gem 'excon'
-gem 'glimr-api-client', '~> 0.2'
-gem 'govuk_elements_rails'
-gem 'govuk_elements_form_builder', git: 'https://github.com/ministryofjustice/govuk_elements_form_builder.git'
-gem 'govuk_frontend_toolkit'
-gem 'govuk-pay-api-client'
-gem 'govuk_template'
+gem 'glimr-api-client', '0.2.4'
+gem 'govuk-pay-api-client', '0.1.5'
+gem 'govuk_elements_form_builder', github: 'ministryofjustice/govuk_elements_form_builder', ref: '9128562'
+gem 'govuk_elements_rails', '2.0.0'
+gem 'govuk_frontend_toolkit', '5.0.2'
+gem 'govuk_template', '0.19.1'
 gem 'high_voltage'
 gem 'httparty'
 gem 'lograge'
@@ -34,9 +39,9 @@ group :development, :test do
 end
 
 group :test do
-  gem 'factory_girl_rails'
   gem 'brakeman'
   gem 'capybara'
+  gem 'factory_girl_rails'
   gem 'fuubar'
   gem 'rubocop', require: false
   gem 'rubocop-rspec', require: false
@@ -47,8 +52,8 @@ group :test do
 end
 
 group :development do
-  gem 'web-console'
   gem 'listen', '~> 3.0.5'
+  gem 'web-console'
 end
 
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

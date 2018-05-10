@@ -32,7 +32,7 @@ class ProcessPayByAccount
 
   def process_payment!
     @glimr = GlimrApiClient::PayByAccount.call(request_params)
-  rescue => e
+  rescue StandardError => e
     # Account and confirmation validation errors are re-rerescued at the
     # controller level.
     log_error(self.class.name, 'N/A', e)

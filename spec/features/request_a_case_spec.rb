@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Request a brand new case' do
+RSpec.describe 'Request a brand new case' do
   case_number = 'TC/2012/00001'
   confirmation_code = 'ABC123'
 
@@ -39,32 +39,32 @@ RSpec.feature 'Request a brand new case' do
         make_a_case_request
       end
 
-      scenario 'show the case reference' do
+      it 'show the case reference' do
         expect(page).to have_text("Your case reference is #{case_number}")
       end
 
-      scenario 'highlight the need' do
+      it 'highlight the need' do
         expect(page).to have_text("You need to pay the following fee")
       end
 
-      scenario 'highlight the urgency' do
+      it 'highlight the urgency' do
         expect(page).to have_text("pay your fee immediately")
       end
 
-      scenario 'show the fee details' do
+      it 'show the fee details' do
         expect(page).to have_text("£20 fee to lodge your appeal")
       end
 
       describe 'payment methods' do
-        scenario 'select the method' do
+        it 'select the method' do
           expect(page).to have_text("Select your method of payment")
         end
 
-        scenario 'by card' do
+        it 'by card' do
           expect(page).to have_text("Debit or credit card")
         end
 
-        scenario 'Help with fees' do
+        it 'Help with fees' do
           expect(page).to have_text("Help with fees")
         end
       end
@@ -75,7 +75,7 @@ RSpec.feature 'Request a brand new case' do
         expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::Unavailable)
       end
 
-      scenario 'then we do not show the fee' do
+      it 'then we do not show the fee' do
         make_a_case_request
         # TODO: This is not ideal.  It should alert the user to the failure.
         expect(page).to have_text('service is currently unavailable')
@@ -94,7 +94,7 @@ RSpec.feature 'Request a brand new case' do
         expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::Case::InvalidCaseNumber)
       end
 
-      scenario 'then tell the user the case cannot be found' do
+      it 'then tell the user the case cannot be found' do
         fill_in 'Case reference', with: 'some junk'
         fill_in 'Confirmation code', with: 'ABC123'
         click_on 'Find case'
@@ -107,7 +107,7 @@ RSpec.feature 'Request a brand new case' do
         expect(GlimrApiClient::Case).to receive(:find).and_raise(GlimrApiClient::Case::InvalidCaseNumber)
       end
 
-      scenario 'then tell the user the case cannot be found' do
+      it 'then tell the user the case cannot be found' do
         fill_in 'Case reference', with: 'TC/2016/00001'
         fill_in 'Confirmation code', with: 'ABC123'
         click_on 'Find case'
@@ -116,7 +116,7 @@ RSpec.feature 'Request a brand new case' do
     end
 
     describe 'without a confirmation code' do
-      scenario do
+      it do
         fill_in 'Case reference', with: 'some junk'
         click_on 'Find case'
         expect(page).to have_text("Confirmation code can't be blank")

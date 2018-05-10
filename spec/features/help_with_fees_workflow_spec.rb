@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Help with fees' do
+RSpec.describe 'Help with fees' do
   case_number = 'TC/2012/00001'
   confirmation_code = 'ABC123'
 
@@ -41,23 +41,23 @@ RSpec.feature 'Help with fees' do
         make_a_case_request
       end
 
-      scenario 'shows the correct page' do
+      it 'shows the correct page' do
         expect(page).to have_text("Pay via help with fees")
       end
 
-      scenario 'has the correct case' do
+      it 'has the correct case' do
         expect(page).to have_text(case_number)
       end
 
-      scenario 'has the correct case title' do
+      it 'has the correct case title' do
         expect(page).to have_text('You vs HM Revenue & Customs')
       end
 
-      scenario 'has the correct amount' do
+      it 'has the correct amount' do
         expect(page).to have_text('Total amount £20')
       end
 
-      scenario 'has the correct type' do
+      it 'has the correct type' do
         expect(page).to have_text('Lodgement Fee')
       end
 
@@ -70,7 +70,7 @@ RSpec.feature 'Help with fees' do
           )
         end
 
-        scenario 'send data to glimr and do not require a data response' do
+        it 'send data to glimr and do not require a data response' do
           fill_in 'Help with fees reference number', with: 'ABC123'
           click_on 'Continue'
           expect(page).to have_text('Fee paid via help with fees reference ABC123')

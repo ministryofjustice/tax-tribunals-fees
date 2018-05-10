@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Before requesting a case' do
+RSpec.describe 'Before requesting a case' do
   context 'Glimr is up' do
     let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
 
@@ -9,7 +9,7 @@ RSpec.feature 'Before requesting a case' do
     end
 
     describe 'users can start a new case ' do
-      scenario do
+      it do
         visit '/'
         expect(page).to have_text('Start now')
       end
@@ -25,7 +25,7 @@ RSpec.feature 'Before requesting a case' do
     end
 
     describe 'users cannot start a new case ' do
-      scenario 'and are told the service is unavailable' do
+      it 'and are told the service is unavailable' do
         visit '/'
         expect(page).to have_text('The service is currently unavailable')
       end

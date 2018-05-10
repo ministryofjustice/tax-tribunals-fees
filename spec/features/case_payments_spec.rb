@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.feature 'Pay for a case' do
+RSpec.describe 'Pay for a case' do
   let(:api_available) { instance_double(GlimrApiClient::Available, available?: true) }
 
   before do
